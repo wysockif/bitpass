@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "NXeGH0Om+bdvIO11bK8AoZDmh9fbfJbZvX4xsw//TqpZ6/wqNZA55rZWhqrszUUppDEXYoRyIFD1dcm/CqeOvA==",
+  "dgSpecHash": "45bCrHc/S2GrKobIS+b3JQL7mhClkCg8ZkZRkzcsCZlvJY6GaBZqj+tuRJMEykjoHjff7KnbiduNowsCRGSjrg==",
   "success": true,
   "projectFilePath": "C:\\Users\\wysoc\\Desktop\\bitpass\\server\\BitPass\\Domain\\Domain.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\wysoc\\.nuget\\packages\\nodatime\\3.0.9\\nodatime.3.0.9.nupkg.sha512",
+    "C:\\Users\\wysoc\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.7.1\\system.runtime.compilerservices.unsafe.4.7.1.nupkg.sha512"
+  ],
   "logs": []
 }

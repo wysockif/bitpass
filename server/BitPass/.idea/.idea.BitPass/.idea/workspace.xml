@@ -16,38 +16,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e92f4fa7-da08-4787-b94f-7b23ff09cf94" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Api/Controllers/AccountController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Domain/IAggregateRoot.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.BitPass/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.BitPass/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.BitPass/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/.dockerignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/Controllers/WeatherForecastController.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/Dockerfile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/WeatherForecast.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/bin/Debug/net5.0/Api.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Api/bin/Debug/net5.0/Api.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/bin/Debug/net5.0/Api.exe" beforeDir="false" afterPath="$PROJECT_DIR$/Api/bin/Debug/net5.0/Api.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/bin/Debug/net5.0/Api.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Api/bin/Debug/net5.0/Api.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/bin/Debug/net5.0/ref/Api.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Api/bin/Debug/net5.0/ref/Api.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/obj/Api.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/Api/obj/Api.csproj.nuget.dgspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/obj/Api.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/Api/obj/Api.csproj.nuget.g.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/obj/Api.csproj.nuget.g.targets" beforeDir="false" afterPath="$PROJECT_DIR$/Api/obj/Api.csproj.nuget.g.targets" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/obj/Debug/net5.0/Api.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/Api/obj/Debug/net5.0/Api.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/obj/Debug/net5.0/Api.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Api/obj/Debug/net5.0/Api.assets.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/obj/Debug/net5.0/Api.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Api/obj/Debug/net5.0/Api.csproj.AssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/obj/Debug/net5.0/Api.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Api/obj/Debug/net5.0/Api.csproj.CoreCompileInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/obj/Debug/net5.0/Api.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Api/obj/Debug/net5.0/Api.csproj.FileListAbsolute.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/obj/Debug/net5.0/Api.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Api/obj/Debug/net5.0/Api.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/obj/Debug/net5.0/Api.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Api/obj/Debug/net5.0/Api.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/obj/Debug/net5.0/apphost.exe" beforeDir="false" afterPath="$PROJECT_DIR$/Api/obj/Debug/net5.0/apphost.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/obj/Debug/net5.0/ref/Api.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Api/obj/Debug/net5.0/ref/Api.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/Api/obj/project.assets.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Api/obj/project.nuget.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/obj/project.packagespec.json" beforeDir="false" afterPath="$PROJECT_DIR$/Api/obj/project.packagespec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/Api/obj/rider.project.restore.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitPass.sln" beforeDir="false" afterPath="$PROJECT_DIR$/BitPass.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/global.json" beforeDir="false" />
+    <list default="true" id="e92f4fa7-da08-4787-b94f-7b23ff09cf94" name="Changes" comment="Add file structure">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.BitPass/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.BitPass/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Infrastructure/Infrastructure.sln" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Infrastructure/Infrastructure/Infrastructure.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Infrastructure/Infrastructure/Program.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Infrastructure/Infrastructure/Properties/launchSettings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Infrastructure/Infrastructure/Startup.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Infrastructure/Infrastructure/appsettings.Development.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Infrastructure/Infrastructure/appsettings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Infrastructure/global.json" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +45,8 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="settings.editor.selected.configurable" value="CodeInspectionSettingsId" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="terminal" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RunManager" selected="Docker.Api">
@@ -119,7 +98,7 @@
       <updated>1637846115301</updated>
       <workItem from="1637846120870" duration="2607000" />
       <workItem from="1637857638097" duration="621000" />
-      <workItem from="1637858363928" duration="1838000" />
+      <workItem from="1637858363928" duration="2403000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <created>1637848478409</created>
@@ -128,7 +107,14 @@
       <option name="project" value="LOCAL" />
       <updated>1637848478409</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Add file structure">
+      <created>1637864713467</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1637864713467</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -149,7 +135,8 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="Initial Commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Initial Commit" />
+    <MESSAGE value="Add file structure" />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

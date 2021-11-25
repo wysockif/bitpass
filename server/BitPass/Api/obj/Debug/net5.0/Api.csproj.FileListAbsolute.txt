@@ -26,3 +26,4 @@ C:\Users\wysoc\Desktop\bitpass\server\BitPass\Api\obj\Debug\net5.0\Api.dll
 C:\Users\wysoc\Desktop\bitpass\server\BitPass\Api\obj\Debug\net5.0\ref\Api.dll
 C:\Users\wysoc\Desktop\bitpass\server\BitPass\Api\obj\Debug\net5.0\Api.pdb
 C:\Users\wysoc\Desktop\bitpass\server\BitPass\Api\obj\Debug\net5.0\Api.genruntimeconfig.cache
+C:\Users\wysoc\Desktop\bitpass\server\BitPass\Api\obj\Debug\net5.0\staticwebassets\Api.StaticWebAssets.xml

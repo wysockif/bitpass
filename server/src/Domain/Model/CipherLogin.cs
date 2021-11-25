@@ -1,4 +1,4 @@
-namespace Domain.Model.CipherLogins
+namespace Domain.Model
 {
     public class CipherLogin : Entity, IAggregateRoot
     {

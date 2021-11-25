@@ -1,4 +1,4 @@
-namespace Domain.Model.AppUsers
+namespace Domain.Model
 {
     public class AppUserSession
     {

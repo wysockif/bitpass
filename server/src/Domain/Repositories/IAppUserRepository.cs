@@ -1,10 +1,11 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Domain.Model.AppUsers;
+using Domain.Model;
+using Domain.Repositories.Common.Domain;
 
-namespace Domain.Repositories.AppUsers
+namespace Domain.Repositories
 {
-    public interface IAppUserRepository
+    public interface IAppUserRepository : IRepository<AppUser>
     {
         Task<AppUser> GetByIdAsync(long id, CancellationToken cancellationToken = default);
         Task<AppUser> GetByEmailOrUsernameAsync(string email, string username, CancellationToken cancellationToken = default);

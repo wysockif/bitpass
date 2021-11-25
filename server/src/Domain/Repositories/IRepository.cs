@@ -8,7 +8,7 @@ namespace Domain.Repositories
         public interface IRepository<T> where T : class, IAggregateRoot
         {
             Task AddAsync(T entity, CancellationToken cancellationToken = default);
-            void Delete(T entity);
+            Task DeleteAsync(T entity, CancellationToken cancellationToken = default);
         }
     }
 }

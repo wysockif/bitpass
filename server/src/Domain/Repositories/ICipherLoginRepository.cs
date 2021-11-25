@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Domain.Model.CipherLogins;
+using Domain.Model;
 using Domain.Repositories.Common.Domain;
 
-namespace Domain.Repositories.CipherLogins
+namespace Domain.Repositories
 {
     public interface ICipherLoginRepository : IRepository<CipherLogin>
     {

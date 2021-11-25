@@ -5,8 +5,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Persistance\Configurations" />
-      <Folder Include="Persistance\Repositories" />
+      <Folder Include="Persistence\Configurations" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Domain\Domain.csproj" />
     </ItemGroup>
 
 </Project>

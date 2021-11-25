@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using NodaTime;
 
-namespace Domain.Model.AppUsers
+namespace Domain.Model
 {
-    public class AppUser : Entity
+    public class AppUser : Entity, IAggregateRoot
     {
         public long Id { get; private init; }
         public string Username { get; private init; }

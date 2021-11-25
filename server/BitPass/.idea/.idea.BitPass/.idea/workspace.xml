@@ -16,30 +16,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e92f4fa7-da08-4787-b94f-7b23ff09cf94" name="Changes" comment="Clean up">
-      <change afterPath="$PROJECT_DIR$/Domain/Model/AppUsers/AppUser.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Domain/Model/AppUsers/AppUserSession.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Domain/Model/CipherLogins/CipherLogin.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Domain/Model/CipherLogins/CipherLoginGroup.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Domain/Model/Entity.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Domain/Repositories/AppUsers/IAppUserRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Domain/Repositories/CipherLogins/ICipherLoginGroupRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Domain/Repositories/IRepository.cs" afterDir="false" />
+    <list default="true" id="e92f4fa7-da08-4787-b94f-7b23ff09cf94" name="Changes" comment="Add domain models">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.BitPass/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.BitPass/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/obj/Debug/net5.0/Api.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Api/obj/Debug/net5.0/Api.csproj.AssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/Api/obj/rider.project.restore.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Application/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/Application/obj/rider.project.restore.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitPass.sln" beforeDir="false" afterPath="$PROJECT_DIR$/BitPass.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Domain/Domain.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Domain.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Domain/IAggregateRoot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Model/IAggregateRoot.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Domain/obj/Debug/net5.0/Domain.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/obj/Debug/net5.0/Domain.assets.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Domain/obj/Domain.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/obj/Domain.csproj.nuget.dgspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Domain/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/obj/project.assets.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Domain/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/obj/project.nuget.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Domain/obj/project.packagespec.json" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/obj/project.packagespec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Domain/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/obj/rider.project.restore.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Infrastructure/Infrastructure.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Infrastructure/Infrastructure.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Infrastructure/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/Infrastructure/obj/rider.project.restore.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Domain/Model/CipherLogins/CipherLogin.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Model/CipherLogins/CipherLogin.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Domain/Model/CipherLogins/CipherLoginGroup.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Domain/Repositories/AppUsers/IAppUserRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Repositories/AppUsers/IAppUserRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Domain/Repositories/CipherLogins/ICipherLoginGroupRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Repositories/CipherLogins/ICipherLoginRepository.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -120,7 +102,7 @@
       <updated>1637846115301</updated>
       <workItem from="1637846120870" duration="2607000" />
       <workItem from="1637857638097" duration="621000" />
-      <workItem from="1637858363928" duration="7011000" />
+      <workItem from="1637858363928" duration="7603000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <created>1637848478409</created>
@@ -143,7 +125,14 @@
       <option name="project" value="LOCAL" />
       <updated>1637865371081</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Add domain models">
+      <created>1637869983025</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1637869983025</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -166,7 +155,8 @@
     <MESSAGE value="Initial Commit" />
     <MESSAGE value="Add file structure" />
     <MESSAGE value="Clean up" />
-    <option name="LAST_COMMIT_MESSAGE" value="Clean up" />
+    <MESSAGE value="Add domain models" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add domain models" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

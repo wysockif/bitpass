@@ -16,12 +16,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e92f4fa7-da08-4787-b94f-7b23ff09cf94" name="Changes" comment="Add domain models">
+    <list default="true" id="e92f4fa7-da08-4787-b94f-7b23ff09cf94" name="Changes" comment="Add repositories interfaces">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.BitPass/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.BitPass/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Domain/Model/AppUsers/AppUserSession.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Model/AppUsers/AppUserSession.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Domain/Model/CipherLogins/CipherLogin.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Model/CipherLogins/CipherLogin.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Domain/Model/CipherLogins/CipherLoginGroup.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Domain/Repositories/AppUsers/IAppUserRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Repositories/AppUsers/IAppUserRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Domain/Repositories/CipherLogins/ICipherLoginGroupRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Domain/Repositories/CipherLogins/ICipherLoginRepository.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,6 +36,9 @@
       <filtered-out-file-type name="TAG" />
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="mock://C:/Users/wysoc/Desktop/bitpass/server/BitPass/Domain/Model/CipherLogins/CipherLogin.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="21PcMFVdZvtaanhuGlDPsYisITI" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -102,7 +103,7 @@
       <updated>1637846115301</updated>
       <workItem from="1637846120870" duration="2607000" />
       <workItem from="1637857638097" duration="621000" />
-      <workItem from="1637858363928" duration="7603000" />
+      <workItem from="1637858363928" duration="8615000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <created>1637848478409</created>
@@ -132,7 +133,14 @@
       <option name="project" value="LOCAL" />
       <updated>1637869983025</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Add repositories interfaces">
+      <created>1637870548894</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1637870548894</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -156,7 +164,8 @@
     <MESSAGE value="Add file structure" />
     <MESSAGE value="Clean up" />
     <MESSAGE value="Add domain models" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add domain models" />
+    <MESSAGE value="Add repositories interfaces" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add repositories interfaces" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

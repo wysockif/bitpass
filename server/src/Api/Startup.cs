@@ -1,3 +1,5 @@
+using System;
+using Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +21,11 @@ namespace Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var infrastructureSettings = new InfrastructureSettings();
+            Configuration.Bind(nameof(InfrastructureSettings), infrastructureSettings);
+            // infrastructureSettings.Validate();
+            services.AddInfrastructure(infrastructureSettings);
+            
             services.AddControllers();
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api", Version = "v1" }); });
         }

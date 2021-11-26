@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.InfrastructureInterfaces;
 using Domain.Model;
 using Domain.Repositories;
 
@@ -8,6 +9,13 @@ namespace Infrastructure.Persistence.Repositories
 {
     public class CipherLoginRepository : ICipherLoginRepository
     {
+        private readonly IStorage _storage;
+
+        public CipherLoginRepository(IStorage storage)
+        {
+            _storage = storage;
+        }
+
         public Task AddAsync(CipherLogin entity, CancellationToken cancellationToken = default)
         {
             throw new System.NotImplementedException();

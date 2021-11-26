@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+ database:
+  build:
+   context: ./postgres
+  image: bitpass_local_database_image
+  container_name: bitpass_local_database_container
+  ports:
+   - "5432:5432"
+  env_file: ./postgres/.env
+

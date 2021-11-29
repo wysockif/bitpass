@@ -9,13 +9,13 @@ namespace Domain.Model
         public string Username { get; private init; }
         public string Email { get; private init; }
         public bool IdEmailConfirmed { get; private set; }
-
         public string PasswordHash { get; private set; }
         public string MasterPasswordHash { get; private set; }
         public Instant? PasswordValidTo { get; private set; }
         public string? PasswordResetTokenHash { get; private set; }
         public Instant? PasswordResetTokenValidTo { get; private set; }
-        public List<AppUserSession> Sessions { get; private set; }
+        public int NumberOfFailedLogins { get; private set; }
+        public List<SecurityActivity> Sessions { get; private set; }
 
         private AppUser(string username, string email, string passwordHash)
         {
@@ -31,7 +31,7 @@ namespace Domain.Model
         
         public void AddSession(string refreshToken)
         {
-            var session = AppUserSession.Create(refreshToken);
+            var session = SecurityActivity.Create(refreshToken);
             Sessions.Add(session);
         }
         

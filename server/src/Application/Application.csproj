@@ -5,14 +5,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Handlers" />
       <Folder Include="Mappers" />
+      <Folder Include="Queries" />
       <Folder Include="Services" />
-      <Folder Include="ViewModels" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Domain\Domain.csproj" />
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
+        <PackageReference Include="UAParser" Version="3.1.47" />
+        <ProjectReference Include="..\Domain\Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>

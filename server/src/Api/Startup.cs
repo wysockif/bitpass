@@ -1,4 +1,4 @@
-using System;
+using Application;
 using Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -25,6 +25,7 @@ namespace Api
             Configuration.Bind(nameof(InfrastructureSettings), infrastructureSettings);
             // infrastructureSettings.Validate();
             services.AddInfrastructure(infrastructureSettings);
+            services.AddApplication();
             
             services.AddControllers();
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api", Version = "v1" }); });
@@ -39,8 +40,6 @@ namespace Api
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Api v1"));
             }
-
-            // app.UseHttpsRedirection();
 
             app.UseRouting();
 

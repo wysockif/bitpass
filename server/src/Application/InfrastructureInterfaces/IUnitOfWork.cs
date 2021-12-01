@@ -6,7 +6,7 @@ namespace Application.InfrastructureInterfaces
 {
     public interface IUnitOfWork
     {
-        IAppUserRepository AppUserRepository { get; }
+        IUserRepository UserRepository { get; }
         ICipherLoginRepository CipherLoginRepository { get; }
         Task SaveChangesAsync(CancellationToken cancellationToken = default);
     }

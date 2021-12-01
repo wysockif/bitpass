@@ -1,16 +1,20 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.InfrastructureInterfaces;
 using Domain.Model;
 using Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class AppUserRepository : IAppUserRepository
+    public class UserRepository : IUserRepository
     {
         private readonly IStorage _storage;
 
-        public AppUserRepository(IStorage storage)
+        public UserRepository(IStorage storage)
         {
             _storage = storage;
         }
@@ -20,7 +24,8 @@ namespace Infrastructure.Persistence.Repositories
             throw new System.NotImplementedException();
         }
 
-        public Task<User> GetByEmailOrUsernameAsync(string email, string username, CancellationToken cancellationToken = default)
+        public Task<User> GetByEmailOrUsernameAsync(string email, string username,
+            CancellationToken cancellationToken = default)
         {
             throw new System.NotImplementedException();
         }
@@ -43,6 +48,16 @@ namespace Infrastructure.Persistence.Repositories
         public Task DeleteAsync(User entity, CancellationToken cancellationToken = default)
         {
             throw new System.NotImplementedException();
+        }
+
+        public async Task<int> GetFailedLoginActivitiesCountInLastHourByUserId(long userId,
+            CancellationToken cancellationToken = default)
+        {
+            return await _storage.AppUserSessions
+                .Where(activity => activity.UserId == userId 
+                                   && activity.CreatedAt > DateTime.Now.AddHours(-1) 
+                                   && activity.ActivityType == ActivityType.FailedLogin)
+                .CountAsync(cancellationToken);
         }
     }
 }

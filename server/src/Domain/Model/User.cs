@@ -14,7 +14,6 @@ namespace Domain.Model
         public string MasterPasswordHash { get; private set; }
         public string? PasswordResetTokenHash { get; private set; }
         public DateTime? PasswordResetTokenValidTo { get; private set; }
-        public int NumberOfFailedLogins { get; private set; }
         public List<AccountActivity> AccountActivities { get; private set; }
 
         private User(string username, string email, string passwordHash, string masterPasswordHash)
@@ -23,6 +22,7 @@ namespace Domain.Model
             Email = email;
             PasswordHash = passwordHash;
             MasterPasswordHash = masterPasswordHash;
+            IdEmailConfirmed = false;
         }
 
         public static User Register(string username, string email, string passwordHash, string masterPasswordHash)

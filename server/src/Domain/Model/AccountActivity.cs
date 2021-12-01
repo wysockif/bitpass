@@ -6,19 +6,19 @@ namespace Domain.Model
     {
         public long Id { get; private set; }
         
-        private long UserId { get; init; }
-        public DateTime LoggedAt {  get; private init; }
+        public long UserId { get; init; }
+        public DateTime CreatedAt {  get; private init; }
         public string? OsName { get; private init; }
         public string? BrowserName { get; private init; }
         public string? IpAddress { get; private init; }
         
         public ActivityType ActivityType { get; private set; }
 
-        private AccountActivity(long userId, ActivityType activityType, DateTime loggedAt, string? ipAddress, string? osName, string? browserName)
+        private AccountActivity(long userId, ActivityType activityType, DateTime createdAt, string? ipAddress, string? osName, string? browserName)
         {
             UserId = userId;
             ActivityType = activityType;
-            LoggedAt = loggedAt;
+            CreatedAt = createdAt;
             IpAddress = ipAddress;
             OsName = osName;
             BrowserName = browserName;

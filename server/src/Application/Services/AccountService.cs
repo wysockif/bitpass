@@ -19,7 +19,7 @@ namespace Application.Services
 
         public async Task<User> RegisterAsync(string email, string username, string password, string masterPassword)
         {
-            var user = await _unitOfWork.AppUserRepository.GetByEmailOrUsernameAsync(email, username);
+            var user = await _unitOfWork.UserRepository.GetByEmailOrUsernameAsync(email, username);
 
             if (user != default)
             {
@@ -32,7 +32,7 @@ namespace Application.Services
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(password + "PEPPER", 16);
             var masterPasswordHash = BCrypt.Net.BCrypt.HashPassword(password + "PEPPER2", 16);
             var registeredUser = User.Register(username, email, passwordHash, masterPasswordHash);
-            await _unitOfWork.AppUserRepository.AddAsync(registeredUser);
+            await _unitOfWork.UserRepository.AddAsync(registeredUser);
             await _unitOfWork.SaveChangesAsync();
             return registeredUser;
         }
@@ -40,18 +40,17 @@ namespace Application.Services
         public async Task<AuthToken> LoginAsync(string identifier, string password, string? ipAddress,
             string? userAgent)
         {
-            var user = await _unitOfWork.AppUserRepository.GetByEmailOrUsernameAsync(identifier.ToLower(),
+            var user = await _unitOfWork.UserRepository.GetByEmailOrUsernameAsync(identifier.ToLower(),
                 identifier.ToLower());
-
             if (user == default)
             {
                 throw new AuthenticationException("Invalid credentials");
             }
 
+            await CheckInvalidLoginAttemptsNumber(user.Id);
             var (osName, browserName) = GetDeviceInfo(userAgent);
 
             var isPasswordVerified = BCrypt.Net.BCrypt.Verify(password + "PEPPER", user.PasswordHash);
-
             if (!isPasswordVerified)
             {
                 user.AddAccountActivity(ActivityType.FailedLogin, ipAddress, osName, browserName);
@@ -63,6 +62,14 @@ namespace Application.Services
             await _unitOfWork.SaveChangesAsync();
 
             return new AuthToken("asdasfa");
+        }
+
+        private async Task CheckInvalidLoginAttemptsNumber(long userId)
+        {
+            if (await _unitOfWork.UserRepository.GetFailedLoginActivitiesCountInLastHourByUserId(userId) > 3)
+            {
+                throw new AuthenticationException("Too many invalid login attempts. Try again later");
+            }
         }
 
         private static (string? osName, string? browserName) GetDeviceInfo(string? userAgent)

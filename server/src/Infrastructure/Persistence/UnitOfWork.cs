@@ -9,13 +9,13 @@ namespace Infrastructure.Persistence
     public class UnitOfWork : IUnitOfWork
     {
         private readonly IStorage _storage;
-        public IAppUserRepository AppUserRepository { get; }
+        public IUserRepository UserRepository { get; }
         public ICipherLoginRepository CipherLoginRepository { get; }
 
         public UnitOfWork(IStorage storage)
         {
             _storage = storage;
-            AppUserRepository = new AppUserRepository(storage);
+            UserRepository = new UserRepository(storage);
             CipherLoginRepository = new CipherLoginRepository(storage);
         }
 

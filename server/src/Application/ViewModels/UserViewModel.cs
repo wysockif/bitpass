@@ -1,4 +1,6 @@
 namespace Application.ViewModels
+#pragma warning disable 8618
+
 {
     public class UserViewModel
     {

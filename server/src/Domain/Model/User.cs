@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using NodaTime;
+#pragma warning disable 8618
 
 namespace Domain.Model
 {
@@ -15,7 +15,6 @@ namespace Domain.Model
         public string? PasswordResetTokenHash { get; private set; }
         public DateTime? PasswordResetTokenValidTo { get; private set; }
         public List<AccountActivity> AccountActivities { get; private set; }
-
         private User(string username, string email, string passwordHash, string masterPasswordHash)
         {
             Username = username;

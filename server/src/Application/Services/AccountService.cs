@@ -29,9 +29,9 @@ namespace Application.Services
                 throw new Exception($"User with given {propertyName} already exists");
             }
 
-            var passwordHash = BCrypt.Net.BCrypt.HashPassword(password + "PEPPER", 16);
-            var masterPasswordHash = BCrypt.Net.BCrypt.HashPassword(password + "PEPPER2", 16);
-            var registeredUser = User.Register(username, email, passwordHash, masterPasswordHash);
+            var passwordHash = password + "PEPPER";
+            var masterPasswordHash = password + "PEPPER2";
+            var registeredUser = User.Register(username.ToLower(), email.ToLower(), passwordHash, masterPasswordHash);
             await _unitOfWork.UserRepository.AddAsync(registeredUser);
             await _unitOfWork.SaveChangesAsync();
             return registeredUser;
@@ -50,7 +50,7 @@ namespace Application.Services
             await CheckInvalidLoginAttemptsNumber(user.Id);
             var (osName, browserName) = GetDeviceInfo(userAgent);
 
-            var isPasswordVerified = BCrypt.Net.BCrypt.Verify(password + "PEPPER", user.PasswordHash);
+            var isPasswordVerified = password + "PEPPER" == user.PasswordHash;
             if (!isPasswordVerified)
             {
                 user.AddAccountActivity(ActivityType.FailedLogin, ipAddress, osName, browserName);

@@ -1,3 +1,4 @@
+using System.Reflection;
 using Domain.Model;
 using Microsoft.EntityFrameworkCore;
 
@@ -5,12 +6,18 @@ namespace Infrastructure.Persistence
 {
     public class DatabaseContext : DbContext, IStorage
     {
-        public DbSet<User> AppUsers { get; }
-        public DbSet<AccountActivity> AppUserSessions { get; }
-        public DbSet<CipherLogin> CipherLogins { get; }
+        public DbSet<User> Users { get; private set; }
+        public DbSet<AccountActivity> AccountActivities { get; private set; }
+        public DbSet<CipherLogin> CipherLogins { get; private set; }
 
         public DatabaseContext(DbContextOptions options) : base(options)
         {
+        }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            base.OnModelCreating(builder);
         }
     }
 }

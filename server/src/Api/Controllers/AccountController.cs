@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
-    [Route("accounts")]
+    [Route("api/accounts")]
     public class AccountController : BaseController
     {
 

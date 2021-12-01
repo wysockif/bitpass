@@ -12,20 +12,18 @@ namespace Infrastructure
         {
             services.AddSingleton(settings);
             services.AddDatabase(settings.DbConnectionString);
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }
 
         private static IServiceCollection AddDatabase(this IServiceCollection services, string dbConnectionString)
         {
-            Action<DbContextOptionsBuilder> action = options =>
-            {
-                options.UseNpgsql(dbConnectionString, sqlServer =>
-                {
-                    sqlServer.UseNodaTime();
-                });
-            };
+            // Action<DbContextOptionsBuilder> action = options =>
+            // {
+            //     options.UseNpgsql(dbConnectionString);
+            // };
 
-            services.AddDbContext<DatabaseContext>(action);
+            services.AddDbContext<IStorage, DatabaseContext>(options => options.UseNpgsql(dbConnectionString));
             return services;
         }
     }

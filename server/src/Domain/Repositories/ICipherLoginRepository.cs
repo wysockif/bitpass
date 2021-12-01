@@ -8,8 +8,8 @@ namespace Domain.Repositories
 {
     public interface ICipherLoginRepository : IRepository<CipherLogin>
     {
-        Task<CipherLogin> GetByIdAsync(long id, CancellationToken cancellationToken = default);
-        Task<IEnumerable<CipherLogin>> GetByOwnerId(long ownerId, CancellationToken cancellationToken = default);
-        Task<IEnumerable<CipherLogin>> GetByUrl(string url, CancellationToken cancellationToken = default);
+        Task<CipherLogin?> GetByIdAsync(long id, CancellationToken cancellationToken = default);
+        Task<List<CipherLogin>> GetByOwnerId(long ownerId, CancellationToken cancellationToken = default);
+        Task<List<CipherLogin>> GetByOwnerIdAndUrl(long ownerId, string url, CancellationToken cancellationToken = default);
     }
 }

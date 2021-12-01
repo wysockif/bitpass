@@ -5,13 +5,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using NodaTime;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20211126144709_InitialCreate")]
+    [Migration("20211201155403_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -22,68 +21,37 @@ namespace Infrastructure.Persistence.Migrations
                 .HasAnnotation("ProductVersion", "5.0.12")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-            modelBuilder.Entity("Domain.Model.AppUser", b =>
+            modelBuilder.Entity("Domain.Model.AccountActivity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("Email")
+                    b.Property<string>("ActivityType")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("IdEmailConfirmed")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("MasterPasswordHash")
-                        .IsRequired()
+                    b.Property<string>("BrowserName")
                         .HasColumnType("text");
 
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("PasswordResetTokenHash")
-                        .HasColumnType("text");
-
-                    b.Property<Instant?>("PasswordResetTokenValidTo")
-                        .HasColumnType("timestamp");
-
-                    b.Property<Instant?>("PasswordValidTo")
-                        .HasColumnType("timestamp");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AppUsers");
-                });
-
-            modelBuilder.Entity("Domain.Model.AppUserSession", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<long?>("AppUserId")
-                        .HasColumnType("bigint");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("IpAddress")
                         .HasColumnType("text");
 
-                    b.Property<string>("RefreshToken")
-                        .IsRequired()
+                    b.Property<string>("OsName")
                         .HasColumnType("text");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("AppUserSessions");
+                    b.ToTable("AccountActivities");
                 });
 
             modelBuilder.Entity("Domain.Model.CipherLogin", b =>
@@ -113,16 +81,61 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("CipherLogins");
                 });
 
-            modelBuilder.Entity("Domain.Model.AppUserSession", b =>
+            modelBuilder.Entity("Domain.Model.User", b =>
                 {
-                    b.HasOne("Domain.Model.AppUser", null)
-                        .WithMany("Sessions")
-                        .HasForeignKey("AppUserId");
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IdEmailConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("MasterPasswordHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PasswordResetTokenHash")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("PasswordResetTokenValidTo")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Username")
+                        .IsUnique();
+
+                    b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Domain.Model.AppUser", b =>
+            modelBuilder.Entity("Domain.Model.AccountActivity", b =>
                 {
-                    b.Navigation("Sessions");
+                    b.HasOne("Domain.Model.User", null)
+                        .WithMany("AccountActivities")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Model.User", b =>
+                {
+                    b.Navigation("AccountActivities");
                 });
 #pragma warning restore 612, 618
         }

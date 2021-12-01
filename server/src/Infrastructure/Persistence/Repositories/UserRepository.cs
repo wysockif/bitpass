@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.InfrastructureInterfaces;
 using Domain.Model;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -14,48 +12,54 @@ namespace Infrastructure.Persistence.Repositories
     {
         private readonly IStorage _storage;
 
+        private IQueryable<User> Users => _storage.Users
+            .Include(user => user.AccountActivities)
+            .AsQueryable();
+
         public UserRepository(IStorage storage)
         {
             _storage = storage;
         }
 
-        public Task<User> GetByIdAsync(long id, CancellationToken cancellationToken = default)
+        public async Task<User?> GetByIdAsync(long id, CancellationToken cancellationToken = default)
         {
-            throw new System.NotImplementedException();
+            return await Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
         }
 
-        public Task<User> GetByEmailOrUsernameAsync(string email, string username,
+        public async Task<User?> GetByEmailOrUsernameAsync(string email, string username,
             CancellationToken cancellationToken = default)
         {
-            throw new System.NotImplementedException();
+            return await Users.FirstOrDefaultAsync(
+                u => u.Email.Equals(email.ToLower()) || u.Username.Equals(username.ToLower()),
+                cancellationToken);
         }
 
-        public Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
+        public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
         {
-            throw new System.NotImplementedException();
+            return await Users.FirstOrDefaultAsync(u => u.Email.Equals(email.ToLower()), cancellationToken);
         }
 
-        public Task<User> GetByUsernameAsync(string username, CancellationToken cancellationToken = default)
+        public async Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default)
         {
-            throw new System.NotImplementedException();
+            return await Users.FirstOrDefaultAsync(u => u.Username.Equals(username.ToLower()), cancellationToken);
         }
 
-        public Task AddAsync(User entity, CancellationToken cancellationToken = default)
+        public async Task AddAsync(User entity, CancellationToken cancellationToken = default)
         {
-            throw new System.NotImplementedException();
+            await _storage.Users.AddAsync(entity, cancellationToken);
         }
 
-        public Task DeleteAsync(User entity, CancellationToken cancellationToken = default)
+        public async Task DeleteAsync(User entity, CancellationToken cancellationToken = default)
         {
-            throw new System.NotImplementedException();
+            await Task.FromResult(_storage.Users.Remove(entity));
         }
 
         public async Task<int> GetFailedLoginActivitiesCountInLastHourByUserId(long userId,
             CancellationToken cancellationToken = default)
         {
-            return await _storage.AppUserSessions
-                .Where(activity => activity.UserId == userId 
-                                   && activity.CreatedAt > DateTime.Now.AddHours(-1) 
+            return await _storage.AccountActivities
+                .Where(activity => activity.UserId == userId
+                                   && activity.CreatedAt > DateTime.Now.AddHours(-1)
                                    && activity.ActivityType == ActivityType.FailedLogin)
                 .CountAsync(cancellationToken);
         }

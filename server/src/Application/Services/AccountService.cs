@@ -11,10 +11,12 @@ namespace Application.Services
     public class AccountService : IAccountService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ApplicationSettings _settings;
 
-        public AccountService(IUnitOfWork unitOfWork)
+        public AccountService(IUnitOfWork unitOfWork, ApplicationSettings settings)
         {
             _unitOfWork = unitOfWork;
+            _settings = settings;
         }
 
         public async Task<User> RegisterAsync(string email, string username, string password, string masterPassword)
@@ -29,8 +31,8 @@ namespace Application.Services
                 throw new Exception($"User with given {propertyName} already exists");
             }
 
-            var passwordHash = password + "PEPPER";
-            var masterPasswordHash = password + "PEPPER2";
+            var passwordHash = BCrypt.Net.BCrypt.HashPassword( password + _settings.PasswordPepper, 13);
+            var masterPasswordHash = BCrypt.Net.BCrypt.HashPassword( password + _settings.MasterPasswordPepper, 13);
             var registeredUser = User.Register(username.ToLower(), email.ToLower(), passwordHash, masterPasswordHash);
             await _unitOfWork.UserRepository.AddAsync(registeredUser);
             await _unitOfWork.SaveChangesAsync();
@@ -50,7 +52,7 @@ namespace Application.Services
             await CheckInvalidLoginAttemptsNumber(user.Id);
             var (osName, browserName) = GetDeviceInfo(userAgent);
 
-            var isPasswordVerified = password + "PEPPER" == user.PasswordHash;
+            var isPasswordVerified = BCrypt.Net.BCrypt.Verify(password + _settings.PasswordPepper, user.PasswordHash);
             if (!isPasswordVerified)
             {
                 user.AddAccountActivity(ActivityType.FailedLogin, ipAddress, osName, browserName);

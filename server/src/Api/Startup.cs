@@ -25,7 +25,10 @@ namespace Api
             Configuration.Bind(nameof(InfrastructureSettings), infrastructureSettings);
             // infrastructureSettings.Validate();
             services.AddInfrastructure(infrastructureSettings);
-            services.AddApplication();
+
+            var applicationSettings = new ApplicationSettings();
+            Configuration.Bind(nameof(ApplicationSettings), applicationSettings);
+            services.AddApplication(applicationSettings);
             
             services.AddControllers();
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api", Version = "v1" }); });

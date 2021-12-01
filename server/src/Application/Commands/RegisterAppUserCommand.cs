@@ -40,8 +40,7 @@ namespace Application.Commands
             var user = await _accountService.RegisterAsync(command.Email, command.Username, command.Password,
                 command.MasterPassword);
             
-            var authToken =
-                await _accountService.LoginAsync(user.Email, command.Password, command.IpAddress, command.UserAgent);
+            var authToken = await _accountService.LoginAsync(user.Email, command.Password, command.IpAddress, command.UserAgent);
 
             return new AuthViewModel { AccessToken = authToken.AccessToken };
         }

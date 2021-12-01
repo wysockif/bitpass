@@ -7,8 +7,8 @@ namespace Infrastructure.Persistence
 {
     public interface IStorage
     {
-        DbSet<AppUser> AppUsers { get; }
-        DbSet<SecurityActivity> AppUserSessions { get; }
+        DbSet<User> AppUsers { get; }
+        DbSet<AccountActivity> AppUserSessions { get; }
         DbSet<CipherLogin> CipherLogins { get; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }

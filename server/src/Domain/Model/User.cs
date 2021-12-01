@@ -1,9 +1,10 @@
+using System;
 using System.Collections.Generic;
 using NodaTime;
 
 namespace Domain.Model
 {
-    public class AppUser : Entity, IAggregateRoot
+    public class User : Entity, IAggregateRoot
     {
         public long Id { get; private init; }
         public string Username { get; private init; }
@@ -11,35 +12,36 @@ namespace Domain.Model
         public bool IdEmailConfirmed { get; private set; }
         public string PasswordHash { get; private set; }
         public string MasterPasswordHash { get; private set; }
-        public Instant? PasswordValidTo { get; private set; }
         public string? PasswordResetTokenHash { get; private set; }
-        public Instant? PasswordResetTokenValidTo { get; private set; }
+        public DateTime? PasswordResetTokenValidTo { get; private set; }
         public int NumberOfFailedLogins { get; private set; }
-        public List<SecurityActivity> Sessions { get; private set; }
+        public List<AccountActivity> AccountActivities { get; private set; }
 
-        private AppUser(string username, string email, string passwordHash)
+        private User(string username, string email, string passwordHash, string masterPasswordHash)
         {
             Username = username;
             Email = email;
             PasswordHash = passwordHash;
+            MasterPasswordHash = masterPasswordHash;
         }
 
-        public static AppUser Register(string username, string email, string password)
+        public static User Register(string username, string email, string passwordHash, string masterPasswordHash)
         {
-            return new AppUser(username, email, password);
+            return new User(username, email, passwordHash, masterPasswordHash);
         }
-        
-        public void AddSession(string refreshToken)
-        {
-            var session = SecurityActivity.Create(refreshToken);
-            Sessions.Add(session);
-        }
-        
+
         public void ResetPassword(string passwordHash)
         {
             PasswordHash = passwordHash;
             PasswordResetTokenHash = null;
             PasswordResetTokenValidTo = null;
+        }
+
+        public void AddAccountActivity(ActivityType activityType, string? ipAddress, string? osName,
+            string? browserName)
+        {
+            var accountActivity = AccountActivity.Create(Id, activityType, ipAddress, osName, browserName);
+            AccountActivities.Add(accountActivity);
         }
     }
 }

@@ -15,32 +15,32 @@ namespace Infrastructure.Persistence.Repositories
             _storage = storage;
         }
 
-        public Task<AppUser> GetByIdAsync(long id, CancellationToken cancellationToken = default)
+        public Task<User> GetByIdAsync(long id, CancellationToken cancellationToken = default)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<AppUser> GetByEmailOrUsernameAsync(string email, string username, CancellationToken cancellationToken = default)
+        public Task<User> GetByEmailOrUsernameAsync(string email, string username, CancellationToken cancellationToken = default)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<AppUser> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
+        public Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<AppUser> GetByUsernameAsync(string username, CancellationToken cancellationToken = default)
+        public Task<User> GetByUsernameAsync(string username, CancellationToken cancellationToken = default)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task AddAsync(AppUser entity, CancellationToken cancellationToken = default)
+        public Task AddAsync(User entity, CancellationToken cancellationToken = default)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task DeleteAsync(AppUser entity, CancellationToken cancellationToken = default)
+        public Task DeleteAsync(User entity, CancellationToken cancellationToken = default)
         {
             throw new System.NotImplementedException();
         }

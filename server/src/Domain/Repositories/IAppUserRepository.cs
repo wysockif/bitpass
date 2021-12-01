@@ -5,11 +5,11 @@ using Domain.Repositories.Common.Domain;
 
 namespace Domain.Repositories
 {
-    public interface IAppUserRepository : IRepository<AppUser>
+    public interface IAppUserRepository : IRepository<User>
     {
-        Task<AppUser> GetByIdAsync(long id, CancellationToken cancellationToken = default);
-        Task<AppUser> GetByEmailOrUsernameAsync(string email, string username, CancellationToken cancellationToken = default);
-        Task<AppUser> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
-        Task<AppUser> GetByUsernameAsync(string username, CancellationToken cancellationToken = default);
+        Task<User> GetByIdAsync(long id, CancellationToken cancellationToken = default);
+        Task<User> GetByEmailOrUsernameAsync(string email, string username, CancellationToken cancellationToken = default);
+        Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
+        Task<User> GetByUsernameAsync(string username, CancellationToken cancellationToken = default);
     }
 }

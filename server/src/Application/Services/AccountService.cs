@@ -30,9 +30,9 @@ namespace Application.Services
         {
             await CheckIfUserAlreadyExists(email, username);
 
-            var passwordHash = BCrypt.Net.BCrypt.HashPassword(password + _settings.PasswordPepper, 15);
+            var passwordHash = BCrypt.Net.BCrypt.HashPassword(password + _settings.PasswordPepper, 14);
             var masterPasswordHash =
-                BCrypt.Net.BCrypt.HashPassword(masterPassword + _settings.MasterPasswordPepper, 14);
+                BCrypt.Net.BCrypt.HashPassword(masterPassword + _settings.MasterPasswordPepper, 12);
 
             var registeredUser = User.Register(username.ToLower(), email.ToLower(), passwordHash, masterPasswordHash);
             var (osName, browserName) = GetDeviceInfo(userAgent);
@@ -52,12 +52,22 @@ namespace Application.Services
                 identifier.ToLower());
             if (user == default)
             {
+                await Task.Delay(ApplicationConstants.InvalidLoginDelayInMilliseconds);
                 throw new AuthenticationException("Invalid credentials");
             }
 
             await CheckInvalidLoginAttemptsNumber(user.Id);
             var (osName, browserName) = GetDeviceInfo(userAgent);
+            await VerifyPassword(password, ipAddress, user, osName, browserName);
+            user.AddAccountActivity(ActivityType.SuccessfulLogin, ipAddress, osName, browserName);
 
+            await _unitOfWork.SaveChangesAsync();
+            return new Auth(_securityTokenService.GenerateAccessTokenForUser(user.Id, user.Username));
+        }
+
+        private async Task VerifyPassword(string password, string? ipAddress, User user, string? osName,
+            string? browserName)
+        {
             var isPasswordVerified = BCrypt.Net.BCrypt.Verify(password + _settings.PasswordPepper, user.PasswordHash);
             if (!isPasswordVerified)
             {
@@ -65,10 +75,6 @@ namespace Application.Services
                 await _unitOfWork.SaveChangesAsync();
                 throw new AuthenticationException("Invalid credentials");
             }
-
-            user.AddAccountActivity(ActivityType.SuccessfulLogin, ipAddress, osName, browserName);
-            await _unitOfWork.SaveChangesAsync();
-            return new Auth(_securityTokenService.GenerateAccessTokenForUser(user.Id, user.Username));
         }
 
         private async Task CheckIfUserAlreadyExists(string email, string username)

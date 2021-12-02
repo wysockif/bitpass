@@ -8,5 +8,6 @@ namespace Application
         public const int MaxUsernameLength = 24;
         public const int MinEmailLength = 5;
         public const int MaxEmailLength = 64;
+        public const int InvalidLoginDelayInMilliseconds = 2000;
     }
 }

@@ -1,4 +1,6 @@
 using Application;
+using Application.Settings;
+using FluentValidation.AspNetCore;
 using Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,7 +31,7 @@ namespace Api
             var applicationSettings = new ApplicationSettings();
             Configuration.Bind(nameof(ApplicationSettings), applicationSettings);
             services.AddApplication(applicationSettings);
-            
+
             services.AddControllers();
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api", Version = "v1" }); });
         }
@@ -45,9 +47,8 @@ namespace Api
             }
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }

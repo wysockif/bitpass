@@ -2,6 +2,8 @@ using System;
 using System.Security.Authentication;
 using System.Threading.Tasks;
 using Application.InfrastructureInterfaces;
+using Application.Settings;
+using Application.Utils.Security;
 using Domain.Model;
 using Domain.Services;
 using UAParser;
@@ -12,27 +14,22 @@ namespace Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ApplicationSettings _settings;
+        private readonly ISecurityTokenService _securityTokenService;
 
-        public AccountService(IUnitOfWork unitOfWork, ApplicationSettings settings)
+        public AccountService(IUnitOfWork unitOfWork, ApplicationSettings settings, ISecurityTokenService securityTokenService)
         {
             _unitOfWork = unitOfWork;
             _settings = settings;
+            _securityTokenService = securityTokenService;
         }
 
         public async Task<User> RegisterAsync(string email, string username, string password, string masterPassword)
         {
-            var user = await _unitOfWork.UserRepository.GetByEmailOrUsernameAsync(email, username);
+            await CheckIfUserAlreadyExists(email, username);
 
-            if (user != default)
-            {
-                var propertyName = user.Email == email.ToLower()
-                    ? nameof(email)
-                    : nameof(username);
-                throw new Exception($"User with given {propertyName} already exists");
-            }
-
-            var passwordHash = BCrypt.Net.BCrypt.HashPassword( password + _settings.PasswordPepper, 13);
-            var masterPasswordHash = BCrypt.Net.BCrypt.HashPassword( password + _settings.MasterPasswordPepper, 13);
+            var passwordHash = BCrypt.Net.BCrypt.HashPassword( password + _settings.PasswordPepper, 15);
+            var masterPasswordHash = BCrypt.Net.BCrypt.HashPassword( password + _settings.MasterPasswordPepper, 14);
+            
             var registeredUser = User.Register(username.ToLower(), email.ToLower(), passwordHash, masterPasswordHash);
             await _unitOfWork.UserRepository.AddAsync(registeredUser);
             await _unitOfWork.SaveChangesAsync();
@@ -62,8 +59,20 @@ namespace Application.Services
 
             user.AddAccountActivity(ActivityType.SuccessfulLogin, ipAddress, osName, browserName);
             await _unitOfWork.SaveChangesAsync();
+            return new AuthToken(_securityTokenService.GenerateAccessTokenForUser(user.Id, user.Username));
+        }
 
-            return new AuthToken("asdasfa");
+        private async Task CheckIfUserAlreadyExists(string email, string username)
+        {
+            var user = await _unitOfWork.UserRepository.GetByEmailOrUsernameAsync(email, username);
+
+            if (user != default)
+            {
+                var propertyName = user.Email == email.ToLower()
+                    ? nameof(email)
+                    : nameof(username);
+                throw new Exception($"User with given {propertyName} already exists");
+            }
         }
 
         private async Task CheckInvalidLoginAttemptsNumber(long userId)

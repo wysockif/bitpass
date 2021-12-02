@@ -18,7 +18,7 @@ namespace Application.Commands
                 .MaximumLength(ApplicationConstants.MaxEmailLength);
             RuleFor(command => command.Password)
                 .NotNull()
-                .MinimumLength(ApplicationConstants.MaxPasswordLength)
+                .MinimumLength(ApplicationConstants.MinPasswordLength)
                 .MaximumLength(ApplicationConstants.MaxPasswordLength);
             RuleFor(command => command.MasterPassword)
                 .NotNull()
@@ -62,12 +62,10 @@ namespace Application.Commands
 
         public async Task<AuthViewModel> Handle(RegisterUserCommand command, CancellationToken cancellationToken)
         {
-            var user = await _accountService.RegisterAsync(command.Email, command.Username, command.Password,
-                command.MasterPassword);
+            var auth = await _accountService.RegisterAsync(command.Email, command.Username, command.Password,
+                command.MasterPassword, command.IpAddress, command.UserAgent);
             
-            var authToken = await _accountService.LoginAsync(user.Email, command.Password, command.IpAddress, command.UserAgent);
-
-            return new AuthViewModel { AccessToken = authToken.AccessToken };
+            return new AuthViewModel(auth.AccessToken);
         }
     }
 }

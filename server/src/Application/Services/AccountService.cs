@@ -16,27 +16,36 @@ namespace Application.Services
         private readonly ApplicationSettings _settings;
         private readonly ISecurityTokenService _securityTokenService;
 
-        public AccountService(IUnitOfWork unitOfWork, ApplicationSettings settings, ISecurityTokenService securityTokenService)
+        public AccountService(IUnitOfWork unitOfWork, ApplicationSettings settings,
+            ISecurityTokenService securityTokenService)
         {
             _unitOfWork = unitOfWork;
             _settings = settings;
             _securityTokenService = securityTokenService;
         }
 
-        public async Task<User> RegisterAsync(string email, string username, string password, string masterPassword)
+        public async Task<Auth> RegisterAsync(string email, string username, string password, string masterPassword,
+            string? ipAddress,
+            string? userAgent)
         {
             await CheckIfUserAlreadyExists(email, username);
 
-            var passwordHash = BCrypt.Net.BCrypt.HashPassword( password + _settings.PasswordPepper, 15);
-            var masterPasswordHash = BCrypt.Net.BCrypt.HashPassword( password + _settings.MasterPasswordPepper, 14);
-            
+            var passwordHash = BCrypt.Net.BCrypt.HashPassword(password + _settings.PasswordPepper, 15);
+            var masterPasswordHash =
+                BCrypt.Net.BCrypt.HashPassword(masterPassword + _settings.MasterPasswordPepper, 14);
+
             var registeredUser = User.Register(username.ToLower(), email.ToLower(), passwordHash, masterPasswordHash);
+            var (osName, browserName) = GetDeviceInfo(userAgent);
             await _unitOfWork.UserRepository.AddAsync(registeredUser);
             await _unitOfWork.SaveChangesAsync();
-            return registeredUser;
+
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(registeredUser.Id);
+            user!.AddAccountActivity(ActivityType.SuccessfulRegistration, ipAddress, osName, browserName);
+            await _unitOfWork.SaveChangesAsync();
+            return new Auth(_securityTokenService.GenerateAccessTokenForUser(user.Id, user.Username));
         }
 
-        public async Task<AuthToken> LoginAsync(string identifier, string password, string? ipAddress,
+        public async Task<Auth> LoginAsync(string identifier, string password, string? ipAddress,
             string? userAgent)
         {
             var user = await _unitOfWork.UserRepository.GetByEmailOrUsernameAsync(identifier.ToLower(),
@@ -59,7 +68,7 @@ namespace Application.Services
 
             user.AddAccountActivity(ActivityType.SuccessfulLogin, ipAddress, osName, browserName);
             await _unitOfWork.SaveChangesAsync();
-            return new AuthToken(_securityTokenService.GenerateAccessTokenForUser(user.Id, user.Username));
+            return new Auth(_securityTokenService.GenerateAccessTokenForUser(user.Id, user.Username));
         }
 
         private async Task CheckIfUserAlreadyExists(string email, string username)

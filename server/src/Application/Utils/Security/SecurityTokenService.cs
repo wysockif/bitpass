@@ -10,12 +10,15 @@ namespace Application.Utils.Security
 {
     public interface ISecurityTokenService
     {
-        string GenerateAccessTokenForUser(long userId, string username);
-        string GenerateRefreshTokenForUser(long userId, string username);
+        AccessToken GenerateAccessTokenForUser(long userId, string username);
+        RefreshToken GenerateRefreshTokenForUser(long userId, string username);
         long? GetUserIdFromRefreshToken(string refreshToken);
-        Guid? GetTokenIdFromRefreshToken(string refreshToken);
-        long? GetUnixExpirationDateFromRefreshToken(string refreshToken);
+        Guid? GetTokenGuidFromRefreshToken(string refreshToken);
+        long? GetExpirationTimestampFromRefreshToken(string refreshToken);
     }
+
+    public record AccessToken(string Token, long ExpirationTimestamp);
+    public record RefreshToken(string Token, Guid TokenGuid, long ExpirationTimestamp);
 
     public class SecurityTokenService : ISecurityTokenService
     {
@@ -26,7 +29,7 @@ namespace Application.Utils.Security
             _applicationSettings = applicationSettings;
         }
 
-        public string GenerateAccessTokenForUser(long userId, string username)
+        public AccessToken GenerateAccessTokenForUser(long userId, string username)
         {
             var claims = new ClaimsIdentity(new[]
             {
@@ -43,15 +46,16 @@ namespace Application.Utils.Security
                 { Subject = claims, Expires = expiresAt, SigningCredentials = signingCredentials };
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            return new AccessToken(tokenHandler.WriteToken(token), ((DateTimeOffset)expiresAt).ToUnixTimeSeconds());
         }
 
-        public string GenerateRefreshTokenForUser(long userId, string username)
+        public RefreshToken GenerateRefreshTokenForUser(long userId, string username)
         {
+            var jti = Guid.NewGuid();
             var claims = new ClaimsIdentity(new[]
             {
                 new Claim("type", "refresh"),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Jti, jti.ToString()),
                 new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
                 new Claim(ClaimTypes.Name, username)
             });
@@ -64,7 +68,7 @@ namespace Application.Utils.Security
                 { Subject = claims, Expires = expiresAt, SigningCredentials = signingCredentials };
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            return new RefreshToken(tokenHandler.WriteToken(token), jti, ((DateTimeOffset)expiresAt).ToUnixTimeSeconds());
         }
 
         public long? GetUserIdFromRefreshToken(string refreshToken)
@@ -83,7 +87,7 @@ namespace Application.Utils.Security
             return userId;
         }
 
-        public Guid? GetTokenIdFromRefreshToken(string refreshToken)
+        public Guid? GetTokenGuidFromRefreshToken(string refreshToken)
         {
             if (ValidateRefreshToken(refreshToken, out var claimsPrincipal))
             {
@@ -99,7 +103,7 @@ namespace Application.Utils.Security
             return tokenId;
         }
 
-        public long? GetUnixExpirationDateFromRefreshToken(string refreshToken)
+        public long? GetExpirationTimestampFromRefreshToken(string refreshToken)
         {
             if (ValidateRefreshToken(refreshToken, out var claimsPrincipal))
             {

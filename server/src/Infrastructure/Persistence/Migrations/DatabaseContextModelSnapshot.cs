@@ -89,16 +89,16 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("BrowserName")
                         .HasColumnType("text");
 
+                    b.Property<long>("ExpirationUnixTimestamp")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("IpAddress")
                         .HasColumnType("text");
 
                     b.Property<string>("OsName")
                         .HasColumnType("text");
 
-                    b.Property<long>("RefreshTokenExpirationUnixTimestamp")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid>("RefreshTokenId")
+                    b.Property<Guid>("RefreshTokenGuid")
                         .HasColumnType("uuid");
 
                     b.Property<long>("UserId")

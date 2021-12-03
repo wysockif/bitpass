@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20211203135741_SessionAdd")]
-    partial class SessionAdd
+    [Migration("20211203155059_AddSession")]
+    partial class AddSession
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -91,16 +91,16 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("BrowserName")
                         .HasColumnType("text");
 
+                    b.Property<long>("ExpirationUnixTimestamp")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("IpAddress")
                         .HasColumnType("text");
 
                     b.Property<string>("OsName")
                         .HasColumnType("text");
 
-                    b.Property<long>("RefreshTokenExpirationUnixTimestamp")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid>("RefreshTokenId")
+                    b.Property<Guid>("RefreshTokenGuid")
                         .HasColumnType("uuid");
 
                     b.Property<long>("UserId")

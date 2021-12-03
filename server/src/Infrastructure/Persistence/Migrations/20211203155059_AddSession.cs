@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Infrastructure.Persistence.Migrations
 {
-    public partial class SessionAdd : Migration
+    public partial class AddSession : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,8 +15,8 @@ namespace Infrastructure.Persistence.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<long>(type: "bigint", nullable: false),
-                    RefreshTokenId = table.Column<Guid>(type: "uuid", nullable: false),
-                    RefreshTokenExpirationUnixTimestamp = table.Column<long>(type: "bigint", nullable: false),
+                    RefreshTokenGuid = table.Column<Guid>(type: "uuid", nullable: false),
+                    ExpirationUnixTimestamp = table.Column<long>(type: "bigint", nullable: false),
                     OsName = table.Column<string>(type: "text", nullable: true),
                     BrowserName = table.Column<string>(type: "text", nullable: true),
                     IpAddress = table.Column<string>(type: "text", nullable: true)

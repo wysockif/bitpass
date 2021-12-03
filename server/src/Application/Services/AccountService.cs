@@ -45,7 +45,9 @@ namespace Application.Services
 
             var accessToken = _securityTokenService.GenerateAccessTokenForUser(registeredUser.Id, registeredUser.Username);
             var refreshToken = _securityTokenService.GenerateRefreshTokenForUser(registeredUser.Id, registeredUser.Username);
-            return new Auth(accessToken, refreshToken);
+            registeredUser.AddSession(refreshToken.TokenGuid, refreshToken.ExpirationTimestamp, ipAddress, osName, browserName);
+
+            return new Auth(accessToken.Token, refreshToken.Token);
         }
 
         public async Task<Auth> LoginAsync(string identifier, string password, string? ipAddress,
@@ -67,13 +69,11 @@ namespace Application.Services
             var accessToken = _securityTokenService.GenerateAccessTokenForUser(user.Id, user.Username);
             var refreshToken = _securityTokenService.GenerateRefreshTokenForUser(user.Id, user.Username);
 
-            var refreshTokenGuid =_securityTokenService.GetTokenIdFromRefreshToken(refreshToken);
-            var refreshTokenUnixExpirationDate = _securityTokenService.GetUnixExpirationDateFromRefreshToken(refreshToken);
-            user.AddSession(refreshTokenGuid!.Value, refreshTokenUnixExpirationDate!.Value, ipAddress, osName, browserName);
+            user.AddSession(refreshToken.TokenGuid, refreshToken.ExpirationTimestamp, ipAddress, osName, browserName);
             await _unitOfWork.SaveChangesAsync();
             
             
-            return new Auth(accessToken, refreshToken);
+            return new Auth(accessToken.Token, refreshToken.Token);
         }
 
         private async Task VerifyPassword(string password, string? ipAddress, User user, string? osName,

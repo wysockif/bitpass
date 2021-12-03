@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Authentication;
+
 #pragma warning disable 8618
 
 namespace Domain.Model
@@ -53,6 +56,17 @@ namespace Domain.Model
             var session = Session.Create(Id, refreshTokenGuid, refreshTokenUnixExpirationDate, ipAddress, osName,
                 browserName);
             Sessions.Add(session);
+        }
+
+        public void UpdateSession(Guid oldRefreshTokenGuid, Guid newRefreshTokenTokenGuid, long newRefreshTokenExpirationTimestamp)
+        {
+            var session = Sessions.FirstOrDefault(s => s.RefreshTokenGuid == oldRefreshTokenGuid);
+            if (session == default || session.ExpirationUnixTimestamp < DateTimeOffset.Now.ToUnixTimeSeconds())
+            {
+                throw new AuthenticationException("This session is not active");
+            }
+
+            session.Update(newRefreshTokenTokenGuid, newRefreshTokenExpirationTimestamp);
         }
     }
 }

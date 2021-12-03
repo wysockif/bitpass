@@ -1,9 +1,12 @@
 using System;
+using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Exceptions;
 using Application.InfrastructureInterfaces;
 using Application.Utils.Security;
 using Application.ViewModels;
+using Domain.Model;
 using FluentValidation;
 using MediatR;
 
@@ -37,11 +40,37 @@ namespace Application.Commands
             _securityTokenService = securityTokenService;
             _unitOfWork = unitOfWork;
         }
-        
-        public Task<AuthViewModel> Handle(RefreshAccessTokenCommand command, CancellationToken cancellationToken)
+
+        public async Task<AuthViewModel> Handle(RefreshAccessTokenCommand command, CancellationToken cancellationToken)
         {
-            // var userId = _securityTokenService.GetUserIdFromRefreshToken(command.RefreshToken);
-            throw new NotImplementedException();
+            var user = await GetUserFromRefreshToken(command, cancellationToken);
+            var oldRefreshTokenGuid = _securityTokenService.GetTokenGuidFromRefreshToken(command.RefreshToken);
+
+            var accessToken = _securityTokenService.GenerateAccessTokenForUser(user.Id, user.Username);
+            var refreshToken = _securityTokenService.GenerateRefreshTokenForUser(user.Id, user.Username);
+
+            user.UpdateSession(oldRefreshTokenGuid!.Value, refreshToken.TokenGuid, refreshToken.ExpirationTimestamp);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            return new AuthViewModel(accessToken.Token, refreshToken.Token);
+        }
+
+        private async Task<User> GetUserFromRefreshToken(RefreshAccessTokenCommand command,
+            CancellationToken cancellationToken)
+        {
+            var userId = _securityTokenService.GetUserIdFromRefreshToken(command.RefreshToken);
+            if (userId == default)
+            {
+                throw new AuthenticationException("Provided refresh token is not valid");
+            }
+
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(userId.Value, cancellationToken);
+            if (user == default)
+            {
+                throw new AuthenticationException("Provided refresh token is not valid");
+            }
+
+            return user;
         }
     }
 }

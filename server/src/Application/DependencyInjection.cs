@@ -10,6 +10,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using AccessToken = Application.Settings.AccessToken;
 
 namespace Application
 {

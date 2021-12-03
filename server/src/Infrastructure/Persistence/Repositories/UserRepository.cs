@@ -14,6 +14,7 @@ namespace Infrastructure.Persistence.Repositories
 
         private IQueryable<User> Users => _storage.Users
             .Include(user => user.AccountActivities)
+            .Include(user => user.Sessions)
             .AsQueryable();
 
         public UserRepository(IStorage storage)

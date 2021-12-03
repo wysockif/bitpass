@@ -10,5 +10,5 @@ namespace Domain.Services
         Task<Auth> LoginAsync(string identifier, string password, string? ipAddress, string? userAgent);
     }
 
-    public record Auth(string AccessToken);
+    public record Auth(string AccessToken, string RefreshToken);
 }

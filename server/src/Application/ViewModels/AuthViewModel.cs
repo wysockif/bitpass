@@ -5,10 +5,12 @@ namespace Application.ViewModels
     public class AuthViewModel
     {
         public string AccessToken { get; set; }
+        public string RefreshToken { get; set; }
 
-        public AuthViewModel(string accessToken)
+        public AuthViewModel(string accessToken, string refreshToken)
         {
             AccessToken = accessToken;
+            RefreshToken = refreshToken;
         }
     }
 }

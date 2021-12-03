@@ -1,6 +1,8 @@
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Authentication;
 using System.Threading.Tasks;
+using Application.Exceptions;
 using Application.InfrastructureInterfaces;
 using Application.Settings;
 using Application.Utils.Security;
@@ -36,13 +38,14 @@ namespace Application.Services
 
             var registeredUser = User.Register(username.ToLower(), email.ToLower(), passwordHash, masterPasswordHash);
             var (osName, browserName) = GetDeviceInfo(userAgent);
+            registeredUser.AddAccountActivity(ActivityType.SuccessfulRegistration, ipAddress, osName, browserName);
+            
             await _unitOfWork.UserRepository.AddAsync(registeredUser);
             await _unitOfWork.SaveChangesAsync();
 
-            var user = await _unitOfWork.UserRepository.GetByIdAsync(registeredUser.Id);
-            user!.AddAccountActivity(ActivityType.SuccessfulRegistration, ipAddress, osName, browserName);
-            await _unitOfWork.SaveChangesAsync();
-            return new Auth(_securityTokenService.GenerateAccessTokenForUser(user.Id, user.Username));
+            var accessToken = _securityTokenService.GenerateAccessTokenForUser(registeredUser.Id, registeredUser.Username);
+            var refreshToken = _securityTokenService.GenerateRefreshTokenForUser(registeredUser.Id, registeredUser.Username);
+            return new Auth(accessToken, refreshToken);
         }
 
         public async Task<Auth> LoginAsync(string identifier, string password, string? ipAddress,
@@ -53,7 +56,7 @@ namespace Application.Services
             if (user == default)
             {
                 await Task.Delay(ApplicationConstants.InvalidLoginDelayInMilliseconds);
-                throw new AuthenticationException("Invalid credentials");
+                throw new BadRequestException("Invalid credentials");
             }
 
             await CheckInvalidLoginAttemptsNumber(user.Id);
@@ -61,8 +64,16 @@ namespace Application.Services
             await VerifyPassword(password, ipAddress, user, osName, browserName);
             user.AddAccountActivity(ActivityType.SuccessfulLogin, ipAddress, osName, browserName);
 
+            var accessToken = _securityTokenService.GenerateAccessTokenForUser(user.Id, user.Username);
+            var refreshToken = _securityTokenService.GenerateRefreshTokenForUser(user.Id, user.Username);
+
+            var refreshTokenGuid =_securityTokenService.GetTokenIdFromRefreshToken(refreshToken);
+            var refreshTokenUnixExpirationDate = _securityTokenService.GetUnixExpirationDateFromRefreshToken(refreshToken);
+            user.AddSession(refreshTokenGuid!.Value, refreshTokenUnixExpirationDate!.Value, ipAddress, osName, browserName);
             await _unitOfWork.SaveChangesAsync();
-            return new Auth(_securityTokenService.GenerateAccessTokenForUser(user.Id, user.Username));
+            
+            
+            return new Auth(accessToken, refreshToken);
         }
 
         private async Task VerifyPassword(string password, string? ipAddress, User user, string? osName,
@@ -73,7 +84,7 @@ namespace Application.Services
             {
                 user.AddAccountActivity(ActivityType.FailedLogin, ipAddress, osName, browserName);
                 await _unitOfWork.SaveChangesAsync();
-                throw new AuthenticationException("Invalid credentials");
+                throw new BadRequestException("Invalid credentials");
             }
         }
 
@@ -86,7 +97,7 @@ namespace Application.Services
                 var propertyName = user.Email == email.ToLower()
                     ? nameof(email)
                     : nameof(username);
-                throw new Exception($"User with given {propertyName} already exists");
+                throw new BadRequestException($"User with given {propertyName} already exists");
             }
         }
 
@@ -94,7 +105,7 @@ namespace Application.Services
         {
             if (await _unitOfWork.UserRepository.GetFailedLoginActivitiesCountInLastHourByUserId(userId) > 3)
             {
-                throw new AuthenticationException("Too many invalid login attempts. Try again later");
+                throw new BadRequestException("Too many invalid login attempts. Try again later");
             }
         }
 

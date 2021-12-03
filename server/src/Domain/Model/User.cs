@@ -15,6 +15,8 @@ namespace Domain.Model
         public string? PasswordResetTokenHash { get; private set; }
         public DateTime? PasswordResetTokenValidTo { get; private set; }
         public List<AccountActivity> AccountActivities { get; private set; }
+        public List<Session> Sessions { get; private set; }
+        
         private User(string username, string email, string passwordHash, string masterPasswordHash)
         {
             Username = username;
@@ -22,6 +24,8 @@ namespace Domain.Model
             PasswordHash = passwordHash;
             MasterPasswordHash = masterPasswordHash;
             IdEmailConfirmed = false;
+            AccountActivities = new List<AccountActivity>();
+            Sessions = new List<Session>();
         }
 
         public static User Register(string username, string email, string passwordHash, string masterPasswordHash)
@@ -41,6 +45,14 @@ namespace Domain.Model
         {
             var accountActivity = AccountActivity.Create(Id, activityType, ipAddress, osName, browserName);
             AccountActivities.Add(accountActivity);
+        }
+
+        public void AddSession(Guid refreshTokenGuid, long refreshTokenUnixExpirationDate, string? ipAddress, string? osName,
+        string? browserName)
+        {
+            var session = Session.Create(Id, refreshTokenGuid, refreshTokenUnixExpirationDate, ipAddress, osName,
+                browserName);
+            Sessions.Add(session);
         }
     }
 }

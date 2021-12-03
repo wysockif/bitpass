@@ -1,3 +1,4 @@
+using Api.Middlewares;
 using Application;
 using Application.Settings;
 using FluentValidation.AspNetCore;
@@ -32,6 +33,8 @@ namespace Api
             Configuration.Bind(nameof(ApplicationSettings), applicationSettings);
             services.AddApplication(applicationSettings);
 
+            services.AddScoped<ErrorHandlingMiddleware>();
+
             services.AddControllers();
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api", Version = "v1" }); });
         }
@@ -47,6 +50,7 @@ namespace Api
             }
 
             app.UseRouting();
+            app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });

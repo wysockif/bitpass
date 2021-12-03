@@ -65,7 +65,7 @@ namespace Application.Commands
             var auth = await _accountService.RegisterAsync(command.Email, command.Username, command.Password,
                 command.MasterPassword, command.IpAddress, command.UserAgent);
             
-            return new AuthViewModel(auth.AccessToken);
+            return new AuthViewModel(auth.AccessToken, auth.RefreshToken);
         }
     }
 }

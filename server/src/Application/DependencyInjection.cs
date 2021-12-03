@@ -22,7 +22,6 @@ namespace Application
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddScoped<IAccountService, AccountService>();
             services.AddJwtAuthentication(applicationSettings.AccessToken);
-
             services.AddFluentValidation();
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             
@@ -46,7 +45,8 @@ namespace Application
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(accessTokenSettings.Key)),
                     ValidateIssuerSigningKey = true,
                     ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidateAudience = false,
+                    ValidateLifetime = true
                 };
             });
         }

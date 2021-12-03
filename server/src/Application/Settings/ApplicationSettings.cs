@@ -4,7 +4,8 @@ namespace Application.Settings
     {
         public string PasswordPepper { get; set; }
         public string MasterPasswordPepper { get; set; }
-
         public AccessToken AccessToken { get; set; }
+
+        public RefreshToken RefreshToken { get; set; }
     }
 }

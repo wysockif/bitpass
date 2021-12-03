@@ -33,7 +33,7 @@ namespace Application.Commands
         public async Task<AuthViewModel> Handle(LoginUserCommand command, CancellationToken cancellationToken)
         {
             var auth = await _accountService.LoginAsync(command.Identifier, command.Password, command.IpAddress, command.UserAgent);
-            return new AuthViewModel(auth.AccessToken);
+            return new AuthViewModel(auth.AccessToken, auth.RefreshToken);
         }
     }
 }

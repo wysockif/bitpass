@@ -26,5 +26,12 @@ namespace Api.Controllers
             command.IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
             return await Mediator.Send(command);
         }
+        
+        [HttpPost("refresh-access-token")]
+        [AllowAnonymous]
+        public async Task<AuthViewModel> RefreshAccessToken([FromBody] RefreshAccessTokenCommand command)
+        {
+            return await Mediator.Send(command);
+        }
     }
 }

@@ -3,7 +3,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using Application.Settings;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Application.Utils.Security
@@ -18,6 +17,7 @@ namespace Application.Utils.Security
     }
 
     public record AccessToken(string Token, long ExpirationTimestamp);
+
     public record RefreshToken(string Token, Guid TokenGuid, long ExpirationTimestamp);
 
     public class SecurityTokenService : ISecurityTokenService
@@ -38,9 +38,9 @@ namespace Application.Utils.Security
                 new Claim(ClaimTypes.Name, username)
             });
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_applicationSettings.AccessToken.Key));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_applicationSettings.AccessTokenSettings.Key));
             var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expiresAt = DateTime.Now.AddHours(_applicationSettings.AccessToken.ExpiryTimeInHours);
+            var expiresAt = DateTime.Now.AddHours(_applicationSettings.AccessTokenSettings.ExpiryTimeInHours);
 
             var tokenDescriptor = new SecurityTokenDescriptor
                 { Subject = claims, Expires = expiresAt, SigningCredentials = signingCredentials };
@@ -60,15 +60,16 @@ namespace Application.Utils.Security
                 new Claim(ClaimTypes.Name, username)
             });
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_applicationSettings.RefreshToken.Key));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_applicationSettings.RefreshTokenSettings.Key));
             var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expiresAt = DateTime.Now.AddHours(_applicationSettings.RefreshToken.ExpiryTimeInHours);
+            var expiresAt = DateTime.Now.AddHours(_applicationSettings.RefreshTokenSettings.ExpiryTimeInHours);
 
             var tokenDescriptor = new SecurityTokenDescriptor
                 { Subject = claims, Expires = expiresAt, SigningCredentials = signingCredentials };
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return new RefreshToken(tokenHandler.WriteToken(token), jti, ((DateTimeOffset)expiresAt).ToUnixTimeSeconds());
+            return new RefreshToken(tokenHandler.WriteToken(token), jti,
+                ((DateTimeOffset)expiresAt).ToUnixTimeSeconds());
         }
 
         public long? GetUserIdFromRefreshToken(string refreshToken)
@@ -149,7 +150,7 @@ namespace Application.Utils.Security
                 return tokenHandler.ValidateToken(token, new TokenValidationParameters()
                 {
                     IssuerSigningKey =
-                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_applicationSettings.RefreshToken.Key)),
+                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_applicationSettings.RefreshTokenSettings.Key)),
                     ValidateIssuerSigningKey = true,
                     ValidateIssuer = false,
                     ValidateAudience = false,

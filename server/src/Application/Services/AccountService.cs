@@ -1,10 +1,6 @@
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Authentication;
 using System.Threading.Tasks;
 using Application.Exceptions;
 using Application.InfrastructureInterfaces;
-using Application.Settings;
 using Application.Utils.Security;
 using Domain.Model;
 using Domain.Services;
@@ -14,9 +10,9 @@ namespace Application.Services
 {
     public class AccountService : IAccountService
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly ApplicationSettings _settings;
         private readonly ISecurityTokenService _securityTokenService;
+        private readonly ApplicationSettings _settings;
+        private readonly IUnitOfWork _unitOfWork;
 
         public AccountService(IUnitOfWork unitOfWork, ApplicationSettings settings,
             ISecurityTokenService securityTokenService)
@@ -39,13 +35,16 @@ namespace Application.Services
             var registeredUser = User.Register(username.ToLower(), email.ToLower(), passwordHash, masterPasswordHash);
             var (osName, browserName) = GetDeviceInfo(userAgent);
             registeredUser.AddAccountActivity(ActivityType.SuccessfulRegistration, ipAddress, osName, browserName);
-            
+
             await _unitOfWork.UserRepository.AddAsync(registeredUser);
             await _unitOfWork.SaveChangesAsync();
 
-            var accessToken = _securityTokenService.GenerateAccessTokenForUser(registeredUser.Id, registeredUser.Username);
-            var refreshToken = _securityTokenService.GenerateRefreshTokenForUser(registeredUser.Id, registeredUser.Username);
-            registeredUser.AddSession(refreshToken.TokenGuid, refreshToken.ExpirationTimestamp, ipAddress, osName, browserName);
+            var accessToken =
+                _securityTokenService.GenerateAccessTokenForUser(registeredUser.Id, registeredUser.Username);
+            var refreshToken =
+                _securityTokenService.GenerateRefreshTokenForUser(registeredUser.Id, registeredUser.Username);
+            registeredUser.AddSession(refreshToken.TokenGuid, refreshToken.ExpirationTimestamp, ipAddress, osName,
+                browserName);
 
             return new Auth(accessToken.Token, refreshToken.Token);
         }
@@ -71,8 +70,8 @@ namespace Application.Services
 
             user.AddSession(refreshToken.TokenGuid, refreshToken.ExpirationTimestamp, ipAddress, osName, browserName);
             await _unitOfWork.SaveChangesAsync();
-            
-            
+
+
             return new Auth(accessToken.Token, refreshToken.Token);
         }
 

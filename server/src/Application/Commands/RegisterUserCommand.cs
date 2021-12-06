@@ -1,5 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Utils.Email;
+using Application.Utils.Email.Templates;
 using Application.ViewModels;
 using Domain.Services;
 using FluentValidation;
@@ -33,14 +35,8 @@ namespace Application.Commands
 
     public class RegisterUserCommand : IRequest<AuthViewModel>
     {
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
-        public string MasterPassword { get; set; }
-        public string? IpAddress { get; set; }
-        public string? UserAgent { get; set; }
-
-        public RegisterUserCommand(string username, string email, string password, string masterPassword, string? ipAddress, string? userAgent)
+        public RegisterUserCommand(string username, string email, string password, string masterPassword,
+            string? ipAddress, string? userAgent)
         {
             Username = username;
             Email = email;
@@ -49,22 +45,33 @@ namespace Application.Commands
             IpAddress = ipAddress;
             UserAgent = userAgent;
         }
+
+        public string Username { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
+        public string MasterPassword { get; set; }
+        public string? IpAddress { get; set; }
+        public string? UserAgent { get; set; }
     }
 
     public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, AuthViewModel>
     {
         private readonly IAccountService _accountService;
-        
-        public RegisterUserCommandHandler(IAccountService accountService)
+        private readonly IEmailService _emailService;
+
+        public RegisterUserCommandHandler(IAccountService accountService, IEmailService emailService)
         {
             _accountService = accountService;
+            _emailService = emailService;
         }
 
         public async Task<AuthViewModel> Handle(RegisterUserCommand command, CancellationToken cancellationToken)
         {
             var auth = await _accountService.RegisterAsync(command.Email, command.Username, command.Password,
                 command.MasterPassword, command.IpAddress, command.UserAgent);
-            
+
+            await _emailService.SendEmailAsync(command.Email, new VerifyEmailAddressEmailTemplateData());
+
             return new AuthViewModel(auth.AccessToken, auth.RefreshToken);
         }
     }

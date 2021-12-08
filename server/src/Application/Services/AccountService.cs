@@ -23,8 +23,7 @@ namespace Application.Services
         }
 
         public async Task<Auth> RegisterAsync(string email, string username, string password, string masterPassword,
-            string? ipAddress,
-            string? userAgent)
+            string? ipAddress, string? userAgent)
         {
             await CheckIfUserAlreadyExists(email, username);
 

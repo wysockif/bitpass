@@ -1,8 +1,6 @@
-using System;
 using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Exceptions;
 using Application.InfrastructureInterfaces;
 using Application.Utils.Security;
 using Application.ViewModels;
@@ -22,12 +20,12 @@ namespace Application.Commands
 
     public class RefreshAccessTokenCommand : IRequest<AuthViewModel>
     {
-        public string RefreshToken { get; set; }
-
         public RefreshAccessTokenCommand(string refreshToken)
         {
             RefreshToken = refreshToken;
         }
+
+        public string RefreshToken { get; set; }
     }
 
     public class RefreshAccessTokenCommandHandler : IRequestHandler<RefreshAccessTokenCommand, AuthViewModel>
@@ -64,7 +62,7 @@ namespace Application.Commands
                 throw new AuthenticationException("Provided refresh token is not valid");
             }
 
-            var user = await _unitOfWork.UserRepository.GetByIdAsync(userId.Value, cancellationToken);
+            var user = await _unitOfWork.UserRepository.GetByIdIncludingSessionsAsync(userId.Value, cancellationToken);
             if (user == default)
             {
                 throw new AuthenticationException("Provided refresh token is not valid");

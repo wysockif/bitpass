@@ -9,17 +9,6 @@ namespace Domain.Model
 {
     public class User : Entity, IAggregateRoot
     {
-        public long Id { get; private init; }
-        public string Username { get; private init; }
-        public string Email { get; private init; }
-        public bool IdEmailConfirmed { get; private set; }
-        public string PasswordHash { get; private set; }
-        public string MasterPasswordHash { get; private set; }
-        public string? PasswordResetTokenHash { get; private set; }
-        public DateTime? PasswordResetTokenValidTo { get; private set; }
-        public List<AccountActivity> AccountActivities { get; private set; }
-        public List<Session> Sessions { get; private set; }
-        
         private User(string username, string email, string passwordHash, string masterPasswordHash)
         {
             Username = username;
@@ -30,6 +19,17 @@ namespace Domain.Model
             AccountActivities = new List<AccountActivity>();
             Sessions = new List<Session>();
         }
+
+        public long Id { get; private init; }
+        public string Username { get; private init; }
+        public string Email { get; private init; }
+        public bool IdEmailConfirmed { get; private set; }
+        public string PasswordHash { get; private set; }
+        public string MasterPasswordHash { get; private set; }
+        public string? PasswordResetTokenHash { get; private set; }
+        public DateTime? PasswordResetTokenValidTo { get; private set; }
+        public List<AccountActivity> AccountActivities { get; private set; }
+        public List<Session> Sessions { get; private set; }
 
         public static User Register(string username, string email, string passwordHash, string masterPasswordHash)
         {
@@ -50,20 +50,22 @@ namespace Domain.Model
             AccountActivities.Add(accountActivity);
         }
 
-        public void AddSession(Guid refreshTokenGuid, long refreshTokenUnixExpirationDate, string? ipAddress, string? osName,
-        string? browserName)
+        public void AddSession(Guid refreshTokenGuid, long refreshTokenUnixExpirationDate, string? ipAddress,
+            string? osName,
+            string? browserName)
         {
             var session = Session.Create(Id, refreshTokenGuid, refreshTokenUnixExpirationDate, ipAddress, osName,
                 browserName);
             Sessions.Add(session);
         }
 
-        public void UpdateSession(Guid oldRefreshTokenGuid, Guid newRefreshTokenTokenGuid, long newRefreshTokenExpirationTimestamp)
+        public void UpdateSession(Guid oldRefreshTokenGuid, Guid newRefreshTokenTokenGuid,
+            long newRefreshTokenExpirationTimestamp)
         {
             var session = Sessions.FirstOrDefault(s => s.RefreshTokenGuid == oldRefreshTokenGuid);
             if (session == default || session.ExpirationUnixTimestamp < DateTimeOffset.Now.ToUnixTimeSeconds())
             {
-                throw new AuthenticationException("This session is not active");
+                throw new AuthenticationException("User session for this user does not exist or is not active");
             }
 
             session.Update(newRefreshTokenTokenGuid, newRefreshTokenExpirationTimestamp);

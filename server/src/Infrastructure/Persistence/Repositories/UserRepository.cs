@@ -33,6 +33,13 @@ namespace Infrastructure.Persistence.Repositories
                 .FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
         }
 
+        public async Task<User?> GetByIdIncludingSessionsAsync(long id, CancellationToken cancellationToken = default)
+        {
+            return await _storage.Users
+                .Include(u => u.Sessions)
+                .FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
+        }
+
         public async Task<User?> GetByEmailOrUsernameAsync(string email, string username,
             CancellationToken cancellationToken = default)
         {

@@ -9,6 +9,7 @@ namespace Domain.Repositories
     {
         Task<User?> GetByIdAsync(long id, CancellationToken cancellationToken = default);
         Task<User?> GetByIdIncludingSessionsAndActivitiesAsync(long id, CancellationToken cancellationToken = default);
+        Task<User?> GetByIdIncludingSessionsAsync(long id, CancellationToken cancellationToken = default);
 
         Task<User?> GetByEmailOrUsernameAsync(string email, string username,
             CancellationToken cancellationToken = default);

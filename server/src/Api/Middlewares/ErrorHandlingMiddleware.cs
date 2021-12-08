@@ -1,4 +1,4 @@
-using System;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 using Application.Exceptions;
 using Microsoft.AspNetCore.Http;
@@ -22,6 +22,11 @@ namespace Api.Middlewares
             {
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
                 await context.Response.WriteAsync(badRequestException.Message);
+            }
+            catch (AuthenticationException authenticationException)
+            {
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                await context.Response.WriteAsync(authenticationException.Message);
             }
             // catch (Exception e)
             // {

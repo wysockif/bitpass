@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Utils.Email;
@@ -6,6 +7,7 @@ using Application.ViewModels;
 using Domain.Services;
 using FluentValidation;
 using MediatR;
+using Serilog;
 
 namespace Application.Commands
 {
@@ -70,10 +72,22 @@ namespace Application.Commands
             var auth = await _accountService.RegisterAsync(command.Email, command.Username, command.Password,
                 command.MasterPassword, command.IpAddress, command.UserAgent);
 
-            await _emailService.SendEmailAsync(command.Email,
-                new VerifyEmailAddressEmailTemplateData(command.Username, "https://google.com"));
+            await TryToSendEmailAsync(command.Email, command.Username);
 
             return new AuthViewModel(auth.AccessToken, auth.RefreshToken);
+        }
+
+        private async Task TryToSendEmailAsync(string email, string username)
+        {
+            try
+            {
+                await _emailService.SendEmailAsync(email,
+                    new VerifyEmailAddressEmailTemplateData(username, "https://google.com"));
+            }
+            catch (Exception exception)
+            {
+                Log.Error(exception, "Exception occured during sending verification email");
+            }
         }
     }
 }

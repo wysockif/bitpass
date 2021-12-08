@@ -30,20 +30,25 @@ namespace Application.Services
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(password + _settings.PasswordPepper, 14);
             var masterPasswordHash =
                 BCrypt.Net.BCrypt.HashPassword(masterPassword + _settings.MasterPasswordPepper, 12);
+            await using var transaction = await _unitOfWork.BeginTransactionAsync();
 
             var registeredUser = User.Register(username.ToLower(), email.ToLower(), passwordHash, masterPasswordHash);
-            var (osName, browserName) = GetDeviceInfo(userAgent);
-            registeredUser.AddAccountActivity(ActivityType.SuccessfulRegistration, ipAddress, osName, browserName);
-
             await _unitOfWork.UserRepository.AddAsync(registeredUser);
             await _unitOfWork.SaveChangesAsync();
+
+            var (osName, browserName) = GetDeviceInfo(userAgent);
 
             var accessToken =
                 _securityTokenService.GenerateAccessTokenForUser(registeredUser.Id, registeredUser.Username);
             var refreshToken =
                 _securityTokenService.GenerateRefreshTokenForUser(registeredUser.Id, registeredUser.Username);
+
             registeredUser.AddSession(refreshToken.TokenGuid, refreshToken.ExpirationTimestamp, ipAddress, osName,
                 browserName);
+            registeredUser.AddAccountActivity(ActivityType.SuccessfulRegistration, ipAddress, osName, browserName);
+
+            await _unitOfWork.SaveChangesAsync();
+            await transaction.CommitAsync();
 
             return new Auth(accessToken.Token, refreshToken.Token);
         }
@@ -69,7 +74,6 @@ namespace Application.Services
 
             user.AddSession(refreshToken.TokenGuid, refreshToken.ExpirationTimestamp, ipAddress, osName, browserName);
             await _unitOfWork.SaveChangesAsync();
-
 
             return new Auth(accessToken.Token, refreshToken.Token);
         }

@@ -1,4 +1,5 @@
 using System;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 using Application.Exceptions;
 using Application.InfrastructureInterfaces;
@@ -28,7 +29,7 @@ namespace Application.Services
             _emailService = emailService;
         }
 
-        public async Task<Auth> RegisterAsync(string email, string username, string password, string masterPassword,
+        public async Task RegisterAsync(string email, string username, string password, string masterPassword,
             string? ipAddress, string? userAgent)
         {
             await CheckIfUserAlreadyExists(email, username);
@@ -50,13 +51,6 @@ namespace Application.Services
 
             var (osName, browserName) = GetDeviceInfo(userAgent);
 
-            var accessToken =
-                _securityTokenService.GenerateAccessTokenForUser(registeredUser.Id, registeredUser.Username);
-            var refreshToken =
-                _securityTokenService.GenerateRefreshTokenForUser(registeredUser.Id, registeredUser.Username);
-
-            registeredUser.AddSession(refreshToken.TokenGuid, refreshToken.ExpirationTimestamp, ipAddress, osName,
-                browserName);
             registeredUser.AddAccountActivity(ActivityType.SuccessfulRegistration, ipAddress, osName, browserName);
 
             var url = _settings.FrontendUrl + "/verify-account/" + username + "/" + emailVerificationToken;
@@ -64,20 +58,12 @@ namespace Application.Services
 
             await _unitOfWork.SaveChangesAsync();
             await transaction.CommitAsync();
-
-            return new Auth(accessToken.Token, refreshToken.Token);
         }
 
         public async Task<Auth> LoginAsync(string identifier, string password, string? ipAddress,
             string? userAgent)
         {
-            var user = await _unitOfWork.UserRepository.GetByEmailOrUsernameAsync(identifier.ToLower(),
-                identifier.ToLower());
-            if (user == default)
-            {
-                await Task.Delay(ApplicationConstants.InvalidLoginDelayInMilliseconds);
-                throw new BadRequestException("Invalid credentials");
-            }
+            var user = await GetUserIfExistsAndHasVerifiedEmail(identifier);
 
             await CheckInvalidLoginAttemptsNumber(user.Id);
             var (osName, browserName) = GetDeviceInfo(userAgent);
@@ -91,6 +77,20 @@ namespace Application.Services
             await _unitOfWork.SaveChangesAsync();
 
             return new Auth(accessToken.Token, refreshToken.Token);
+        }
+
+        private async Task<User?> GetUserIfExistsAndHasVerifiedEmail(string identifier)
+        {
+            var user = await _unitOfWork.UserRepository.GetByEmailOrUsernameAsync(identifier.ToLower(),
+                identifier.ToLower());
+            if (user == default || user.IdEmailConfirmed == false)
+            {
+                var message = user == default ? "Invalid credentials" : "Email not verified";
+                await Task.Delay(ApplicationConstants.InvalidLoginDelayInMilliseconds);
+                throw new AuthenticationException(message);
+            }
+
+            return user;
         }
 
         private async Task VerifyPassword(string password, string? ipAddress, User user, string? osName,

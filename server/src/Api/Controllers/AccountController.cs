@@ -7,19 +7,19 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Controllers
 {
     [Route("api/accounts")]
+    [AllowAnonymous]
     public class AccountController : BaseController
     {
         [HttpPost("register")]
-        [AllowAnonymous]
-        public async Task<AuthViewModel> RegisterUser([FromBody] RegisterUserCommand command)
+        public async Task<ActionResult> RegisterUser([FromBody] RegisterUserCommand command)
         {
             command.UserAgent = Request.Headers["User-Agent"];
             command.IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
-            return await Mediator.Send(command);
+            await Mediator.Send(command);
+            return NoContent();
         }
 
         [HttpPost("login")]
-        [AllowAnonymous]
         public async Task<ActionResult<AuthViewModel>> LoginUser([FromBody] LoginUserCommand command)
         {
             command.UserAgent = Request.Headers["User-Agent"];
@@ -28,14 +28,12 @@ namespace Api.Controllers
         }
 
         [HttpPost("refresh-access-token")]
-        [AllowAnonymous]
         public async Task<ActionResult<AuthViewModel>> RefreshAccessToken([FromBody] RefreshAccessTokenCommand command)
         {
             return Ok(await Mediator.Send(command));
         }
 
         [HttpPost("verify-email-address")]
-        [AllowAnonymous]
         public async Task<ActionResult> VerifyEmailAddress([FromBody] VerifyEmailAddressCommand command)
         {
             await Mediator.Send(command);

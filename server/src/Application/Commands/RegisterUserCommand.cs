@@ -31,7 +31,7 @@ namespace Application.Commands
         }
     }
 
-    public class RegisterUserCommand : IRequest<AuthViewModel>
+    public class RegisterUserCommand : IRequest<SuccessViewModel>
     {
         public RegisterUserCommand(string username, string email, string password, string masterPassword,
             string? ipAddress, string? userAgent)
@@ -52,7 +52,7 @@ namespace Application.Commands
         public string? UserAgent { get; set; }
     }
 
-    public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, AuthViewModel>
+    public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, SuccessViewModel>
     {
         private readonly IAccountService _accountService;
 
@@ -61,12 +61,12 @@ namespace Application.Commands
             _accountService = accountService;
         }
 
-        public async Task<AuthViewModel> Handle(RegisterUserCommand command, CancellationToken cancellationToken)
+        public async Task<SuccessViewModel> Handle(RegisterUserCommand command, CancellationToken cancellationToken)
         {
-            var auth = await _accountService.RegisterAsync(command.Email, command.Username, command.Password,
+            await _accountService.RegisterAsync(command.Email, command.Username, command.Password,
                 command.MasterPassword, command.IpAddress, command.UserAgent);
 
-            return new AuthViewModel(auth.AccessToken, auth.RefreshToken);
+            return new SuccessViewModel();
         }
     }
 }

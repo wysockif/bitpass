@@ -12,11 +12,6 @@ namespace Infrastructure.Persistence.Repositories
     {
         private readonly IStorage _storage;
 
-        private IQueryable<User> Users => _storage.Users
-            .Include(user => user.AccountActivities)
-            .Include(user => user.Sessions)
-            .AsQueryable();
-
         public UserRepository(IStorage storage)
         {
             _storage = storage;
@@ -24,26 +19,48 @@ namespace Infrastructure.Persistence.Repositories
 
         public async Task<User?> GetByIdAsync(long id, CancellationToken cancellationToken = default)
         {
-            return await Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
+            return await _storage.Users
+                .FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
+        }
+
+        public async Task<User?> GetByIdIncludingSessionsAndActivitiesAsync(long id,
+            CancellationToken cancellationToken = default)
+        {
+            return await _storage.Users
+                .Include(u => u.Sessions)
+                .Include(u => u.AccountActivities)
+                .AsSplitQuery()
+                .FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
         }
 
         public async Task<User?> GetByEmailOrUsernameAsync(string email, string username,
             CancellationToken cancellationToken = default)
         {
-            return await Users.FirstOrDefaultAsync(
-                u => u.Email.Equals(email.ToLower()) || u.Username.Equals(username.ToLower()),
-                cancellationToken);
+            return await _storage.Users
+                .FirstOrDefaultAsync(u => u.Email.Equals(email.ToLower()) || u.Username.Equals(username.ToLower()),
+                    cancellationToken);
         }
 
-        public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
+        public async Task<User?> GetByEmailOrUsernameIncludingSessionsAndActivitiesAsync(string email, string username,
+            CancellationToken cancellationToken = default)
         {
-            return await Users.FirstOrDefaultAsync(u => u.Email.Equals(email.ToLower()), cancellationToken);
+            return await _storage.Users
+                .Include(u => u.Sessions)
+                .Include(u => u.AccountActivities)
+                .AsSplitQuery()
+                .FirstOrDefaultAsync(u => u.Email.Equals(email.ToLower()) || u.Username.Equals(username.ToLower()),
+                    cancellationToken);
         }
 
-        public async Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default)
-        {
-            return await Users.FirstOrDefaultAsync(u => u.Username.Equals(username.ToLower()), cancellationToken);
-        }
+        // public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
+        // {
+        //     return await _storage.Users.FirstOrDefaultAsync(u => u.Email.Equals(email.ToLower()), cancellationToken);
+        // }
+        //
+        // public async Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default)
+        // {
+        //     return await _storage.Users.FirstOrDefaultAsync(u => u.Username.Equals(username.ToLower()), cancellationToken);
+        // }
 
         public async Task AddAsync(User entity, CancellationToken cancellationToken = default)
         {

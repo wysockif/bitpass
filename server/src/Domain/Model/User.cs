@@ -88,5 +88,12 @@ namespace Domain.Model
 
             session.Update(newRefreshTokenTokenGuid, newRefreshTokenExpirationTimestamp);
         }
+
+        public void VerifyEmail()
+        {
+            IdEmailConfirmed = true;
+            EmailVerificationTokenHash = null;
+            EmailVerificationTokenValidTo = null;
+        }
     }
 }

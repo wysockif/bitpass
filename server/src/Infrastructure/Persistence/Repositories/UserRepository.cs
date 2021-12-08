@@ -64,10 +64,11 @@ namespace Infrastructure.Persistence.Repositories
         //     return await _storage.Users.FirstOrDefaultAsync(u => u.Email.Equals(email.ToLower()), cancellationToken);
         // }
         //
-        // public async Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default)
-        // {
-        //     return await _storage.Users.FirstOrDefaultAsync(u => u.Username.Equals(username.ToLower()), cancellationToken);
-        // }
+        public async Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default)
+        {
+            return await _storage.Users.FirstOrDefaultAsync(u => u.Username.Equals(username.ToLower()),
+                cancellationToken);
+        }
 
         public async Task AddAsync(User entity, CancellationToken cancellationToken = default)
         {

@@ -20,18 +20,26 @@ namespace Api.Controllers
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<AuthViewModel> LoginUser([FromBody] LoginUserCommand command)
+        public async Task<ActionResult<AuthViewModel>> LoginUser([FromBody] LoginUserCommand command)
         {
             command.UserAgent = Request.Headers["User-Agent"];
             command.IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
-            return await Mediator.Send(command);
+            return Ok(await Mediator.Send(command));
         }
-        
+
         [HttpPost("refresh-access-token")]
         [AllowAnonymous]
-        public async Task<AuthViewModel> RefreshAccessToken([FromBody] RefreshAccessTokenCommand command)
+        public async Task<ActionResult<AuthViewModel>> RefreshAccessToken([FromBody] RefreshAccessTokenCommand command)
         {
-            return await Mediator.Send(command);
+            return Ok(await Mediator.Send(command));
+        }
+
+        [HttpPost("verify-email-address")]
+        [AllowAnonymous]
+        public async Task<ActionResult> VerifyEmailAddress([FromBody] VerifyEmailAddressCommand command)
+        {
+            await Mediator.Send(command);
+            return NoContent();
         }
     }
 }

@@ -59,7 +59,7 @@ namespace Application.Services
                 browserName);
             registeredUser.AddAccountActivity(ActivityType.SuccessfulRegistration, ipAddress, osName, browserName);
 
-            var url = _settings.FrontendUrl + "/verify-account/" + emailVerificationToken;
+            var url = _settings.FrontendUrl + "/verify-account/" + username + "/" + emailVerificationToken;
             await TryToSendEmailAsync(email, username, url);
 
             await _unitOfWork.SaveChangesAsync();

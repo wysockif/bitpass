@@ -1,13 +1,9 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Utils.Email;
-using Application.Utils.Email.Templates;
 using Application.ViewModels;
 using Domain.Services;
 using FluentValidation;
 using MediatR;
-using Serilog;
 
 namespace Application.Commands
 {
@@ -59,12 +55,10 @@ namespace Application.Commands
     public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, AuthViewModel>
     {
         private readonly IAccountService _accountService;
-        private readonly IEmailService _emailService;
 
-        public RegisterUserCommandHandler(IAccountService accountService, IEmailService emailService)
+        public RegisterUserCommandHandler(IAccountService accountService)
         {
             _accountService = accountService;
-            _emailService = emailService;
         }
 
         public async Task<AuthViewModel> Handle(RegisterUserCommand command, CancellationToken cancellationToken)
@@ -72,22 +66,7 @@ namespace Application.Commands
             var auth = await _accountService.RegisterAsync(command.Email, command.Username, command.Password,
                 command.MasterPassword, command.IpAddress, command.UserAgent);
 
-            await TryToSendEmailAsync(command.Email, command.Username);
-
             return new AuthViewModel(auth.AccessToken, auth.RefreshToken);
-        }
-
-        private async Task TryToSendEmailAsync(string email, string username)
-        {
-            try
-            {
-                await _emailService.SendEmailAsync(email,
-                    new VerifyEmailAddressEmailTemplateData(username, "https://google.com"));
-            }
-            catch (Exception exception)
-            {
-                Log.Error(exception, "Exception occured during sending verification email");
-            }
         }
     }
 }

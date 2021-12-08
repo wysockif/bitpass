@@ -9,6 +9,20 @@ namespace Domain.Model
 {
     public class User : Entity, IAggregateRoot
     {
+        private User(string username, string email, string passwordHash, string masterPasswordHash,
+            string emailVerificationTokenHash, DateTime emailVerificationTokenValidTo)
+        {
+            Username = username;
+            Email = email;
+            PasswordHash = passwordHash;
+            MasterPasswordHash = masterPasswordHash;
+            IdEmailConfirmed = false;
+            EmailVerificationTokenHash = emailVerificationTokenHash;
+            EmailVerificationTokenValidTo = emailVerificationTokenValidTo;
+            AccountActivities = new List<AccountActivity>();
+            Sessions = new List<Session>();
+        }
+
         private User(string username, string email, string passwordHash, string masterPasswordHash)
         {
             Username = username;
@@ -23,17 +37,21 @@ namespace Domain.Model
         public long Id { get; private init; }
         public string Username { get; private init; }
         public string Email { get; private init; }
-        public bool IdEmailConfirmed { get; private set; }
         public string PasswordHash { get; private set; }
         public string MasterPasswordHash { get; private set; }
         public string? PasswordResetTokenHash { get; private set; }
         public DateTime? PasswordResetTokenValidTo { get; private set; }
+        public bool IdEmailConfirmed { get; private set; }
+        public string? EmailVerificationTokenHash { get; private set; }
+        public DateTime? EmailVerificationTokenValidTo { get; private set; }
         public List<AccountActivity> AccountActivities { get; private set; }
         public List<Session> Sessions { get; private set; }
 
-        public static User Register(string username, string email, string passwordHash, string masterPasswordHash)
+        public static User Register(string username, string email, string passwordHash, string masterPasswordHash,
+            string emailVerificationTokenHash, DateTime emailVerificationTokenValidTo)
         {
-            return new User(username, email, passwordHash, masterPasswordHash);
+            return new User(username, email, passwordHash, masterPasswordHash, emailVerificationTokenHash,
+                emailVerificationTokenValidTo);
         }
 
         public void ResetPassword(string passwordHash)

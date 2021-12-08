@@ -1,25 +1,31 @@
+using System;
 using System.Threading.Tasks;
 using Application.Exceptions;
 using Application.InfrastructureInterfaces;
+using Application.Utils.Email;
+using Application.Utils.Email.Templates;
 using Application.Utils.Security;
 using Domain.Model;
 using Domain.Services;
+using Serilog;
 using UAParser;
 
 namespace Application.Services
 {
     public class AccountService : IAccountService
     {
+        private readonly IEmailService _emailService;
         private readonly ISecurityTokenService _securityTokenService;
         private readonly ApplicationSettings _settings;
         private readonly IUnitOfWork _unitOfWork;
 
         public AccountService(IUnitOfWork unitOfWork, ApplicationSettings settings,
-            ISecurityTokenService securityTokenService)
+            ISecurityTokenService securityTokenService, IEmailService emailService)
         {
             _unitOfWork = unitOfWork;
             _settings = settings;
             _securityTokenService = securityTokenService;
+            _emailService = emailService;
         }
 
         public async Task<Auth> RegisterAsync(string email, string username, string password, string masterPassword,
@@ -30,9 +36,15 @@ namespace Application.Services
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(password + _settings.PasswordPepper, 14);
             var masterPasswordHash =
                 BCrypt.Net.BCrypt.HashPassword(masterPassword + _settings.MasterPasswordPepper, 12);
+
+            var emailVerificationToken = Guid.NewGuid().ToString();
+            var emailVerificationTokenHash = BCrypt.Net.BCrypt.HashPassword(emailVerificationToken);
+            var emailVerificationTokenValidTo = DateTime.Now.AddHours(1);
+
             await using var transaction = await _unitOfWork.BeginTransactionAsync();
 
-            var registeredUser = User.Register(username.ToLower(), email.ToLower(), passwordHash, masterPasswordHash);
+            var registeredUser = User.Register(username.ToLower(), email.ToLower(), passwordHash, masterPasswordHash,
+                emailVerificationTokenHash, emailVerificationTokenValidTo);
             await _unitOfWork.UserRepository.AddAsync(registeredUser);
             await _unitOfWork.SaveChangesAsync();
 
@@ -46,6 +58,9 @@ namespace Application.Services
             registeredUser.AddSession(refreshToken.TokenGuid, refreshToken.ExpirationTimestamp, ipAddress, osName,
                 browserName);
             registeredUser.AddAccountActivity(ActivityType.SuccessfulRegistration, ipAddress, osName, browserName);
+
+            var url = _settings.FrontendUrl + "/verify-account/" + emailVerificationToken;
+            await TryToSendEmailAsync(email, username, url);
 
             await _unitOfWork.SaveChangesAsync();
             await transaction.CommitAsync();
@@ -117,6 +132,19 @@ namespace Application.Services
             var osName = clientInfo == null ? null : clientInfo.OS.Family + " " + clientInfo.OS.Major;
             var browserName = clientInfo == null ? null : clientInfo.UA.Family + " " + clientInfo.UA.Major;
             return (osName, browserName);
+        }
+
+
+        private async Task TryToSendEmailAsync(string email, string username, string url)
+        {
+            try
+            {
+                await _emailService.SendEmailAsync(email, new VerifyEmailAddressEmailTemplateData(username, url));
+            }
+            catch (Exception exception)
+            {
+                Log.Error(exception, "Exception occured during sending verification email");
+            }
         }
     }
 }

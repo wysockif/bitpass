@@ -16,7 +16,7 @@ namespace Infrastructure
             services.AddDbContext<IStorage, DatabaseContext>(options => options.UseNpgsql(settings.DbConnectionString));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            services.AddSingleton<IEmailGateway, SendGridEmailGateway>();
+            services.AddTransient<IEmailGateway, SendGridEmailGateway>();
             services
                 .AddFluentEmail(settings.SendGridSettings.FromName)
                 .AddSendGridSender(settings.SendGridSettings.ApiKey);

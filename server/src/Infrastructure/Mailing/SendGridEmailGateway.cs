@@ -6,20 +6,23 @@ namespace Infrastructure.Mailing
 {
     public class SendGridEmailGateway : IEmailGateway
     {
-        private readonly IFluentEmail _fluentEmail;
+        private readonly IFluentEmailFactory _fluentEmailFactory;
+        private readonly SendGridSettings _settings;
 
-        public SendGridEmailGateway(SendGridSettings settings, IFluentEmail fluentEmail)
+        public SendGridEmailGateway(SendGridSettings settings, IFluentEmailFactory fluentEmailFactory)
         {
-            _fluentEmail = fluentEmail;
-            _fluentEmail.SetFrom(settings.FromEmail, settings.FromName);
+            _settings = settings;
+            _fluentEmailFactory = fluentEmailFactory;
         }
 
         public async Task SendEmailAsync(string to, string title, string body)
         {
-            await _fluentEmail
+            await _fluentEmailFactory
+                .Create()
+                .SetFrom(_settings.FromEmail, _settings.FromName)
                 .To(to)
                 .Subject(title)
-                .Body(body)
+                .Body(body, true)
                 .SendAsync();
         }
     }

@@ -70,7 +70,8 @@ namespace Application.Commands
             var auth = await _accountService.RegisterAsync(command.Email, command.Username, command.Password,
                 command.MasterPassword, command.IpAddress, command.UserAgent);
 
-            await _emailService.SendEmailAsync(command.Email, new VerifyEmailAddressEmailTemplateData());
+            await _emailService.SendEmailAsync(command.Email,
+                new VerifyEmailAddressEmailTemplateData(command.Username, "https://google.com"));
 
             return new AuthViewModel(auth.AccessToken, auth.RefreshToken);
         }

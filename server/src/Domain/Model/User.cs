@@ -83,7 +83,7 @@ namespace Domain.Model
             var session = Sessions.FirstOrDefault(s => s.RefreshTokenGuid == oldRefreshTokenGuid);
             if (session == default || session.ExpirationUnixTimestamp < DateTimeOffset.Now.ToUnixTimeSeconds())
             {
-                throw new AuthenticationException("User session for this user does not exist or is not active");
+                throw new AuthenticationException("Session for this refresh token does not exist or is not active");
             }
 
             session.Update(newRefreshTokenTokenGuid, newRefreshTokenExpirationTimestamp);

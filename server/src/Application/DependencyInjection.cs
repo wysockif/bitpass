@@ -23,7 +23,7 @@ namespace Application
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddScoped<IAccountService, AccountService>();
             services.AddJwtAuthentication(applicationSettings.AccessTokenSettings);
-            services.AddFluentValidation();
+            services.AddFluentValidation(configuration => configuration.LocalizationEnabled = false);
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
             services.AddSingleton<IEmailService, EmailService>();

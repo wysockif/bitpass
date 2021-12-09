@@ -19,15 +19,25 @@ namespace Application.Commands
             RuleFor(command => command.Password)
                 .NotNull()
                 .MinimumLength(ApplicationConstants.MinPasswordLength)
-                .MaximumLength(ApplicationConstants.MaxPasswordLength);
+                .MaximumLength(ApplicationConstants.MaxPasswordLength)
+                .Matches(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W])[\S].{0,}$")
+                .WithMessage(
+                    "'{PropertyName}' must contain at least one uppercase character, one lowercase character, " +
+                    "one number, one special character and must not contain any white character.");
             RuleFor(command => command.MasterPassword)
                 .NotNull()
                 .MinimumLength(ApplicationConstants.MinPasswordLength)
-                .MaximumLength(ApplicationConstants.MaxPasswordLength);
+                .MaximumLength(ApplicationConstants.MaxPasswordLength)
+                .Matches(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W])[\S].{0,}$")
+                .WithMessage(
+                    "'{PropertyName}' must contain at least one uppercase character, one lowercase character, " +
+                    "one number, one special character and must not contain any white character.");
             RuleFor(command => command.Username)
                 .NotNull()
                 .MinimumLength(ApplicationConstants.MinUsernameLength)
-                .MaximumLength(ApplicationConstants.MaxUsernameLength);
+                .MaximumLength(ApplicationConstants.MaxUsernameLength)
+                .Matches(@"^[^\s\W]+$")
+                .WithMessage("'{PropertyName}' must contain only alphanumeric characters or underscore.");
         }
     }
 
@@ -44,10 +54,10 @@ namespace Application.Commands
             UserAgent = userAgent;
         }
 
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
-        public string MasterPassword { get; set; }
+        public string Username { get; }
+        public string Email { get; }
+        public string Password { get; }
+        public string MasterPassword { get; }
         public string? IpAddress { get; set; }
         public string? UserAgent { get; set; }
     }

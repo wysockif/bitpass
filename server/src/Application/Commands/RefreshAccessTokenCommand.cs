@@ -14,7 +14,7 @@ namespace Application.Commands
     {
         public RefreshAccessTokenCommandValidator()
         {
-            RuleFor(command => command.RefreshToken).NotEmpty();
+            RuleFor(command => command.RefreshToken).NotEmpty().NotEmpty();
         }
     }
 

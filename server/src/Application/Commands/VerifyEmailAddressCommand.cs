@@ -5,10 +5,27 @@ using System.Threading.Tasks;
 using Application.InfrastructureInterfaces;
 using Application.ViewModels;
 using Domain.Model;
+using FluentValidation;
 using MediatR;
 
 namespace Application.Commands
 {
+    public class VerifyEmailAddressCommandValidator : AbstractValidator<VerifyEmailAddressCommand>
+    {
+        public VerifyEmailAddressCommandValidator()
+        {
+            RuleFor(command => command.Username)
+                .NotNull()
+                .MinimumLength(ApplicationConstants.MinUsernameLength)
+                .MaximumLength(ApplicationConstants.MaxUsernameLength);
+
+            RuleFor(command => command.Token)
+                .NotNull()
+                .Must(token => Guid.TryParse(token, out _))
+                .WithMessage("Not valid token");
+        }
+    }
+
     public class VerifyEmailAddressCommand : IRequest<SuccessViewModel>
     {
         public VerifyEmailAddressCommand(string token, string username)
@@ -52,7 +69,7 @@ namespace Application.Commands
 
             if (!isTokenValid)
             {
-                throw new AuthenticationException("Invalid email confirmation link");
+                throw new AuthenticationException($"Invalid token for user {command.Username}");
             }
         }
 
@@ -62,7 +79,7 @@ namespace Application.Commands
             var user = await _unitOfWork.UserRepository.GetByUsernameAsync(command.Username, cancellationToken);
             if (user == default)
             {
-                throw new AuthenticationException("Invalid email confirmation link");
+                throw new AuthenticationException($"Invalid token for user {command.Username}");
             }
 
             return user;

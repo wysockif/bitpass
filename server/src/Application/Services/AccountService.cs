@@ -64,8 +64,8 @@ namespace Application.Services
             string? userAgent)
         {
             var user = await GetUserIfExistsAndHasVerifiedEmail(identifier);
-
-            await CheckInvalidLoginAttemptsNumber(user.Id);
+            // TODO : first check password, then validate if user has verified email 
+            await CheckInvalidLoginAttemptsNumberAsync(user.Id);
             var (osName, browserName) = GetDeviceInfo(userAgent);
             await VerifyPassword(password, ipAddress, user, osName, browserName);
             user.AddAccountActivity(ActivityType.SuccessfulLogin, ipAddress, osName, browserName);
@@ -118,10 +118,11 @@ namespace Application.Services
             }
         }
 
-        private async Task CheckInvalidLoginAttemptsNumber(long userId)
+        private async Task CheckInvalidLoginAttemptsNumberAsync(long userId)
         {
-            if (await _unitOfWork.UserRepository.GetFailedLoginActivitiesCountInLastHourByUserId(userId) > 3)
+            if (await _unitOfWork.UserRepository.GetFailedLoginActivitiesCountInLastHourByUserId(userId) > 4)
             {
+                await Task.Delay(ApplicationConstants.InvalidLoginDelayInMilliseconds);
                 throw new BadRequestException("Too many invalid login attempts. Try again later");
             }
         }

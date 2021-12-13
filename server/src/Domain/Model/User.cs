@@ -69,8 +69,7 @@ namespace Domain.Model
         }
 
         public void AddSession(Guid refreshTokenGuid, long refreshTokenUnixExpirationDate, string? ipAddress,
-            string? osName,
-            string? browserName)
+            string? osName, string? browserName)
         {
             var session = Session.Create(Id, refreshTokenGuid, refreshTokenUnixExpirationDate, ipAddress, osName,
                 browserName);

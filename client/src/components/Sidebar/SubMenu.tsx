@@ -26,7 +26,7 @@ const SubMenu = (props: any) => {
                 className={classNames("items-menu", { "mb-1": !collapsed })}
             >
                 {items.map((item: any, index: any) => (
-                    <NavItem key={index} className="pl-4">
+                    <NavItem key={index} className="ps-4">
                         <NavLink tag={Link} to={item.target}>
                             {item.title}
                         </NavLink>

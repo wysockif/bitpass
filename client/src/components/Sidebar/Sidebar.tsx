@@ -1,6 +1,13 @@
 import React from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faBriefcase, faCopy, faHome, faImage, faPaperPlane, faQuestion} from "@fortawesome/free-solid-svg-icons";
+import {
+    faCog,
+    faExclamationCircle,
+    faKey,
+    faPaperPlane,
+    faQuestion,
+    faShieldAlt
+} from "@fortawesome/free-solid-svg-icons";
 import {Nav, NavItem, NavLink} from "reactstrap";
 import classNames from "classnames";
 import {Link} from "react-router-dom";
@@ -14,30 +21,36 @@ const SideBar = (props: any) => (
         </div>
         <div className="side-menu">
             <Nav vertical className="list-group pb-3">
-                <p>Dummy Heading</p>
-                <SubMenu title="Home" icon={faHome} items={submenus[0]}/>
+                {/*<p>Dummy Heading</p>*/}
+                {/*<SubMenu title="Home" icon={faHome} items={submenus[0]}/>*/}
                 <NavItem>
-                    <NavLink tag={Link} to={"/about"}>
-                        <FontAwesomeIcon icon={faBriefcase} className="mr-2"/>
-                        About
+                    <NavLink tag={Link} to={"/vault"}>
+                        <FontAwesomeIcon icon={faShieldAlt} className="me-2"/>
+                        Vault
                     </NavLink>
                 </NavItem>
-                <SubMenu title="Pages" icon={faCopy} items={submenus[1]}/>
                 <NavItem>
-                    <NavLink tag={Link} to={"/pages"}>
-                        <FontAwesomeIcon icon={faImage} className="mr-2"/>
-                        Portfolio
+                    <NavLink tag={Link} to={"/generator"}>
+                        <FontAwesomeIcon icon={faKey} className="me-2"/>
+                        Generator
+                    </NavLink>
+                </NavItem>
+                <SubMenu title="Activity" icon={faExclamationCircle} items={submenus[1]}/>
+                <NavItem>
+                    <NavLink tag={Link} to={"/settings"}>
+                        <FontAwesomeIcon icon={faCog} className="me-2"/>
+                        Settings
                     </NavLink>
                 </NavItem>
                 <NavItem>
                     <NavLink tag={Link} to={"/faq"}>
-                        <FontAwesomeIcon icon={faQuestion} className="mr-2"/>
+                        <FontAwesomeIcon icon={faQuestion} className="me-2"/>
                         FAQ
                     </NavLink>
                 </NavItem>
                 <NavItem>
                     <NavLink tag={Link} to={"/contact"}>
-                        <FontAwesomeIcon icon={faPaperPlane} className="mr-2"/>
+                        <FontAwesomeIcon icon={faPaperPlane} className="me-2"/>
                         Contact
                     </NavLink>
                 </NavItem>
@@ -57,13 +70,13 @@ const submenus = [
             target: "Home-2",
         },
         {
-            itle: "Home 3",
+            title: "Home 3",
             target: "Home-3",
         },
     ],
     [
         {
-            title: "Page 1",
+            title: "Activity",
             target: "Page-1",
         },
         {

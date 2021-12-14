@@ -1,10 +1,10 @@
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+
 .App {
     display: flex;
     width: 100%;
     align-items: stretch;
 }
-
-@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 
 body {
     font-family: "Poppins", sans-serif;
@@ -23,11 +23,11 @@ a:focus {
     SIDEBAR STYLE
 ----------------------------------------------------- */
 .sidebar {
-    min-width: 250px;
-    max-width: 250px;
-    background: #7386d5;
+    min-width: 240px;
+    max-width: 240px;
+    background: #08415C;
     color: #fff;
-    margin-left: -250px;
+    margin-left: -240px;
     transition: all 0.5s;
 }
 
@@ -37,7 +37,7 @@ a:focus {
 }
 
 .sidebar-header {
-    background: #6d7fcc;
+    background: #08415C;
 }
 
 .sidebar-header h3 {
@@ -51,24 +51,24 @@ a:focus {
 }
 
 .menu-open {
-    background: #6d7fcc;
+    background: #08415C;
 }
 
 .nav-item:hover {
-    color: #7386d5;
+    color: #08415C;
     background: #fff;
+    margin-left: 10px;
 }
 
 .items-menu {
-    color: #fff;
-    background: #6d7fcc;
+    color: #fff  !important;
+    background: #08415C;
 }
 
 li a.dropdown-toggle::after {
     display: inline-flex;
     position: relative;
-    left: 60%;
-    top: 10%;
+    top: 5%;
 }
 
 .sidebar-header > span {
@@ -82,6 +82,7 @@ li a.dropdown-toggle::after {
 .side-menu {
     height: calc(100vh - 98px);
     overflow-y: scroll;
+    cursor: pointer;
 }
 
 .side-menu::-webkit-scrollbar {
@@ -89,12 +90,12 @@ li a.dropdown-toggle::after {
 }
 
 .side-menu::-webkit-scrollbar-thumb {
-    background: #5466b3;
+    background: #08415C;
     border-radius: 3px;
 }
 
 .side-menu::-webkit-scrollbar-thumb:hover {
-    background: #3a4c99;
+    background: #08415C;
 }
 
 /* ---------------------------------------------------

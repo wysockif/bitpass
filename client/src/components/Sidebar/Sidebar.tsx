@@ -21,35 +21,33 @@ const SideBar = (props: any) => (
         </div>
         <div className="side-menu">
             <Nav vertical className="list-group pb-3">
-                {/*<p>Dummy Heading</p>*/}
-                {/*<SubMenu title="Home" icon={faHome} items={submenus[0]}/>*/}
                 <NavItem>
-                    <NavLink tag={Link} to={"/vault"}>
+                    <NavLink tag={Link} to={"/vault"} className="menu-item">
                         <FontAwesomeIcon icon={faShieldAlt} className="me-2"/>
                         Vault
                     </NavLink>
                 </NavItem>
                 <NavItem>
-                    <NavLink tag={Link} to={"/generator"}>
+                    <NavLink tag={Link} to={"/generator"} className="menu-item">
                         <FontAwesomeIcon icon={faKey} className="me-2"/>
                         Generator
                     </NavLink>
                 </NavItem>
-                <SubMenu title="Activity" icon={faExclamationCircle} items={submenus[1]}/>
+                <SubMenu title="Activity" icon={faExclamationCircle} items={submenus[0]}/>
                 <NavItem>
-                    <NavLink tag={Link} to={"/settings"}>
+                    <NavLink tag={Link} to={"/settings"} className="menu-item">
                         <FontAwesomeIcon icon={faCog} className="me-2"/>
                         Settings
                     </NavLink>
                 </NavItem>
                 <NavItem>
-                    <NavLink tag={Link} to={"/faq"}>
+                    <NavLink tag={Link} to={"/faq"} className="menu-item">
                         <FontAwesomeIcon icon={faQuestion} className="me-2"/>
                         FAQ
                     </NavLink>
                 </NavItem>
                 <NavItem>
-                    <NavLink tag={Link} to={"/contact"}>
+                    <NavLink tag={Link} to={"/contact"} className="menu-item">
                         <FontAwesomeIcon icon={faPaperPlane} className="me-2"/>
                         Contact
                     </NavLink>
@@ -62,26 +60,12 @@ const SideBar = (props: any) => (
 const submenus = [
     [
         {
-            title: "Home 1",
-            target: "Home-1",
+            title: "Last Activity",
+            target: "last-Activity",
         },
         {
-            title: "Home 2",
-            target: "Home-2",
-        },
-        {
-            title: "Home 3",
-            target: "Home-3",
-        },
-    ],
-    [
-        {
-            title: "Activity",
-            target: "Page-1",
-        },
-        {
-            title: "Page 2",
-            target: "Page-2",
+            title: "Active sessions",
+            target: "active-sessions",
         },
     ],
 ];

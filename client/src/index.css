@@ -42,7 +42,10 @@ a:focus {
 
 .sidebar-header h3 {
     color: #fff;
-    padding: 1em;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: 1em;
+    padding-bottom: 7px;
 }
 
 .sidebar ul p {
@@ -58,6 +61,7 @@ a:focus {
     color: #08415C;
     background: #fff;
     margin-left: 10px;
+    margin-right: 10px;
 }
 
 .items-menu {
@@ -80,8 +84,7 @@ li a.dropdown-toggle::after {
     display: none;
 }
 .side-menu {
-    height: calc(100vh - 98px);
-    overflow-y: scroll;
+    height: calc(100vh - 77px);
     cursor: pointer;
 }
 
@@ -96,6 +99,10 @@ li a.dropdown-toggle::after {
 
 .side-menu::-webkit-scrollbar-thumb:hover {
     background: #08415C;
+}
+
+.menu-item{
+    color: #5886d1;
 }
 
 /* ---------------------------------------------------

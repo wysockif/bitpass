@@ -15,7 +15,7 @@ const SubMenu = (props: any) => {
                 onClick={toggle}
                 className={classNames({ "menu-open": !collapsed })}
             >
-                <NavLink className="dropdown-toggle">
+                <NavLink className="dropdown-toggle menu-item">
                     <FontAwesomeIcon icon={icon} className="me-2" />
                     {title}
                 </NavLink>
@@ -26,8 +26,8 @@ const SubMenu = (props: any) => {
                 className={classNames("items-menu", { "mb-1": !collapsed })}
             >
                 {items.map((item: any, index: any) => (
-                    <NavItem key={index} className="ps-4">
-                        <NavLink tag={Link} to={item.target}>
+                    <NavItem key={index} className="ps-4" >
+                        <NavLink tag={Link} to={item.target} className="menu-item">
                             {item.title}
                         </NavLink>
                     </NavItem>

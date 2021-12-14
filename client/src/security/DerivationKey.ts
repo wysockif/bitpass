@@ -1,7 +1,7 @@
 import {Buffer} from "buffer";
 import {pbkdf2Sync} from "pbkdf2";
 
-export const derivativeKey = (password: string, salt: string, iterations: number = 100100): string => {
+export const derivativeKey = (password: string, salt: string, iterations: number = 100200): string => {
     const passwordBuffer = Buffer.from(password, "utf-8");
     const saltBuffer = Buffer.from(salt, "utf-8")
     const derivationKey = pbkdf2Sync(passwordBuffer, saltBuffer, iterations, 128, 'sha256');

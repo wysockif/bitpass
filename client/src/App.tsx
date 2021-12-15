@@ -1,6 +1,6 @@
 import {useState} from "react";
 import SideBar from "./components/Sidebar/Sidebar";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Route, Routes, Navigate} from "react-router-dom";
 import {Container} from "reactstrap";
 import Generator from "./components/Generator/Generator";
 import Vault from "./components/Vault/Vault";
@@ -28,9 +28,7 @@ function App() {
                         <Route path="/contact" element={<Contact/>}/>
                         <Route path="/active-sessions" element={<Sessions/>}/>
                         <Route path="/last-activity" element={<AccountActivity/>}/>
-                        <Route path="*" element={<Vault/>} />
-                        {/*<*/}
-                        {/*/!*<Route path="/" element={<Welcome username={"wysockif"}/>}/>*!/*/}
+                        <Route path="/*" element={<Navigate to="/vault"/>}/>
                     </Routes>
 
                 </Container>

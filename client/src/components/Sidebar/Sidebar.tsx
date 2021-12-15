@@ -61,7 +61,7 @@ const submenus = [
     [
         {
             title: "Last Activity",
-            target: "last-Activity",
+            target: "last-activity",
         },
         {
             title: "Active sessions",

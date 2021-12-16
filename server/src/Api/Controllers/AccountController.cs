@@ -39,5 +39,26 @@ namespace Api.Controllers
             await Mediator.Send(command);
             return NoContent();
         }
+        
+        [HttpPost("change-password")]
+        public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordCommand command)
+        {
+            await Mediator.Send(command);
+            return NoContent();
+        }
+        
+        [HttpPost("request-reset-password")]
+        public async Task<ActionResult> ResetPassword([FromBody] RequestResetPasswordCommand command)
+        {
+            await Mediator.Send(command);
+            return NoContent();
+        }
+        
+        [HttpPost("reset-password")]
+        public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordCommand command)
+        {
+            await Mediator.Send(command);
+            return NoContent();
+        }
     }
 }

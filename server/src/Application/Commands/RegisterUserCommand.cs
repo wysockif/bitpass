@@ -16,40 +16,30 @@ namespace Application.Commands
                 .EmailAddress()
                 .MinimumLength(ApplicationConstants.MinEmailLength)
                 .MaximumLength(ApplicationConstants.MaxEmailLength);
-            RuleFor(command => command.Password)
-                .NotNull()
-                .MinimumLength(ApplicationConstants.MinPasswordLength)
-                .MaximumLength(ApplicationConstants.MaxPasswordLength)
-                .Matches(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W])[\S].{0,}$")
-                .WithMessage(
-                    "'{PropertyName}' must contain at least one uppercase character, one lowercase character, " +
-                    "one number, one special character and must not contain any white character.");
-            RuleFor(command => command.MasterPassword)
-                .NotNull()
-                .MinimumLength(ApplicationConstants.MinPasswordLength)
-                .MaximumLength(ApplicationConstants.MaxPasswordLength)
-                .Matches(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W])[\S].{0,}$")
-                .WithMessage(
-                    "'{PropertyName}' must contain at least one uppercase character, one lowercase character, " +
-                    "one number, one special character and must not contain any white character.");
             RuleFor(command => command.Username)
                 .NotNull()
                 .MinimumLength(ApplicationConstants.MinUsernameLength)
                 .MaximumLength(ApplicationConstants.MaxUsernameLength)
                 .Matches(@"^[^\s\W]+$")
                 .WithMessage("'{PropertyName}' must contain only alphanumeric characters or underscore.");
+            RuleFor(command => command.Password)
+                .NotNull()
+                .NotEmpty();
+            RuleFor(command => command.EncryptionKeyHash)
+                .NotNull()
+                .NotEmpty();
         }
     }
 
     public class RegisterUserCommand : IRequest<SuccessViewModel>
     {
-        public RegisterUserCommand(string username, string email, string password, string masterPassword,
+        public RegisterUserCommand(string username, string email, string password, string encryptionKeyHash,
             string? ipAddress, string? userAgent)
         {
             Username = username;
             Email = email;
             Password = password;
-            MasterPassword = masterPassword;
+            EncryptionKeyHash = encryptionKeyHash;
             IpAddress = ipAddress;
             UserAgent = userAgent;
         }
@@ -57,7 +47,8 @@ namespace Application.Commands
         public string Username { get; }
         public string Email { get; }
         public string Password { get; }
-        public string MasterPassword { get; }
+        
+        public string EncryptionKeyHash { get; }
         public string? IpAddress { get; set; }
         public string? UserAgent { get; set; }
     }
@@ -74,7 +65,7 @@ namespace Application.Commands
         public async Task<SuccessViewModel> Handle(RegisterUserCommand command, CancellationToken cancellationToken)
         {
             await _accountService.RegisterAsync(command.Email, command.Username, command.Password,
-                command.MasterPassword, command.IpAddress, command.UserAgent);
+                command.EncryptionKeyHash, command.IpAddress, command.UserAgent);
 
             return new SuccessViewModel();
         }

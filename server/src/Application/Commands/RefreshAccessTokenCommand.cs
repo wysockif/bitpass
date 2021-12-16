@@ -50,7 +50,7 @@ namespace Application.Commands
             user.UpdateSession(oldRefreshTokenGuid!.Value, refreshToken.TokenGuid, refreshToken.ExpirationTimestamp);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return new AuthViewModel(accessToken.Token, refreshToken.Token);
+            return new AuthViewModel(accessToken.Token, refreshToken.Token, user.UniversalToken);
         }
 
         private async Task<User> GetUserFromRefreshToken(RefreshAccessTokenCommand command,

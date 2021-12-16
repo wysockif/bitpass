@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Security.Authentication;
 using System.Threading.Tasks;
 using Application.Exceptions;
@@ -29,23 +30,24 @@ namespace Application.Services
             _emailService = emailService;
         }
 
-        public async Task RegisterAsync(string email, string username, string password, string masterPassword,
+        public async Task RegisterAsync(string email, string username, string password, string encryptionKeyHash,
             string? ipAddress, string? userAgent)
         {
             await CheckIfUserAlreadyExists(email, username);
 
-            var passwordHash = BCrypt.Net.BCrypt.HashPassword(password + _settings.PasswordPepper, 14);
+            var passwordHash = BCrypt.Net.BCrypt.HashPassword(password + _settings.PasswordHashPepper, 14);
             var masterPasswordHash =
-                BCrypt.Net.BCrypt.HashPassword(masterPassword + _settings.MasterPasswordPepper, 12);
+                BCrypt.Net.BCrypt.HashPassword(encryptionKeyHash + _settings.EncryptionKeyHashPepper, 12);
 
             var emailVerificationToken = Guid.NewGuid().ToString();
             var emailVerificationTokenHash = BCrypt.Net.BCrypt.HashPassword(emailVerificationToken);
             var emailVerificationTokenValidTo = DateTime.Now.AddHours(1);
+            var universalToken = GenerateRandomUniversalToken();
 
             await using var transaction = await _unitOfWork.BeginTransactionAsync();
 
             var registeredUser = User.Register(username.ToLower(), email.ToLower(), passwordHash, masterPasswordHash,
-                emailVerificationTokenHash, emailVerificationTokenValidTo);
+                emailVerificationTokenHash, emailVerificationTokenValidTo, universalToken);
             await _unitOfWork.UserRepository.AddAsync(registeredUser);
             await _unitOfWork.SaveChangesAsync();
 
@@ -76,7 +78,7 @@ namespace Application.Services
             user.AddSession(refreshToken.TokenGuid, refreshToken.ExpirationTimestamp, ipAddress, osName, browserName);
             await _unitOfWork.SaveChangesAsync();
 
-            return new Auth(accessToken.Token, refreshToken.Token);
+            return new Auth(accessToken.Token, refreshToken.Token, user.UniversalToken);
         }
 
         private async Task<User?> GetUserIfExistsAndHasVerifiedEmail(string identifier)
@@ -96,7 +98,8 @@ namespace Application.Services
         private async Task VerifyPassword(string password, string? ipAddress, User user, string? osName,
             string? browserName)
         {
-            var isPasswordVerified = BCrypt.Net.BCrypt.Verify(password + _settings.PasswordPepper, user.PasswordHash);
+            var isPasswordVerified =
+                BCrypt.Net.BCrypt.Verify(password + _settings.PasswordHashPepper, user.PasswordHash);
             if (!isPasswordVerified)
             {
                 user.AddAccountActivity(ActivityType.FailedLogin, ipAddress, osName, browserName);
@@ -135,7 +138,6 @@ namespace Application.Services
             return (osName, browserName);
         }
 
-
         private async Task TryToSendEmailAsync(string email, string username, string url)
         {
             try
@@ -146,6 +148,14 @@ namespace Application.Services
             {
                 Log.Error(exception, "Exception occured during sending verification email");
             }
+        }
+
+        private static string GenerateRandomUniversalToken()
+        {
+            var random = new Random();
+            return new string(Enumerable
+                .Repeat(ApplicationConstants.Alphabet, ApplicationConstants.UniversalTokenLength)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
         }
     }
 }

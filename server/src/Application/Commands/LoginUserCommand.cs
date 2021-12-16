@@ -45,7 +45,7 @@ namespace Application.Commands
         {
             var auth = await _accountService.LoginAsync(command.Identifier, command.Password, command.IpAddress,
                 command.UserAgent);
-            return new AuthViewModel(auth.AccessToken, auth.RefreshToken);
+            return new AuthViewModel(auth.AccessToken, auth.RefreshToken, auth.UniversalToken);
         }
     }
 }

@@ -9,5 +9,7 @@ namespace Application
         public const int MinEmailLength = 5;
         public const int MaxEmailLength = 64;
         public const int InvalidLoginDelayInMilliseconds = 2000;
+        public const int UniversalTokenLength = 64;
+        public const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     }
 }

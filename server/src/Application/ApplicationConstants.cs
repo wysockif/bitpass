@@ -10,6 +10,8 @@ namespace Application
         public const int MaxEmailLength = 64;
         public const int InvalidLoginDelayInMilliseconds = 2000;
         public const int UniversalTokenLength = 64;
+        public const int PasswordResetTokenLength = 64;
+        public const int PasswordResetTokenDurationInMinutes = 15;
         public const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     }
 }

@@ -28,6 +28,8 @@ namespace Application
 
             services.AddSingleton<IEmailService, EmailService>();
             services.AddSingleton<VerifyEmailAddressEmailTemplate>();
+            services.AddSingleton<RequestResetPasswordTemplate>();
+            services.AddSingleton<ChangedPasswordTemplate>();
 
             return services;
         }

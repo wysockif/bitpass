@@ -39,24 +39,30 @@ namespace Api.Controllers
             await Mediator.Send(command);
             return NoContent();
         }
-        
-        [HttpPost("change-password")]
-        public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordCommand command)
+
+        [HttpPost("request-password-reset")]
+        public async Task<ActionResult> RequestPasswordReset([FromBody] RequestResetPasswordCommand command)
         {
+            command.UserAgent = Request.Headers["User-Agent"];
+            command.IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
             await Mediator.Send(command);
             return NoContent();
         }
-        
-        [HttpPost("request-reset-password")]
-        public async Task<ActionResult> ResetPassword([FromBody] RequestResetPasswordCommand command)
-        {
-            await Mediator.Send(command);
-            return NoContent();
-        }
-        
+
         [HttpPost("reset-password")]
         public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordCommand command)
         {
+            command.UserAgent = Request.Headers["User-Agent"];
+            command.IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+            await Mediator.Send(command);
+            return NoContent();
+        }
+
+        [HttpPost("change-password")]
+        public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordCommand command)
+        {
+            command.UserAgent = Request.Headers["User-Agent"];
+            command.IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
             await Mediator.Send(command);
             return NoContent();
         }

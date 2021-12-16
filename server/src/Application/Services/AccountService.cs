@@ -1,16 +1,16 @@
 using System;
-using System.Linq;
 using System.Security.Authentication;
 using System.Threading.Tasks;
 using Application.Exceptions;
 using Application.InfrastructureInterfaces;
 using Application.Utils.Email;
 using Application.Utils.Email.Templates;
+using Application.Utils.RandomStringGenerator;
 using Application.Utils.Security;
+using Application.Utils.UserAgentParser;
 using Domain.Model;
 using Domain.Services;
 using Serilog;
-using UAParser;
 
 namespace Application.Services
 {
@@ -42,7 +42,8 @@ namespace Application.Services
             var emailVerificationToken = Guid.NewGuid().ToString();
             var emailVerificationTokenHash = BCrypt.Net.BCrypt.HashPassword(emailVerificationToken);
             var emailVerificationTokenValidTo = DateTime.Now.AddHours(1);
-            var universalToken = GenerateRandomUniversalToken();
+            var universalToken =
+                RandomStringGenerator.GeneratePasswordResetToken(ApplicationConstants.UniversalTokenLength);
 
             await using var transaction = await _unitOfWork.BeginTransactionAsync();
 
@@ -51,7 +52,7 @@ namespace Application.Services
             await _unitOfWork.UserRepository.AddAsync(registeredUser);
             await _unitOfWork.SaveChangesAsync();
 
-            var (osName, browserName) = GetDeviceInfo(userAgent);
+            var (osName, browserName) = UserAgentParser.GetDeviceInfo(userAgent);
 
             registeredUser.AddAccountActivity(ActivityType.SuccessfulRegistration, ipAddress, osName, browserName);
 
@@ -68,7 +69,7 @@ namespace Application.Services
             var user = await GetUserIfExistsAndHasVerifiedEmail(identifier);
             // TODO : first check password, then validate if user has verified email 
             await CheckInvalidLoginAttemptsNumberAsync(user.Id);
-            var (osName, browserName) = GetDeviceInfo(userAgent);
+            var (osName, browserName) = UserAgentParser.GetDeviceInfo(userAgent);
             await VerifyPassword(password, ipAddress, user, osName, browserName);
             user.AddAccountActivity(ActivityType.SuccessfulLogin, ipAddress, osName, browserName);
 
@@ -130,14 +131,6 @@ namespace Application.Services
             }
         }
 
-        private static (string? osName, string? browserName) GetDeviceInfo(string? userAgent)
-        {
-            var clientInfo = string.IsNullOrEmpty(userAgent) ? null : Parser.GetDefault().Parse(userAgent);
-            var osName = clientInfo == null ? null : clientInfo.OS.Family + " " + clientInfo.OS.Major;
-            var browserName = clientInfo == null ? null : clientInfo.UA.Family + " " + clientInfo.UA.Major;
-            return (osName, browserName);
-        }
-
         private async Task TryToSendEmailAsync(string email, string username, string url)
         {
             try
@@ -148,14 +141,6 @@ namespace Application.Services
             {
                 Log.Error(exception, "Exception occured during sending verification email");
             }
-        }
-
-        private static string GenerateRandomUniversalToken()
-        {
-            var random = new Random();
-            return new string(Enumerable
-                .Repeat(ApplicationConstants.Alphabet, ApplicationConstants.UniversalTokenLength)
-                .Select(s => s[random.Next(s.Length)]).ToArray());
         }
     }
 }

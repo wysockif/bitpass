@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import PageTitle from "../PageTitile/PageTitle";
-import {Button, Card, Col, Form, FormGroup, Input, Label, ListGroupItem} from "reactstrap";
+import {Button, Col, Form, FormGroup, Input, Label, ListGroupItem} from "reactstrap";
 
 
 const Generator = () => {
@@ -8,7 +8,7 @@ const Generator = () => {
     const [uppercase, setUppercase] = useState<boolean>(true);
     const [digits, setDigits] = useState<boolean>(true);
     const [specialCharacters, setSpecialCharacters] = useState<boolean>(true);
-    const [length, setLength] = useState<number>(14);
+    const [length, setLength] = useState<number>(18);
     const [generatedPassword, setGeneratedPassword] = useState<string>('');
     const [copied, setCopied] = useState<boolean>(false);
 
@@ -50,8 +50,8 @@ const Generator = () => {
     return (
         <div>
             <PageTitle title="Password generator"/>
-            <div className="m-4 mt-5">
-                <Form>
+            <div className="m-4 mt-4">
+                <Form className="ms-2">
                     <FormGroup check inline>
                         <Input checked={lowercase} type="checkbox"
                                onChange={(event) => setLowerCase(event.target.checked)}/>
@@ -80,25 +80,30 @@ const Generator = () => {
                         </Label>
                     </FormGroup>
                 </Form>
-                <Col md="4 ms-2">
+                <Col md="6" xl="4" className="ms-2">
                     <Label check>
                         Length: {length}
                     </Label>
                     <Input type="range" className="form-range" id="customRange1" min="8" max="64" step="1"
                            defaultValue="14" onChange={(ev) => setLength(parseInt(ev.target.value))}></Input>
                 </Col>
-                <Button size="sm" color="primary" onClick={(ev) => generatePassword(ev)}>Generate</Button>
+                <Button size="sm" color="primary" className="ms-2 mt-2"
+                        onClick={(ev) => generatePassword(ev)}>Generate</Button>
 
-                {generatedPassword && <div><div className="mt-4 p-2 d-inline-flex" onClick={() => copyToClipBoard()} style={{cursor: "pointer"}}>
-                    <ListGroupItem action className="rounded">
-                        {!copied &&
-                        <span style={{fontSize: "10px"}} className="text-muted">Click to copy to clipboard</span>}
-                        {copied && <span style={{fontSize: "10px"}} className="text-muted">Copied to clipboard!</span>}
-                        <div>
-                            <h5><code className="text-danger">{generatedPassword}</code></h5>
-                        </div>
-                    </ListGroupItem>
-                </div></div>}
+                {generatedPassword && <div>
+                    <div className="mt-3 p-2 d-inline-flex" onClick={() => copyToClipBoard()}
+                         style={{cursor: "pointer"}}>
+                        <ListGroupItem action className="rounded">
+                            {!copied &&
+                            <span style={{fontSize: "10px"}} className="text-muted">Click to copy to clipboard</span>}
+                            {copied &&
+                            <span style={{fontSize: "10px"}} className="text-muted">Copied to clipboard!</span>}
+                            <div>
+                                <h5><code className="text-danger">{generatedPassword}</code></h5>
+                            </div>
+                        </ListGroupItem>
+                    </div>
+                </div>}
             </div>
         </div>
     )

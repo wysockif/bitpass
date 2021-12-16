@@ -6,17 +6,18 @@ import {
     faKey,
     faPaperPlane,
     faQuestion,
-    faShieldAlt
+    faShieldAlt,
+    faSignOutAlt
 } from "@fortawesome/free-solid-svg-icons";
-import {Nav, NavItem, NavLink} from "reactstrap";
+import {Col, Nav, NavItem, NavLink} from "reactstrap";
 import classNames from "classnames";
 import {Link} from "react-router-dom";
 
 import SubMenu from "./SubMenu";
 
 const SideBar = (props: any) => (
-    <div className={classNames("sidebar", {"is-open": props.isOpen})}>
-        <div className="sidebar-header">
+    <Col lg="2" md="3" sm="4" className={classNames("sidebar", {"is-open": props.isOpen})}>
+        <div className="sidebar-header mt-4 text-center mb-3">
             <h3>Bitpass app</h3>
         </div>
         <div className="side-menu">
@@ -53,8 +54,15 @@ const SideBar = (props: any) => (
                     </NavLink>
                 </NavItem>
             </Nav>
+            <div className="text-center logout-button ms-1 px-2 py-1">
+                <small>
+                    <FontAwesomeIcon icon={faSignOutAlt} className="me-2"/>
+                    Log out
+
+                </small>
+            </div>
         </div>
-    </div>
+    </Col>
 );
 
 const submenus = [

@@ -55,16 +55,15 @@ namespace Application.Commands
             var (osName, browserName) = UserAgentParser.GetDeviceInfo(command.UserAgent);
             if (!isTokenValid)
             {
-                user.AddAccountActivity(ActivityType.InvalidTokenDuringPasswordReset, command.IpAddress, osName,
-                    browserName);
+                user.AddAccountActivity(ActivityType.FailedPasswordReset, command.IpAddress, osName, browserName);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
-                await Task.Delay(ApplicationConstants.InvalidLoginDelayInMilliseconds, cancellationToken);
+                await Task.Delay(ApplicationConstants.InvalidAuthOperationExtraDelayInMilliseconds, cancellationToken);
                 throw new BadRequestException("Invalid credentials");
             }
 
             var newPasswordHash =
                 BCrypt.Net.BCrypt.HashPassword(command.NewPassword + _settings.PasswordHashPepper, 14);
-            user.AddAccountActivity(ActivityType.PasswordChanged, command.IpAddress, osName, browserName);
+            user.AddAccountActivity(ActivityType.SuccessfulPasswordReset, command.IpAddress, osName, browserName);
             user.ChangePassword(newPasswordHash);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);

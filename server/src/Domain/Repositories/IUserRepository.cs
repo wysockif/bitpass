@@ -20,7 +20,10 @@ namespace Domain.Repositories
         // Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
         Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default);
 
-        Task<int> GetFailedLoginActivitiesCountInLastHourByUserId(long userId,
+        Task<int> GetFailedLoginActivitiesCountInLastHourByUserIdAsync(long userId,
+            CancellationToken cancellationToken = default);
+
+        Task<int> GetPasswordResetRequestedActivitiesCountInLastHourByUserIdAsync(long userId,
             CancellationToken cancellationToken = default);
     }
 }

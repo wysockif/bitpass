@@ -58,9 +58,8 @@ namespace Application.Commands
 
             if (!isPasswordVerified)
             {
-                await Task.Delay(ApplicationConstants.InvalidLoginDelayInMilliseconds, cancellationToken);
-                user.AddAccountActivity(ActivityType.InvalidOldPasswordDuringPasswordChange, command.IpAddress, osName,
-                    browserName);
+                await Task.Delay(ApplicationConstants.InvalidAuthOperationExtraDelayInMilliseconds, cancellationToken);
+                user.AddAccountActivity(ActivityType.FailedPasswordChange, command.IpAddress, osName, browserName);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
                 throw new BadRequestException("Invalid credentials");
             }

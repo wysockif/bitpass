@@ -4,10 +4,14 @@ namespace Domain.Model
     {
         SuccessfulLogin,
         FailedLogin,
-        SuccessfulRegistration,
-        InvalidOldPasswordDuringPasswordChange,
+        Registration,
+        FailedPasswordChange,
         PasswordChanged,
-        PasswordChangeRequested,
-        InvalidTokenDuringPasswordReset
+        PasswordResetRequested,
+        FailedPasswordReset,
+        PasswordResetFailed,
+        SuccessfulPasswordReset,
+        FailedAddressEmailVerification,
+        EmailVerified
     }
 }

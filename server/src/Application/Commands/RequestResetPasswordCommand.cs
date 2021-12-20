@@ -51,6 +51,7 @@ namespace Application.Commands
                 throw new NotFoundException("User not found");
             }
 
+            await CheckPasswordResetRequestsNumberInLastHourAsync(user.Id);
             var passwordResetToken =
                 RandomStringGenerator.GeneratePasswordResetToken(ApplicationConstants.PasswordResetTokenLength);
             var passwordResetTokenHash = BCrypt.Net.BCrypt.HashPassword(passwordResetToken);
@@ -60,11 +61,21 @@ namespace Application.Commands
             var url = _settings.FrontendUrl + "/reset-password/" + user.Username + "/" + passwordResetToken;
 
             user.AddPasswordResetToken(passwordResetTokenHash, passwordResetTokenValidTo);
-            user.AddAccountActivity(ActivityType.PasswordChangeRequested, command.IpAddress, osName, browserName);
+            user.AddAccountActivity(ActivityType.PasswordResetRequested, command.IpAddress, osName, browserName);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
             await _emailService.SendEmailAsync(user.Email, new RequestResetPasswordTemplateData(user.Username, url));
             return new SuccessViewModel();
+        }
+
+        private async Task CheckPasswordResetRequestsNumberInLastHourAsync(long userId)
+        {
+            if (await _unitOfWork.UserRepository
+                .GetPasswordResetRequestedActivitiesCountInLastHourByUserIdAsync(userId) > 4)
+            {
+                await Task.Delay(ApplicationConstants.InvalidAuthOperationExtraDelayInMilliseconds);
+                throw new BadRequestException("Too many password reset requests. Try again later");
+            }
         }
     }
 }

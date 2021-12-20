@@ -1,9 +1,17 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Exceptions;
+using Application.InfrastructureInterfaces;
+using Application.Utils.Email;
+using Application.Utils.Email.Templates;
+using Application.Utils.RandomStringGenerator;
+using Application.Utils.UserAgentParser;
 using Application.ViewModels;
-using Domain.Services;
+using Domain.Model;
 using FluentValidation;
 using MediatR;
+using Serilog;
 
 namespace Application.Commands
 {
@@ -11,23 +19,15 @@ namespace Application.Commands
     {
         public RegisterUserCommandValidator()
         {
-            RuleFor(command => command.Email)
-                .NotNull()
-                .EmailAddress()
-                .MinimumLength(ApplicationConstants.MinEmailLength)
-                .MaximumLength(ApplicationConstants.MaxEmailLength);
+            RuleFor(command => command.Email).NotNull().EmailAddress()
+                .MinimumLength(ApplicationConstants.MinEmailLength).MaximumLength(ApplicationConstants.MaxEmailLength);
             RuleFor(command => command.Username)
-                .NotNull()
-                .MinimumLength(ApplicationConstants.MinUsernameLength)
+                .NotNull().MinimumLength(ApplicationConstants.MinUsernameLength)
                 .MaximumLength(ApplicationConstants.MaxUsernameLength)
                 .Matches(@"^[^\s\W]+$")
                 .WithMessage("'{PropertyName}' must contain only alphanumeric characters or underscore.");
-            RuleFor(command => command.Password)
-                .NotNull()
-                .NotEmpty();
-            RuleFor(command => command.EncryptionKeyHash)
-                .NotNull()
-                .NotEmpty();
+            RuleFor(command => command.Password).NotNull().NotEmpty();
+            RuleFor(command => command.EncryptionKeyHash).NotNull().NotEmpty();
         }
     }
 
@@ -47,7 +47,6 @@ namespace Application.Commands
         public string Username { get; }
         public string Email { get; }
         public string Password { get; }
-        
         public string EncryptionKeyHash { get; }
         public string? IpAddress { get; set; }
         public string? UserAgent { get; set; }
@@ -55,19 +54,78 @@ namespace Application.Commands
 
     public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, SuccessViewModel>
     {
-        private readonly IAccountService _accountService;
+        private readonly IEmailService _emailService;
+        private readonly ApplicationSettings _settings;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public RegisterUserCommandHandler(IAccountService accountService)
+        public RegisterUserCommandHandler(IEmailService emailService, ApplicationSettings settings,
+            IUnitOfWork unitOfWork)
         {
-            _accountService = accountService;
+            _emailService = emailService;
+            _settings = settings;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<SuccessViewModel> Handle(RegisterUserCommand command, CancellationToken cancellationToken)
         {
-            await _accountService.RegisterAsync(command.Email, command.Username, command.Password,
-                command.EncryptionKeyHash, command.IpAddress, command.UserAgent);
+            await CheckIfUserAlreadyExists(command.Email, command.Username);
+            var passwordHash = BCrypt.Net.BCrypt.HashPassword(command.Password + _settings.PasswordHashPepper, 12)!;
+            var masterPasswordHash =
+                BCrypt.Net.BCrypt.HashPassword(command.EncryptionKeyHash + _settings.EncryptionKeyHashPepper, 12)!;
+            var (verificationToken, verificationTokenHash, verificationTokenValidTo, universalToken) =
+                GenerateEmailVerificationToken();
 
+            await using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
+
+            var registeredUser = User.Register(command.Username.ToLower(), command.Email.ToLower(), passwordHash,
+                masterPasswordHash, verificationTokenHash, verificationTokenValidTo, universalToken);
+            await _unitOfWork.UserRepository.AddAsync(registeredUser, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            var (osName, browserName) = UserAgentParser.GetDeviceInfo(command.UserAgent);
+            registeredUser.AddAccountActivity(ActivityType.Registration, command.IpAddress, osName,
+                browserName);
+
+            await TryToSendEmailAsync(command.Email.ToLower(), command.Username.ToLower(), verificationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
             return new SuccessViewModel();
+        }
+
+        private static (string, string, DateTime, string) GenerateEmailVerificationToken()
+        {
+            var emailVerificationToken = Guid.NewGuid().ToString();
+            var emailVerificationTokenHash = BCrypt.Net.BCrypt.HashPassword(emailVerificationToken);
+            var emailVerificationTokenValidTo = DateTime.Now.AddHours(1);
+            var universalToken =
+                RandomStringGenerator.GeneratePasswordResetToken(ApplicationConstants.UniversalTokenLength);
+            return (emailVerificationToken, emailVerificationTokenHash, emailVerificationTokenValidTo, universalToken);
+        }
+
+        private async Task CheckIfUserAlreadyExists(string email, string username)
+        {
+            var user = await _unitOfWork.UserRepository.GetByEmailOrUsernameAsync(email, username);
+
+            if (user != default)
+            {
+                var propertyName = user.Email == email.ToLower()
+                    ? nameof(email)
+                    : nameof(username);
+                throw new BadRequestException($"User with given {propertyName} already exists");
+            }
+        }
+
+        private async Task TryToSendEmailAsync(string email, string username, string verificationToken)
+        {
+            try
+            {
+                var url = _settings.FrontendUrl + "/verify-account/" + username + "/" + verificationToken;
+                await _emailService.SendEmailAsync(email, new VerifyEmailAddressEmailTemplateData(username, url));
+            }
+            catch (Exception exception)
+            {
+                Log.Error(exception, "Exception occured during sending verification email");
+            }
         }
     }
 }

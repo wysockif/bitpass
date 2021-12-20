@@ -3,6 +3,7 @@ using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.InfrastructureInterfaces;
+using Application.Utils.UserAgentParser;
 using Application.ViewModels;
 using Domain.Model;
 using FluentValidation;
@@ -28,14 +29,18 @@ namespace Application.Commands
 
     public class VerifyEmailAddressCommand : IRequest<SuccessViewModel>
     {
-        public VerifyEmailAddressCommand(string token, string username)
+        public VerifyEmailAddressCommand(string username, string token, string? ipAddress, string? userAgent)
         {
-            Token = token;
             Username = username;
+            Token = token;
+            IpAddress = ipAddress;
+            UserAgent = userAgent;
         }
 
         public string Username { get; set; }
         public string Token { get; set; }
+        public string? IpAddress { get; set; }
+        public string? UserAgent { get; set; }
     }
 
     public class VerifyEmailAddressCommandHandler : IRequestHandler<VerifyEmailAddressCommand, SuccessViewModel>
@@ -52,23 +57,28 @@ namespace Application.Commands
         {
             var user = await GetUserIfExistsAsync(command, cancellationToken);
 
-            ValidateToken(command, user.EmailVerificationTokenHash, user.EmailVerificationTokenValidTo);
+            var (osName, browserName) = UserAgentParser.GetDeviceInfo(command.UserAgent);
+            await ValidateTokenAsync(command, user, osName, browserName, command.IpAddress, cancellationToken);
 
             user.VerifyEmail();
+            user.AddAccountActivity(ActivityType.EmailVerified, command.IpAddress, osName, browserName);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
             return new SuccessViewModel();
         }
 
-        private static void ValidateToken(VerifyEmailAddressCommand command, string? emailVerificationTokenHash,
-            DateTime? emailVerificationTokenValidTo)
+        private async Task ValidateTokenAsync(VerifyEmailAddressCommand command, User user, string? osName,
+            string? browserName, string? ipAddress, CancellationToken cancellationToken)
         {
-            var isTokenValid = emailVerificationTokenHash != default
-                               && emailVerificationTokenValidTo != default
-                               && BCrypt.Net.BCrypt.Verify(command.Token, emailVerificationTokenHash)
-                               && emailVerificationTokenValidTo >= DateTime.Now;
-
+            var isTokenValid = user.EmailVerificationTokenHash != default
+                               && user.EmailVerificationTokenValidTo != default
+                               && BCrypt.Net.BCrypt.Verify(command.Token, user.EmailVerificationTokenHash)
+                               && user.EmailVerificationTokenValidTo >= DateTime.Now;
             if (!isTokenValid)
             {
+                user.AddAccountActivity(ActivityType.FailedAddressEmailVerification, command.IpAddress, osName,
+                    browserName);
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
+                await Task.Delay(ApplicationConstants.InvalidAuthOperationExtraDelayInMilliseconds, cancellationToken);
                 throw new AuthenticationException($"Invalid token for user {command.Username}");
             }
         }
@@ -79,6 +89,7 @@ namespace Application.Commands
             var user = await _unitOfWork.UserRepository.GetByUsernameAsync(command.Username, cancellationToken);
             if (user == default)
             {
+                await Task.Delay(ApplicationConstants.InvalidAuthOperationExtraDelayInMilliseconds, cancellationToken);
                 throw new AuthenticationException($"Invalid token for user {command.Username}");
             }
 

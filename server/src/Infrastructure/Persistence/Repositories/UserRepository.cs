@@ -80,13 +80,23 @@ namespace Infrastructure.Persistence.Repositories
             await Task.FromResult(_storage.Users.Remove(entity));
         }
 
-        public async Task<int> GetFailedLoginActivitiesCountInLastHourByUserId(long userId,
+        public async Task<int> GetFailedLoginActivitiesCountInLastHourByUserIdAsync(long userId,
             CancellationToken cancellationToken = default)
         {
             return await _storage.AccountActivities
                 .Where(activity => activity.UserId == userId
                                    && activity.CreatedAt > DateTime.Now.AddHours(-1)
                                    && activity.ActivityType == ActivityType.FailedLogin)
+                .CountAsync(cancellationToken);
+        }
+
+        public async Task<int> GetPasswordResetRequestedActivitiesCountInLastHourByUserIdAsync(long userId,
+            CancellationToken cancellationToken = default)
+        {
+            return await _storage.AccountActivities
+                .Where(activity => activity.UserId == userId
+                                   && activity.CreatedAt > DateTime.Now.AddHours(-1)
+                                   && activity.ActivityType == ActivityType.PasswordResetRequested)
                 .CountAsync(cancellationToken);
         }
     }

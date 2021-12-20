@@ -9,26 +9,29 @@ namespace Domain.Model
 {
     public class User : Entity, IAggregateRoot
     {
-        private User(string username, string email, string passwordHash, string masterPasswordHash,
-            string emailVerificationTokenHash, DateTime emailVerificationTokenValidTo)
+        private User(string username, string email, string passwordHash, string encryptionKeyHash,
+            string emailVerificationTokenHash, DateTime emailVerificationTokenValidTo, string universalToken)
         {
             Username = username;
             Email = email;
             PasswordHash = passwordHash;
-            MasterPasswordHash = masterPasswordHash;
+            EncryptionKeyHash = encryptionKeyHash;
             IdEmailConfirmed = false;
             EmailVerificationTokenHash = emailVerificationTokenHash;
             EmailVerificationTokenValidTo = emailVerificationTokenValidTo;
+            UniversalToken = universalToken;
             AccountActivities = new List<AccountActivity>();
             Sessions = new List<Session>();
         }
 
-        private User(string username, string email, string passwordHash, string masterPasswordHash)
+        private User(string username, string email, string passwordHash, string encryptionKeyHash,
+            string universalToken)
         {
             Username = username;
             Email = email;
             PasswordHash = passwordHash;
-            MasterPasswordHash = masterPasswordHash;
+            EncryptionKeyHash = encryptionKeyHash;
+            UniversalToken = universalToken;
             IdEmailConfirmed = false;
             AccountActivities = new List<AccountActivity>();
             Sessions = new List<Session>();
@@ -37,8 +40,9 @@ namespace Domain.Model
         public long Id { get; private init; }
         public string Username { get; private init; }
         public string Email { get; private init; }
+        public string UniversalToken { get; init; }
         public string PasswordHash { get; private set; }
-        public string MasterPasswordHash { get; private set; }
+        public string EncryptionKeyHash { get; private set; }
         public string? PasswordResetTokenHash { get; private set; }
         public DateTime? PasswordResetTokenValidTo { get; private set; }
         public bool IdEmailConfirmed { get; private set; }
@@ -47,11 +51,11 @@ namespace Domain.Model
         public List<AccountActivity> AccountActivities { get; private set; }
         public List<Session> Sessions { get; private set; }
 
-        public static User Register(string username, string email, string passwordHash, string masterPasswordHash,
-            string emailVerificationTokenHash, DateTime emailVerificationTokenValidTo)
+        public static User Register(string username, string email, string passwordHash, string encryptionKeyHash,
+            string emailVerificationTokenHash, DateTime emailVerificationTokenValidTo, string universalToken)
         {
-            return new User(username, email, passwordHash, masterPasswordHash, emailVerificationTokenHash,
-                emailVerificationTokenValidTo);
+            return new User(username, email, passwordHash, encryptionKeyHash, emailVerificationTokenHash,
+                emailVerificationTokenValidTo, universalToken);
         }
 
         public void ResetPassword(string passwordHash)
@@ -93,6 +97,19 @@ namespace Domain.Model
             IdEmailConfirmed = true;
             EmailVerificationTokenHash = null;
             EmailVerificationTokenValidTo = null;
+        }
+
+        public void AddPasswordResetToken(string passwordResetTokenHash, DateTime passwordResetTokenValidTo)
+        {
+            PasswordResetTokenHash = passwordResetTokenHash;
+            PasswordResetTokenValidTo = passwordResetTokenValidTo;
+            Sessions.Clear();
+        }
+
+        public void ChangePassword(string passwordHash)
+        {
+            PasswordHash = passwordHash;
+            Sessions.Clear();
         }
     }
 }

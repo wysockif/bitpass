@@ -6,11 +6,13 @@ namespace Application.ViewModels
     {
         public string AccessToken { get; set; }
         public string RefreshToken { get; set; }
+        public string UniversalToken { get; set; }
 
-        public AuthViewModel(string accessToken, string refreshToken)
+        public AuthViewModel(string accessToken, string refreshToken, string universalToken)
         {
             AccessToken = accessToken;
             RefreshToken = refreshToken;
+            UniversalToken = universalToken;
         }
     }
 }

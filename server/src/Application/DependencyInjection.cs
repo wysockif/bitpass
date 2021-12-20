@@ -1,10 +1,8 @@
 using System.Reflection;
 using System.Text;
-using Application.Services;
 using Application.Utils.Email;
 using Application.Utils.Email.Templates;
 using Application.Utils.Security;
-using Domain.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MediatR;
@@ -21,13 +19,14 @@ namespace Application
         {
             services.AddSingleton(applicationSettings);
             services.AddMediatR(Assembly.GetExecutingAssembly());
-            services.AddScoped<IAccountService, AccountService>();
             services.AddJwtAuthentication(applicationSettings.AccessTokenSettings);
             services.AddFluentValidation(configuration => configuration.LocalizationEnabled = false);
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
             services.AddSingleton<IEmailService, EmailService>();
             services.AddSingleton<VerifyEmailAddressEmailTemplate>();
+            services.AddSingleton<RequestResetPasswordTemplate>();
+            services.AddSingleton<ChangedPasswordTemplate>();
 
             return services;
         }

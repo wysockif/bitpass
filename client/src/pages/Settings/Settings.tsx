@@ -1,6 +1,6 @@
 import React from 'react';
-import PageTitle from "../PageTitile/PageTitle";
-import HorizontalLine from "../HorizontalLine/HorizontalLine";
+import PageTitle from "../../components/PageTitile/PageTitle";
+import HorizontalLine from "../../components/HorizontalLine/HorizontalLine";
 import {Button, Col, Input, InputGroup, InputGroupText} from "reactstrap";
 
 const Settings = () => {

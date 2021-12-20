@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import PageTitle from "../PageTitile/PageTitle";
+import PageTitle from "../../components/PageTitile/PageTitle";
 import {Button, Col, Form, FormGroup, Input, Label, ListGroupItem} from "reactstrap";
 
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import PageTitle from "../PageTitile/PageTitle";
+import PageTitle from "../../components/PageTitile/PageTitle";
 
 const Contact = () => {
     return (

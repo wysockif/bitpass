@@ -1,5 +1,5 @@
 import React from 'react';
-import PageTitle from "../PageTitile/PageTitle";
+import PageTitle from "../../components/PageTitile/PageTitle";
 import {Button, Table} from "reactstrap";
 import {Link} from "react-router-dom";
 

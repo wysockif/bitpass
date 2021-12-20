@@ -33,6 +33,15 @@ namespace Api
             services.AddScoped<DeviceInfoCollectingMiddleware>();
 
             services.AddControllers();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("FrontEndClient", builder =>
+                {
+                    builder.AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowAnyOrigin();
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,7 +51,7 @@ namespace Api
             // {
             //     app.UseDeveloperExceptionPage();
             // }
-
+            app.UseCors("FrontEndClient");
             app.UseRouting();
             app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseMiddleware<DeviceInfoCollectingMiddleware>();

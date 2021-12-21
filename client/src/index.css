@@ -119,10 +119,10 @@ li a.dropdown-toggle::after {
     width: 0 !important;
 }
 
-body.modal-open .supreme-container{
-    -webkit-filter: blur(2px);
-    -moz-filter: blur(2px);
-    -o-filter: blur(2px);
-    -ms-filter: blur(2px);
-    filter: blur(2px);
+body.modal-open .modal-container{
+    -webkit-filter: blur(3px);
+    -moz-filter: blur(3px);
+    -o-filter: blur(3px);
+    -ms-filter: blur(3px);
+    filter: blur(3px);
 }

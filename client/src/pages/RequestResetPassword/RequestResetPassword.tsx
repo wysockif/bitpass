@@ -3,9 +3,8 @@ import {Card, CardBody, CardTitle, Col, FormGroup, Input, Label, Row} from "reac
 import ButtonWithSpinner from "../../components/ButtonWithSpinner/ButtonWithSpinner";
 import {Link} from "react-router-dom";
 
-const Login = () => {
+const RequestResetPassword = () => {
     const [ongoingApiCall, setOngoingApiCall] = useState<boolean>(false);
-
 
     return (
         <div>
@@ -16,7 +15,9 @@ const Login = () => {
                 <Col xl="8" sm="10">
                     <Card>
                         <CardBody>
-                            <CardTitle><h5>Sign in</h5></CardTitle>
+                            <CardTitle><h5>Request reset password</h5></CardTitle>
+                            <small className="text-muted">Requests per hour are limited</small>
+
                             <FormGroup>
                                 <Label for="identifier" className="mt-3">
                                     Email or username:
@@ -27,28 +28,18 @@ const Login = () => {
                                     placeholder="Enter your email address or username"
                                     type="text"
                                 />
-                                <Label for="password" className="mt-3">
-                                    Password:
-                                </Label>
-                                <Input
-                                    id="password"
-                                    name="Password"
-                                    placeholder="Enter your password"
-                                    type="password"
-                                />
                             </FormGroup>
                             <div className="text-center">
                                 <ButtonWithSpinner onClick={() => setOngoingApiCall(!ongoingApiCall)} disabled={false}
-                                                   className="" content="Sign in" ongoingApiCall={ongoingApiCall}/>
+                                                   className="" content="Request" ongoingApiCall={ongoingApiCall}/>
                             </div>
                         </CardBody>
                     </Card>
                 </Col>
-                <small className="text-center mt-2">Forgot your password? <Link className="fw-bold" to={'/request-reset-password'}>Request reset password</Link></small>
-                <small className="text-center mt-2">Don't have an account yet? <Link className="fw-bold" to={'/register'}>Sign up</Link></small>
+                <small className="text-center mt-2"><Link className="fw-bold" to={'/login'}>Return to login</Link></small>
             </Row>
         </div>
     );
 };
 
-export default Login;
+export default RequestResetPassword;

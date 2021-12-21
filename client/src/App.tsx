@@ -3,7 +3,7 @@ import SideBar from "./components/Sidebar/Sidebar";
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import {Col, Row} from "reactstrap";
 import Generator from "./pages/Generator/Generator";
-import Vault from "./components/Vault/Vault";
+import Vault from "./pages/Vault/Vault";
 import Settings from "./pages/Settings/Settings";
 import Faq from "./pages/Faq/Faq";
 import Contact from "./pages/Contact/Contact";
@@ -11,6 +11,8 @@ import Sessions from "./pages/Sessions/Sessions";
 import AccountActivity from "./pages/Activity/AccountActivity";
 import Register from "./pages/Register/Register";
 import Login from "./pages/Login/Login";
+import RequestResetPassword from "./pages/RequestResetPassword/RequestResetPassword";
+import ResetPassword from "./pages/ResetPassword/ResetPassword";
 
 function App() {
     const [sidebarIsOpen, setSidebarOpen] = useState(true);
@@ -20,10 +22,12 @@ function App() {
 
     return (
         <BrowserRouter>
-            <div>
+            <div className="modal-container">
                 {!userLoggedIn && <Routes>
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/register" element={<Register/>}/>
+                    <Route path="/request-reset-password" element={<RequestResetPassword/>}/>
+                    <Route path="/reset-password" element={<ResetPassword/>}/>
                     <Route path="/*" element={<Navigate to="/login"/>}/>
                 </Routes>}
                 {userLoggedIn && <Row className="m-0">

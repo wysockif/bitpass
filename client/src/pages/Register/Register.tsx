@@ -9,7 +9,7 @@ const Register = () => {
     return (
         <div>
             <div className="sidebar-header text-center py-4 myModal">
-                <h3>Bitpass app</h3>
+                <h3><Link to="/login">Bitpass app</Link></h3>
             </div>
             <Row className="justify-content-center mt-3">
                 <Col xl="8" sm="10">

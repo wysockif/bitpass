@@ -2,10 +2,57 @@ import React, {useState} from 'react';
 import {Card, CardBody, CardTitle, Col, FormGroup, Input, Label, Row} from "reactstrap";
 import ButtonWithSpinner from "../../components/ButtonWithSpinner/ButtonWithSpinner";
 import {Link} from "react-router-dom";
+import * as api from "../../api/apiCalls";
+
 
 const Login = () => {
     const [ongoingApiCall, setOngoingApiCall] = useState<boolean>(false);
+    const [identifier, setIdentifier] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [fieldErrors, setFieldErrors] = useState<any>([]);
+    const [error, setError] = useState<string>('');
 
+    const onClickLogin = () => {
+        setFieldErrors([]);
+        setError('')
+        setOngoingApiCall(true);
+        api.login({identifier: identifier, password: password})
+            .then(response => {
+                setOngoingApiCall(false)
+                setIdentifier('');
+                setPassword('');
+                api.setAuthHeader(true, response.data.accessToken)
+            })
+            .catch(error => {
+            setOngoingApiCall(false);
+            if (error?.response?.data?.errors) {
+                setFieldErrors(error.response.data.errors);
+                return;
+            } else if (error.response?.data){
+                setError(error.response.data);
+            } else {
+                setError("An error occurred, please try again later")
+            }
+        });
+    }
+
+    const onChangePassword = (ev: React.ChangeEvent<HTMLInputElement>) => {
+        if (password !== ev.target.value.trim()) {
+            const err = {...fieldErrors};
+            delete err.Password;
+            setFieldErrors(err);
+            setPassword(ev.target.value.trim());
+        }
+    }
+
+    const onChangeIdentifier = (ev: React.ChangeEvent<HTMLInputElement>) => {
+        if (identifier !== ev.target.value.trim()) {
+            const err = {...fieldErrors};
+            delete err.Username;
+            setFieldErrors(err);
+            setIdentifier(ev.target.value.trim());
+        }
+    }
 
     return (
         <div>
@@ -26,7 +73,10 @@ const Login = () => {
                                     name="identifier"
                                     placeholder="Enter your email address or username"
                                     type="text"
+                                    value={identifier}
+                                    onChange={onChangeIdentifier}
                                 />
+                                {fieldErrors.Identifier && <div className="text-danger mt-1">{fieldErrors.Identifier}</div>}
                                 <Label for="password" className="mt-3">
                                     Password:
                                 </Label>
@@ -35,10 +85,15 @@ const Login = () => {
                                     name="Password"
                                     placeholder="Enter your password"
                                     type="password"
+                                    value={password}
+                                    onChange={onChangePassword}
                                 />
+                                {fieldErrors.Password && <div className="text-danger mt-1">{fieldErrors.Password}</div>}
                             </FormGroup>
+                            {error && <div className="text-danger text-center mt-1 mb-3">{error}</div>}
+
                             <div className="text-center">
-                                <ButtonWithSpinner onClick={() => setOngoingApiCall(!ongoingApiCall)} disabled={false}
+                                <ButtonWithSpinner onClick={() => onClickLogin()} disabled={false}
                                                    className="" content="Sign in" ongoingApiCall={ongoingApiCall}/>
                             </div>
                         </CardBody>

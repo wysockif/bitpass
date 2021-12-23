@@ -126,3 +126,7 @@ body.modal-open .modal-container{
     -ms-filter: blur(3px);
     filter: blur(3px);
 }
+
+.btn-close{
+    display: none;
+}

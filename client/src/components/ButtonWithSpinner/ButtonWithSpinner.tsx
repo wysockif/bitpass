@@ -4,7 +4,7 @@ import {Button, Spinner} from "reactstrap";
 interface ButtonWithSpinnerProps {
     onClick: (ev: any) => void,
     disabled: boolean,
-    className: string,
+    className?: string,
     content: string,
     ongoingApiCall: boolean
 }
@@ -20,7 +20,7 @@ const ButtonWithSpinner = (props: ButtonWithSpinnerProps) => {
         >
             {props.content}
             {props.ongoingApiCall && <Spinner animation="border" size="sm" role="status" className="ms-1">
-                <span className="sr-only">Loading...</span>
+               Loading...
             </Spinner>}
         </Button>
     );

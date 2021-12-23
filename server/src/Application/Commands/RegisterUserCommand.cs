@@ -19,15 +19,28 @@ namespace Application.Commands
     {
         public RegisterUserCommandValidator()
         {
-            RuleFor(command => command.Email).NotNull().EmailAddress()
-                .MinimumLength(ApplicationConstants.MinEmailLength).MaximumLength(ApplicationConstants.MaxEmailLength);
+            // todo: Move to validators
+            RuleFor(command => command.Email)
+                .EmailAddress()
+                .WithMessage(" Not valid email address.")
+                .MinimumLength(ApplicationConstants.MinEmailLength)
+                .WithMessage($" Must contain at least {ApplicationConstants.MinEmailLength} characters.")
+                .MaximumLength(ApplicationConstants.MaxEmailLength)
+                .WithMessage($" Must contain max {ApplicationConstants.MaxEmailLength} characters.");
             RuleFor(command => command.Username)
-                .NotNull().MinimumLength(ApplicationConstants.MinUsernameLength)
+                .NotNull()
+                .WithMessage("Must not be empty")
+                .MinimumLength(ApplicationConstants.MinUsernameLength)
+                .WithMessage($" Must contain at least {ApplicationConstants.MinUsernameLength} characters.")
                 .MaximumLength(ApplicationConstants.MaxUsernameLength)
+                .WithMessage($" Must contain max {ApplicationConstants.MaxUsernameLength} characters.")
                 .Matches(@"^[^\s\W]+$")
-                .WithMessage("'{PropertyName}' must contain only alphanumeric characters or underscore.");
-            RuleFor(command => command.Password).NotNull().NotEmpty();
-            RuleFor(command => command.EncryptionKeyHash).NotNull().NotEmpty();
+                .WithMessage(" Must contain only alphanumeric characters or underscore.");
+            RuleFor(command => command.Password)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage("Must not be empty");
+            RuleFor(command => command.EncryptionKeyHash).NotNull().NotEmpty().WithMessage("Must not be empty");
         }
     }
 
@@ -119,7 +132,7 @@ namespace Application.Commands
         {
             try
             {
-                var url = _settings.FrontendUrl + "/verify-account/" + username + "/" + verificationToken;
+                var url = _settings.FrontendUrl + "/verify-email-address/" + username + "/" + verificationToken;
                 await _emailService.SendEmailAsync(email, new VerifyEmailAddressEmailTemplateData(username, url));
             }
             catch (Exception exception)

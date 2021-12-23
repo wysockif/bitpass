@@ -37,7 +37,7 @@ const VerifyMasterPassword = (props: VerifyPasswordModalProps) => {
             <ModalFooter>
                 <ButtonWithSpinner onClick={() => {
                     return;
-                }} disabled={false} className="" content={"Verify"} ongoingApiCall={true}/>
+                }} disabled={false} className="" content={"Verify"} ongoingApiCall={false}/>
             </ModalFooter>
         </Modal>
     );

@@ -13,6 +13,7 @@ import Register from "./pages/Register/Register";
 import Login from "./pages/Login/Login";
 import RequestResetPassword from "./pages/RequestResetPassword/RequestResetPassword";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
+import VerifyEmailAddress from "./pages/VerifyEmail/VerifyEmailAddress";
 
 function App() {
     const [sidebarIsOpen, setSidebarOpen] = useState(true);
@@ -27,7 +28,8 @@ function App() {
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/register" element={<Register/>}/>
                     <Route path="/request-reset-password" element={<RequestResetPassword/>}/>
-                    <Route path="/reset-password" element={<ResetPassword/>}/>
+                    <Route path="/reset-password/:username/:token" element={<ResetPassword/>}/>
+                    <Route path="/verify-email-address/:username/:token" element={<VerifyEmailAddress/>}/>
                     <Route path="/*" element={<Navigate to="/login"/>}/>
                 </Routes>}
                 {userLoggedIn && <Row className="m-0">

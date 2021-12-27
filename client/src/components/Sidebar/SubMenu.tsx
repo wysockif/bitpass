@@ -1,32 +1,32 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import classNames from "classnames";
-import { Collapse, NavItem, NavLink } from "reactstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
+import {Collapse, NavItem, NavLink} from "reactstrap";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {Link} from "react-router-dom";
 
 const SubMenu = (props: any) => {
     const [collapsed, setCollapsed] = useState(true);
     const toggle = () => setCollapsed(!collapsed);
-    const { icon, title, items } = props;
+    const {icon, title, items} = props;
 
     return (
-        <div>
+        <div style={{cursor: "pointer"}}>
             <NavItem
                 onClick={toggle}
-                className={classNames({ "menu-open": !collapsed })}
+                className={classNames({"menu-open": !collapsed})}
             >
                 <NavLink className="dropdown-toggle menu-item">
-                    <FontAwesomeIcon icon={icon} className="me-2" />
+                    <FontAwesomeIcon icon={icon} className="me-2"/>
                     {title}
                 </NavLink>
             </NavItem>
             <Collapse
                 isOpen={!collapsed}
                 navbar
-                className={classNames("items-menu", { "mb-1": !collapsed })}
+                className={classNames("items-menu", {"mb-1": !collapsed})}
             >
                 {items.map((item: any, index: any) => (
-                    <NavItem key={index} className="ps-4" >
+                    <NavItem key={index} className="ps-4">
                         <NavLink tag={Link} to={item.target} className="menu-item">
                             {item.title}
                         </NavLink>

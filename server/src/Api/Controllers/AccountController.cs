@@ -1,5 +1,3 @@
-using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Application.Commands;
 using Application.Utils.Authorization;
@@ -14,7 +12,7 @@ namespace Api.Controllers
     {
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<ActionResult> RegisterUser([FromBody] RegisterUserCommand command)
+        public async Task<ActionResult> Register([FromBody] RegisterUserCommand command)
         {
             command.UserAgent = Request.Headers["User-Agent"];
             command.IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
@@ -24,13 +22,22 @@ namespace Api.Controllers
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<ActionResult<AuthViewModel>> LoginUser([FromBody] LoginUserCommand command)
+        public async Task<ActionResult<AuthViewModel>> Login([FromBody] LoginUserCommand command)
         {
             command.UserAgent = Request.Headers["User-Agent"];
             command.IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
             return Ok(await Mediator.Send(command));
         }
 
+        [HttpPost("logout")]
+        [Authorize]
+        public async Task<ActionResult<AuthViewModel>> Logout([FromBody] LogoutUserCommand command)
+        {
+            await Mediator.Send(command);
+            return NoContent();
+        }
+
+        
         [HttpPost("refresh-access-token")]
         [AllowAnonymous]
         public async Task<ActionResult<AuthViewModel>> RefreshAccessToken([FromBody] RefreshAccessTokenCommand command)

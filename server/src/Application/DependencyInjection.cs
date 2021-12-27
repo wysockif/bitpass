@@ -1,5 +1,7 @@
+using System;
 using System.Reflection;
 using System.Text;
+using Application.Utils.AutoMapperProfiles;
 using Application.Utils.Email;
 using Application.Utils.Email.Templates;
 using Application.Utils.Security;
@@ -27,6 +29,7 @@ namespace Application
             services.AddSingleton<VerifyEmailAddressEmailTemplate>();
             services.AddSingleton<RequestResetPasswordTemplate>();
             services.AddSingleton<ChangedPasswordTemplate>();
+            services.AddAutoMapper(typeof(ViewModelProfile));
 
             return services;
         }
@@ -51,7 +54,8 @@ namespace Application
                     ValidateIssuerSigningKey = true,
                     ValidateIssuer = false,
                     ValidateAudience = false,
-                    ValidateLifetime = true
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
                 };
             });
         }

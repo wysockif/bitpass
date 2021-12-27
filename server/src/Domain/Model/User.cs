@@ -111,5 +111,15 @@ namespace Domain.Model
             PasswordHash = passwordHash;
             Sessions.Clear();
         }
+
+        public void DeleteSession(Guid refreshTokenGuid)
+        {
+            var session = Sessions.FirstOrDefault(s => s.RefreshTokenGuid == refreshTokenGuid);
+            if (session == default)
+            {
+                return;
+            }
+            Sessions.Remove(session);
+        }
     }
 }

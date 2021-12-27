@@ -7,18 +7,18 @@ const Settings = () => {
     return (
         <div>
             <PageTitle title="Settings"/>
-            <div className="px-3 pt-3" id="log-out-of-all-sessions">
+            <div className="px-3 pt-3 my-2" id="log-out-of-all-sessions">
                 <h6 className="fw-bold">Log out of all sessions</h6>
                 <small className="text-muted">Active sessions may continue to remain active for up to 15 minutes.</small>
                 <br/>
                 <Col md="8" lg="6" xl="5" xxl="4" className="mt-2">
                     <div className="d-flex aligns-items-center justify-content-center">
-                        <Button className="mt-2" size="sm">Log me out</Button>
+                        <Button className="mt-2 mb-2" size="sm">Log me out</Button>
                     </div>
                 </Col>
                 <HorizontalLine/>
             </div>
-            <div className="px-3 pt-1" id="change-password">
+            <div className="px-3 pt-1 my-2" id="change-password">
                 <h6 className="fw-bold">Change password</h6>
                 <small className="text-muted">You can change your password - not to be confused with master password.</small>
                 <Col md="8" lg="6" xl="5" xxl="4" className="mt-2">
@@ -40,7 +40,7 @@ const Settings = () => {
                         </InputGroupText>
                         <Input/>
                     </InputGroup>
-                    <div className="d-flex aligns-items-center justify-content-center">
+                    <div className="d-flex aligns-items-center justify-content-center mb-2">
                         <Button className="mt-2" size="sm">Change</Button>
                     </div>
                 </Col>

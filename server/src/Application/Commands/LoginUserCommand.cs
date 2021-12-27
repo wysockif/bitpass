@@ -70,7 +70,7 @@ namespace Application.Commands
                 browserName);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return new AuthViewModel(accessToken.Token, refreshToken.Token, user.UniversalToken);
+            return new AuthViewModel(accessToken.Token, refreshToken.Token, user.Id, user.Username, user.Email);
         }
 
         private async Task<User> GetUserIfExistsEmail(string identifier)

@@ -55,7 +55,7 @@ a:focus {
 }
 
 .items-menu {
-    color: #fff  !important;
+    color: #fff !important;
     background: #08415C;
 }
 
@@ -111,7 +111,7 @@ li a.dropdown-toggle::after {
     background: #08415C;
 }
 
-.menu-item{
+.menu-item {
     color: #5886d1;
 }
 
@@ -119,7 +119,7 @@ li a.dropdown-toggle::after {
     width: 0 !important;
 }
 
-body.modal-open .modal-container{
+body.modal-open .modal-container {
     -webkit-filter: blur(3px);
     -moz-filter: blur(3px);
     -o-filter: blur(3px);
@@ -127,6 +127,10 @@ body.modal-open .modal-container{
     filter: blur(3px);
 }
 
-.btn-close{
+.btn-close {
     display: none;
+}
+
+.blurry-text {
+    filter:blur(4px);
 }

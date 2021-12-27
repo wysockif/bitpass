@@ -13,8 +13,8 @@ const VerifyMasterPassword = () => {
         const [masterPassword, setMasterPassword] = useState<string>('');
         const [ongoingApiCall, setOngoingApiCall] = useState<boolean>(false);
         const [error, setError] = useState<string>('');
-        const reduxState = useSelector((state: AuthState) => state)
-        const dispatch: Dispatch<Action> = useDispatch()
+        const reduxState = useSelector((state: AuthState) => state);
+        const dispatch: Dispatch<Action> = useDispatch();
 
         const onChangeMasterPassword = (ev: React.ChangeEvent<HTMLInputElement>) => {
             if (masterPassword !== ev.target.value.trim()) {

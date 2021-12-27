@@ -15,13 +15,21 @@ const notLoggedInUser: AuthState = {
 export const configureStore = () => {
     let loadedUserFromLocalStorage = checkIfUserDataAreStoredInLocalStorage();
     const state = loadedUserFromLocalStorage ? {...loadedUserFromLocalStorage} : {...notLoggedInUser};
-    const store = createStore(authenticationReducer, state);
+    // @ts-ignore
+    const store = createStore(authenticationReducer, state, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
     store.subscribe(() => {
         localStorage.setItem('bitpass-user', JSON.stringify(store.getState()));
         const {isLoggedIn, accessToken} = store.getState();
         api.setAuthHeader({isLoggedIn, accessToken});
     });
+
+    window.addEventListener('storage', function(event){
+        if (event.storageArea === localStorage) {
+            let a = localStorage.getItem('bitpass-user');
+            console.log("tutaj " + a)
+        }
+    }, false);
 
     return store;
 };

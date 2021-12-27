@@ -70,11 +70,10 @@ namespace Application.Commands
 
         private async Task CheckPasswordResetRequestsNumberInLastHourAsync(long userId)
         {
-            if (await _unitOfWork.UserRepository
-                .GetPasswordResetRequestedActivitiesCountInLastHourByUserIdAsync(userId) > 4)
+            if (await _unitOfWork.UserRepository.GetPasswordResetRequestedActivitiesCountInLastHourByUserIdAsync(userId) > 4)
             {
                 await Task.Delay(ApplicationConstants.InvalidAuthOperationExtraDelayInMilliseconds);
-                throw new BadRequestException("Too many password reset requests. Try again later");
+                throw new BadRequestException("Too many password reset requests per hour. Try again later.");
             }
         }
     }

@@ -14,17 +14,19 @@ import Login from "./pages/Login/Login";
 import RequestResetPassword from "./pages/RequestResetPassword/RequestResetPassword";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
 import VerifyEmailAddress from "./pages/VerifyEmail/VerifyEmailAddress";
+import {useSelector} from "react-redux";
+import {AuthState} from "./redux/authenticationReducer";
 
 function App() {
     const [sidebarIsOpen, setSidebarOpen] = useState(true);
     const toggleSidebar = () => setSidebarOpen(!sidebarIsOpen);
 
-    let userLoggedIn = false;
+    const isUserLoggedIn = useSelector((state: AuthState) => state.isLoggedIn);
 
     return (
         <BrowserRouter>
             <div className="modal-container">
-                {!userLoggedIn && <Routes>
+                {!isUserLoggedIn && <Routes>
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/register" element={<Register/>}/>
                     <Route path="/request-reset-password" element={<RequestResetPassword/>}/>
@@ -32,7 +34,7 @@ function App() {
                     <Route path="/verify-email-address/:username/:token" element={<VerifyEmailAddress/>}/>
                     <Route path="/*" element={<Navigate to="/login"/>}/>
                 </Routes>}
-                {userLoggedIn && <Row className="m-0">
+                {isUserLoggedIn && <Row className="m-0">
                     <SideBar toggle={toggleSidebar} isOpen={sidebarIsOpen}/>
                     <Col lg="10" md="9" sm="8" className="p-0">
                         <Routes>

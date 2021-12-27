@@ -1,8 +1,10 @@
-import React, {useState} from 'react';
+import React, {Dispatch, useState} from 'react';
 import {Card, CardBody, CardTitle, Col, FormGroup, Input, Label, Row} from "reactstrap";
 import ButtonWithSpinner from "../../components/ButtonWithSpinner/ButtonWithSpinner";
 import {Link} from "react-router-dom";
 import * as api from "../../api/apiCalls";
+import {useDispatch} from "react-redux";
+import {Action} from "../../redux/authenticationReducer";
 
 
 const Login = () => {
@@ -11,6 +13,8 @@ const Login = () => {
     const [password, setPassword] = useState<string>('');
     const [fieldErrors, setFieldErrors] = useState<any>([]);
     const [error, setError] = useState<string>('');
+    const dispatch: Dispatch<Action> = useDispatch()
+
 
     const onClickLogin = () => {
         setFieldErrors([]);
@@ -21,7 +25,11 @@ const Login = () => {
                 setOngoingApiCall(false)
                 setIdentifier('');
                 setPassword('');
-                api.setAuthHeader(true, response.data.accessToken)
+                const {username, accessToken, refreshToken, userId, email} = response.data;
+                dispatch({
+                    type:"login",
+                    payload: {isLoggedIn: true, accessToken, refreshToken, username, userId, email, encryptionKey: ""}})
+                api.setAuthHeader({isLoggedIn: true, accessToken: response.data.accessToken})
             })
             .catch(error => {
             setOngoingApiCall(false);

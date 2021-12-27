@@ -6,13 +6,13 @@ import VerifyMasterPassword from "./VerifyMasterPassword";
 
 const Vault = () => {
     const [isAddItemModalOpen, setAddItemModalOpen] = useState<boolean>(false);
-    const [isMasterPasswordVerified, setMasterPasswordVerified] = useState<boolean>(false);
     const toggleAddItemModal = () => setAddItemModalOpen(!isAddItemModalOpen);
+
 
     return (
         <div>
             <PageTitle title="Your vault"/>
-            <VerifyMasterPassword isOpen={!isMasterPasswordVerified} toggle={() => console.log()} />
+            <VerifyMasterPassword/>
             <AddItemModal isOpen={isAddItemModalOpen} toggle={toggleAddItemModal}/>
 
             <div className="m-3">

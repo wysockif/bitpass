@@ -24,7 +24,7 @@ const VerifyEmailAddress = () => {
                 })
                 .catch(error => {
                     setOngoingApiCall(false);
-                    if (error?.response?.data?.errors?.Username || error.response.data?.errors.Token) {
+                    if (error?.response?.data?.errors?.Username || error?.response.data?.errors?.Token) {
                         setError("Invalid link");
                     } else if (error.response?.data) {
                         setError(error.response?.data);

@@ -5,7 +5,7 @@ import "./index.css";
 import {Provider} from 'react-redux';
 
 import {configureStore} from './redux/configureStore';
-const store = configureStore();
+export const store = configureStore();
 
 
 ReactDOM.render(

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Controllers
 {
     [Route("api/accounts")]
+    [ApiController]
     public class AccountController : BaseController
     {
         [HttpPost("register")]
@@ -25,7 +26,7 @@ namespace Api.Controllers
         public async Task<ActionResult<AuthViewModel>> Login([FromBody] LoginUserCommand command)
         {
             command.UserAgent = Request.Headers["User-Agent"];
-            command.IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+            command.IpAddress = GetIpAddress(HttpContext);
             return Ok(await Mediator.Send(command));
         }
 
@@ -37,7 +38,7 @@ namespace Api.Controllers
             return NoContent();
         }
 
-        
+
         [HttpPost("refresh-access-token")]
         [AllowAnonymous]
         public async Task<ActionResult<AuthViewModel>> RefreshAccessToken([FromBody] RefreshAccessTokenCommand command)
@@ -84,11 +85,11 @@ namespace Api.Controllers
             await Mediator.Send(command);
             return NoContent();
         }
-        
+
         [HttpPost("verify-encryption-key")]
         [Authorize]
         public async Task<ActionResult> VerifyEncryptionKeyHash([FromBody] VerifyEncryptionKeyHashCommand command)
-        { 
+        {
             command.UserId = AuthorizationService.RequireUserId(HttpContext.User);
             command.UserAgent = Request.Headers["User-Agent"];
             command.IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();

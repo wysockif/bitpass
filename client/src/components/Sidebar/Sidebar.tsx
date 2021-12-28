@@ -18,8 +18,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {Action, AuthState} from "../../redux/authenticationReducer";
 
 const SideBar = (props: any) => {
-    const refreshToken = useSelector((state: AuthState) => state.refreshToken)
-    const dispatch: Dispatch<Action> = useDispatch()
+    const refreshToken = useSelector((state: AuthState) => state.refreshToken);
+    const dispatch: Dispatch<Action> = useDispatch();
 
     const onClickLogoutButton = () => {
         api.logout({refreshToken})

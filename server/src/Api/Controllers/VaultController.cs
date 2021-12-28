@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using Application.Commands;
 using Application.Queries;
 using Application.Utils.Authorization;
-using Domain.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,6 +9,7 @@ namespace Api.Controllers
 {
     [Route("api/vault")]
     [Authorize]
+    [ApiController]
     public class VaultController : BaseController
     {
         [HttpGet]
@@ -23,7 +23,7 @@ namespace Api.Controllers
             };
             return Ok(await Mediator.Send(query));
         }
-        
+
         [HttpPost]
         public async Task<ActionResult> AddCipherLogin([FromBody] AddCipherLoginCommand command)
         {

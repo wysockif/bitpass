@@ -4,6 +4,7 @@ import {
     updateAccessTokenInLocalStorage,
     updateRefreshTokenInLocalStorage
 } from "../tokens/tokenService";
+import {store} from "../index";
 
 const apiUrl = 'http://localhost:5000';
 
@@ -12,12 +13,23 @@ axios.interceptors.response.use(
         return res;
     },
     async (err) => {
-        if (err.config.url !== "api/accounts/login" && err.response) {
+        if (!err.config.url.includes("login") && !err.config.url.includes("refresh-access-token")
+            && !err.config.url.includes("register") && !err.config.url.includes("logout")
+            && !err.config.url.includes("verify-email-address") && err.response) {
             if (err.response.status === 401 && !err.config._retry) {
                 err.config._retry = true;
-                const response = await axios.post(apiUrl + "/api/accounts/refresh-access-token", {refreshToken: getRefreshTokenFromLocalStorage()});
+                const oldRefreshToken = getRefreshTokenFromLocalStorage();
+                if (!oldRefreshToken) {
+                    localStorage.removeItem('bitpass-user');
+                    store.dispatch({type: "logout"});
+                    return Promise.reject(err);
+                }
+
+                const response = await axios.post(apiUrl + "/api/accounts/refresh-access-token", {refreshToken: oldRefreshToken});
+                console.log(response)
                 if (!response.data) {
                     localStorage.removeItem('bitpass-user');
+                    store.dispatch({type: "logout"});
                     return Promise.reject(err);
                 }
                 const newAccessToken = response.data.accessToken;
@@ -27,7 +39,15 @@ axios.interceptors.response.use(
                 axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
                 err.config.headers['Authorization'] = `Bearer ${newAccessToken}`;
                 return axios(err.config);
+            } else {
+                localStorage.removeItem('bitpass-user');
+                store.dispatch({type: "logout"});
+                return Promise.reject(err);
             }
+        } else {
+            localStorage.removeItem('bitpass-user');
+            store.dispatch({type: "logout"});
+            return Promise.reject(err);
         }
     });
 
@@ -36,7 +56,6 @@ export const setAuthHeader = (req: { isLoggedIn: boolean, accessToken: string })
         axios.defaults.headers.common['Authorization'] = `Bearer ${req.accessToken}`;
     }
 }
-
 
 export const deleteAuthHeader = () => {
     delete axios.defaults.headers.common['Authorization'];

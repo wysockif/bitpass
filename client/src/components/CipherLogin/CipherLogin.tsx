@@ -11,15 +11,19 @@ const CipherLogin = (props: VaultItem) => {
     const [isPasswordRevealed, setIsPasswordRevealed] = useState<boolean>(false);
     const encryptionKey = useSelector((state: AuthState) => state.encryptionKey)
 
-
     function onClickItem() {
+        setIsPasswordRevealed(false);
         setIsModalOpen(true);
     }
 
     function revealPassword() {
         if (isPasswordRevealed) {
-            return decryptPassword(props.encryptedPassword, encryptionKey);
+            return " " + decryptPassword(props.encryptedPassword, encryptionKey);
         }
+    }
+
+    const onToggleModal = () => {
+        setIsModalOpen(!isModalOpen)
     }
 
     return (
@@ -35,16 +39,30 @@ const CipherLogin = (props: VaultItem) => {
                     </div>
                 </ListGroupItem>
             </div>
-            <Modal isOpen={isModalOpen} toggle={() => setIsModalOpen(!isModalOpen)} centered>
-                <ModalHeader toggle={() => setIsModalOpen(!isModalOpen)}>{props.url}</ModalHeader>
+            <Modal isOpen={isModalOpen} toggle={onToggleModal} centered>
+                <ModalHeader toggle={onToggleModal}>{props.url}</ModalHeader>
                 <ModalBody>
-                    <div>Username or email: {props.identifier}</div>
-                    <div>Password:
-                        {!isPasswordRevealed && <span style={{cursor: "pointer"}} onClick={() => setIsPasswordRevealed(true)}>
-                            Click here to reveal
-                        </span>}
-                        {isPasswordRevealed && <span>
+                    <div>Username or email: <code>{props.identifier}</code>
+                        <span className="btn btn-outline-secondary py-0 float-end" onClick={() => {
+                            return;
+                        }}>
+                            copy
+                        </span>
+                    </div>
+                    <div className="mt-2">Password:
+                        {isPasswordRevealed && <code>
                             {revealPassword()}
+                        </code>}
+                        {!isPasswordRevealed && <code>
+                            {" *****************"}
+                        </code>}
+                        <span className="btn btn-outline-secondary py-0 float-end" onClick={() => {
+                            return;
+                        }}>copy</span>
+                        {!isPasswordRevealed &&
+                        <span className="btn btn-outline-secondary py-0 float-end mx-1"
+                              onClick={() => setIsPasswordRevealed(true)}>
+                            reveal
                         </span>}
                     </div>
                 </ModalBody>

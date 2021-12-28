@@ -40,7 +40,9 @@ namespace Application.Utils.Security
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_applicationSettings.AccessTokenSettings.Key));
             var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expiresAt = DateTime.Now.AddHours(_applicationSettings.AccessTokenSettings.ExpiryTimeInHours);
+            // TODO: change
+            // var expiresAt = DateTime.Now.AddMinutes(_applicationSettings.AccessTokenSettings.ExpiryTimeInMinutes);
+            var expiresAt = DateTime.Now.AddSeconds(30);
 
             var tokenDescriptor = new SecurityTokenDescriptor
                 { Subject = claims, Expires = expiresAt, SigningCredentials = signingCredentials };

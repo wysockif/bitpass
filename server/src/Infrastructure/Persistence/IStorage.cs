@@ -12,6 +12,7 @@ namespace Infrastructure.Persistence
         DbSet<User> Users { get; }
         DbSet<AccountActivity> AccountActivities { get; }
         DbSet<CipherLogin> CipherLogins { get; }
+        DbSet<Session> Sessions { get; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

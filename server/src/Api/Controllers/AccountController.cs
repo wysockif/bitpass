@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Application.Commands;
+using Application.Queries;
 using Application.Utils.Authorization;
 using Application.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -95,6 +96,28 @@ namespace Api.Controllers
             command.IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
             await Mediator.Send(command);
             return NoContent();
+        }
+
+        [HttpGet("activities")]
+        [Authorize]
+        public async Task<ActionResult> GetAccountActivities()
+        {
+            var activities = await Mediator.Send(new GetAccountActivitiesQuery
+            {
+                UserId = AuthorizationService.RequireUserId(HttpContext.User)
+            });
+            return Ok(activities);
+        }
+        
+        [HttpGet("active-sessions")]
+        [Authorize]
+        public async Task<ActionResult> GetActiveSessions()
+        {
+            var activities = await Mediator.Send(new GetActiveSessionsQuery
+            {
+                UserId = AuthorizationService.RequireUserId(HttpContext.User)
+            });
+            return Ok(activities);
         }
     }
 }

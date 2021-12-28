@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Domain.Model;
@@ -25,5 +26,7 @@ namespace Domain.Repositories
 
         Task<int> GetPasswordResetRequestedActivitiesCountInLastHourByUserIdAsync(long userId,
             CancellationToken cancellationToken = default);
+        Task<IEnumerable<AccountActivity>> GetAccountActivitiesByOwnerId(long userId, int days, CancellationToken cancellationToken = default);
+        Task<IEnumerable<Session>> GetActiveSessionsByOwnerId(long userId, CancellationToken cancellationToken);
     }
 }

@@ -36,7 +36,6 @@ const VerifyMasterPassword = () => {
                     })
                 })
                 .catch(error => {
-                        console.log(error)
                         setOngoingApiCall(false);
                         if (error?.response?.data) {
                             setError("Incorrect master password");

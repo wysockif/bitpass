@@ -31,6 +31,8 @@ const authenticationReducer: Reducer<any, Action> = (state: AuthState = initialS
             return {...action.payload};
         case 'verify-master-password':
             return {...action.payload};
+        case 'update-tokens':
+            return {...action.payload};
         case 'logout':
             return {...initialState};
         default:

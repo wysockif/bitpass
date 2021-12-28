@@ -22,19 +22,19 @@ const SideBar = (props: any) => {
     const dispatch: Dispatch<Action> = useDispatch();
 
     const onClickLogoutButton = () => {
+        dispatch({type: "logout"});
         api.logout({refreshToken})
             .finally(() => {
                 api.deleteAuthHeader();
-                dispatch({type: "logout"});
             });
     }
 
     return (
-        <Col lg="2" md="3" sm="4" className={classNames("sidebar", {"is-open": props.isOpen})}>
+        <Col lg="2" md="3" sm="4" className={classNames("sidebar", {"is-open": props.isOpen}, "side-menu", "p-0", "m-0")}>
             <div className="sidebar-header mt-4 text-center mb-3">
                 <h3>Bitpass app</h3>
             </div>
-            <div className="side-menu">
+            <div>
                 <Nav vertical className="list-group pb-3">
                     <NavItem>
                         <NavLink tag={Link} to={"/vault"} className="menu-item">
@@ -67,13 +67,13 @@ const SideBar = (props: any) => {
                             Contact
                         </NavLink>
                     </NavItem>
+                    <div className="text-center logout-button ms-1 px-2 py-1 mt-5" onClick={onClickLogoutButton}>
+                        <small>
+                            <FontAwesomeIcon icon={faSignOutAlt} className="me-2"/>
+                            Log out
+                        </small>
+                    </div>
                 </Nav>
-                <div className="text-center logout-button ms-1 px-2 py-1" onClick={onClickLogoutButton}>
-                    <small>
-                        <FontAwesomeIcon icon={faSignOutAlt} className="me-2"/>
-                        Log out
-                    </small>
-                </div>
             </div>
         </Col>
     );

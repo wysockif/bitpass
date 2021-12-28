@@ -1,9 +1,5 @@
 import axios from 'axios';
-import {
-    getRefreshTokenFromLocalStorage,
-    updateAccessTokenInLocalStorage,
-    updateRefreshTokenInLocalStorage
-} from "../tokens/tokenService";
+import {getRefreshTokenFromLocalStorage, updateAccessAndRefreshTokensInLocalStorage} from "../tokens/tokenService";
 import {store} from "../index";
 
 const apiUrl = 'http://localhost:5000';
@@ -18,6 +14,7 @@ axios.interceptors.response.use(
             && !err.config.url.includes("verify-email-address") && err.response) {
             if (err.response.status === 401 && !err.config._retry) {
                 err.config._retry = true;
+
                 const oldRefreshToken = getRefreshTokenFromLocalStorage();
                 if (!oldRefreshToken) {
                     localStorage.removeItem('bitpass-user');
@@ -25,35 +22,33 @@ axios.interceptors.response.use(
                     return Promise.reject(err);
                 }
 
-                const response = await axios.post(apiUrl + "/api/accounts/refresh-access-token", {refreshToken: oldRefreshToken});
-                console.log(response)
-                if (!response.data) {
+                try {
+                    const response = await axios.post(apiUrl + "/api/accounts/refresh-access-token", {refreshToken: oldRefreshToken});
+                    const newAccessToken = response.data.accessToken;
+                    const newRefreshToken = response.data.refreshToken;
+                    updateAccessAndRefreshTokensInLocalStorage(newAccessToken, newRefreshToken);
+                    axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
+                    err.config.headers['Authorization'] = `Bearer ${newAccessToken}`;
+                } catch (e) {
+                    console.log(e)
                     localStorage.removeItem('bitpass-user');
                     store.dispatch({type: "logout"});
                     return Promise.reject(err);
                 }
-                const newAccessToken = response.data.accessToken;
-                const newRefreshToken = response.data.refreshToken;
-                updateAccessTokenInLocalStorage(newAccessToken);
-                updateRefreshTokenInLocalStorage(newRefreshToken);
-                axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
-                err.config.headers['Authorization'] = `Bearer ${newAccessToken}`;
+
                 return axios(err.config);
             } else {
-                localStorage.removeItem('bitpass-user');
-                store.dispatch({type: "logout"});
                 return Promise.reject(err);
             }
         } else {
-            localStorage.removeItem('bitpass-user');
-            store.dispatch({type: "logout"});
             return Promise.reject(err);
         }
     });
 
 export const setAuthHeader = (req: { isLoggedIn: boolean, accessToken: string }) => {
-    if (req) {
+    if (req.accessToken) {
         axios.defaults.headers.common['Authorization'] = `Bearer ${req.accessToken}`;
+        console.log(axios.defaults.headers.common['Authorization'])
     }
 }
 
@@ -86,11 +81,19 @@ export const verifyEncryptionKey = (verifyEncryptionKeyRequest: { encryptionKeyH
 }
 
 export const getVault = () => {
-    return axios.get(apiUrl + '/api/vault')
+    return axios.get(apiUrl + '/api/vault');
 }
 
 export const addVaultItem = (addVaultItemRequest: {
     encryptionKeyHash: string, websiteUrl: string, encryptedPassword: string, identifier: string
 }) => {
     return axios.post(apiUrl + '/api/vault', addVaultItemRequest);
+}
+
+export const getAccountActivities = () => {
+    return axios.get(apiUrl + '/api/accounts/activities');
+}
+
+export const getActiveSessions = () => {
+    return axios.get(apiUrl + '/api/accounts/active-sessions');
 }

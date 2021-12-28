@@ -9,6 +9,7 @@ namespace Infrastructure.Persistence
         public DbSet<User> Users { get; private set; }
         public DbSet<AccountActivity> AccountActivities { get; private set; }
         public DbSet<CipherLogin> CipherLogins { get; private set; }
+        public DbSet<Session> Sessions { get; private set; }
 
         public DatabaseContext(DbContextOptions options) : base(options)
         {

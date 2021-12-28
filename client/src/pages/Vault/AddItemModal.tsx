@@ -61,7 +61,6 @@ const AddItemModal = (props: AddItemModalProps) => {
             .then(response => {
                 props.toggle();
                 props.afterAdd();
-                console.log(response);
             });
     }
 

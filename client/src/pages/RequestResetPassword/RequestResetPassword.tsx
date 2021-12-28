@@ -20,7 +20,6 @@ const RequestResetPassword = () => {
                 setMessage('Check your email inbox and reset your password')
                 setIdentifier('');
                 setOngoingApiCall(false);
-                console.log(response)
             })
             .catch(error => {
                 setOngoingApiCall(false);

@@ -25,7 +25,7 @@ function App() {
 
     return (
         <BrowserRouter>
-            <div className="modal-container">
+            <div className="m-0 p-0">
                 {!isUserLoggedIn && <Routes>
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/register" element={<Register/>}/>

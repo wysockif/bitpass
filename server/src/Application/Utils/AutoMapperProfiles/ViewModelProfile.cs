@@ -9,6 +9,8 @@ namespace Application.Utils.AutoMapperProfiles
         public ViewModelProfile()
         {
             CreateMap<CipherLogin, CipherLoginViewModel>();
+            CreateMap<AccountActivity, AccountActivityViewModel>();
+            CreateMap<Session, SessionViewModel>();
         }
     }
 }

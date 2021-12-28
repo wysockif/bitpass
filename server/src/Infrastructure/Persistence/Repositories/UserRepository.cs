@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -98,6 +99,25 @@ namespace Infrastructure.Persistence.Repositories
                                    && activity.CreatedAt > DateTime.Now.AddHours(-1)
                                    && activity.ActivityType == ActivityType.PasswordResetRequested)
                 .CountAsync(cancellationToken);
+        }
+
+        public async Task<IEnumerable<AccountActivity>> GetAccountActivitiesByOwnerId(long userId, int days, CancellationToken cancellationToken = default)
+        {
+            return await _storage.AccountActivities
+                .Where(activity => activity.UserId == userId
+                                   && activity.CreatedAt > DateTime.Now.AddDays(-days))
+                .OrderByDescending(activity => activity.CreatedAt)
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<IEnumerable<Session>> GetActiveSessionsByOwnerId(long userId, CancellationToken cancellationToken)
+        {
+            var nowTimestamp = (DateTimeOffset.Now).ToUnixTimeSeconds();
+            return await _storage.Sessions
+                .Where(session => session.UserId == userId
+                                  && session.ExpirationUnixTimestamp > nowTimestamp)
+                .OrderByDescending(session => session.ExpirationUnixTimestamp)
+                .ToListAsync(cancellationToken);
         }
     }
 }

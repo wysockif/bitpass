@@ -27,12 +27,14 @@ export const configureStore = () => {
     window.addEventListener('storage', function (event) {
         if (event.storageArea === localStorage) {
             let a = localStorage.getItem('bitpass-user');
-            console.log(a)
             if (a) {
-                store.dispatch({type: "login", payload: JSON.parse(a)});
-                console.log('here')
-            } else {
-                store.dispatch({type: "logout"});
+                const payload: AuthState = JSON.parse(a);
+                if (payload.isLoggedIn){
+                    store.dispatch({type: "login", payload})
+                }
+                else {
+                    store.dispatch({type: "logout"})
+                }
             }
         }
     }, false);

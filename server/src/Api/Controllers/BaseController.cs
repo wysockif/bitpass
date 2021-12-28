@@ -17,7 +17,6 @@ namespace Api.Controllers
                 ? httpContext.Request.Headers["x-forwarded-for"].ToString().Split(',')[
                     httpContext.Request.Headers["x-forwarded-for"].ToString().Split(',').Length - 1]
                 : httpContext.Connection.RemoteIpAddress?.ToString();
-            Console.WriteLine(ip);
             return ip;
         }
     }

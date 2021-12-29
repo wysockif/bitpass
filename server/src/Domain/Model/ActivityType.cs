@@ -2,15 +2,14 @@ namespace Domain.Model
 {
     public enum ActivityType
     {
-        SuccessfulLogin,
+        Login,
         FailedLogin,
         Registration,
         FailedPasswordChange,
         PasswordChanged,
         PasswordResetRequested,
         FailedPasswordReset,
-        PasswordResetFailed,
-        SuccessfulPasswordReset,
+        PasswordReset,
         FailedAddressEmailVerification,
         EmailVerified
     }

@@ -1,13 +1,17 @@
 import React, {useState} from 'react';
-import {ListGroupItem, Modal, ModalBody, ModalHeader} from "reactstrap";
+import {Card, ListGroupItem, Modal, ModalBody, ModalHeader} from "reactstrap";
 import HorizontalLine from "../HorizontalLine/HorizontalLine";
 import {VaultItem} from "../../pages/Vault/Vault";
 import {decryptPassword} from "../../security/Encryption";
 import {useSelector} from "react-redux";
 import {AuthState} from "../../redux/authenticationReducer";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faClipboard, faClipboardCheck, faExternalLinkAlt, faEye, faEyeSlash} from "@fortawesome/free-solid-svg-icons";
 
 const CipherLogin = (props: VaultItem) => {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [isPasswordCopied, setIsPasswordCopied] = useState<boolean>(false);
+    const [isIdentifierCopied, setIsIdentifierCopied] = useState<boolean>(false);
     const [isPasswordRevealed, setIsPasswordRevealed] = useState<boolean>(false);
     const encryptionKey = useSelector((state: AuthState) => state.encryptionKey)
 
@@ -18,12 +22,25 @@ const CipherLogin = (props: VaultItem) => {
 
     function revealPassword() {
         if (isPasswordRevealed) {
-            return " " + decryptPassword(props.encryptedPassword, encryptionKey);
+            return decryptPassword(props.encryptedPassword, encryptionKey);
         }
     }
 
     const onToggleModal = () => {
         setIsModalOpen(!isModalOpen)
+    }
+
+    const copyPasswordToClipBoard = () => {
+        const encryptedPassword = decryptPassword(props.encryptedPassword, encryptionKey);
+        navigator.clipboard.writeText(encryptedPassword).then();
+        setIsPasswordCopied(true);
+        setIsIdentifierCopied(false);
+    }
+
+    const copyIdentifierToClipBoard = () => {
+        navigator.clipboard.writeText(props.identifier).then();
+        setIsIdentifierCopied(true);
+        setIsPasswordCopied(false);
     }
 
     return (
@@ -40,30 +57,37 @@ const CipherLogin = (props: VaultItem) => {
                 </ListGroupItem>
             </div>
             <Modal isOpen={isModalOpen} toggle={onToggleModal} centered>
-                <ModalHeader toggle={onToggleModal}>{props.url}</ModalHeader>
+                <ModalHeader toggle={onToggleModal}>
+                    {props.url}
+                    <a href={props.url} style={{cursor: "pointer"}} target="_blank" rel="noreferrer">
+                        <FontAwesomeIcon icon={faExternalLinkAlt} className="ms-2"/>
+                    </a>
+
+                </ModalHeader>
                 <ModalBody>
-                    <div>Username or email: <code>{props.identifier}</code>
-                        <span className="btn btn-outline-secondary py-0 float-end" onClick={() => {
-                            return;
-                        }}>
-                            copy
+                    <div>Username or email:
+                        <Card className="ms-2 px-1 d-inline"><code>{props.identifier}</code></Card>
+                        <span className="btn btn-outline-secondary py-0 float-end" onClick={copyIdentifierToClipBoard}>
+                            {!isIdentifierCopied && <FontAwesomeIcon icon={faClipboard}/>}
+                            {isIdentifierCopied && <FontAwesomeIcon icon={faClipboardCheck}/>}
                         </span>
                     </div>
                     <div className="mt-2">Password:
-                        {isPasswordRevealed && <code>
+                        {isPasswordRevealed && <Card className="ms-2 px-1 d-inline"><code>
                             {revealPassword()}
-                        </code>}
-                        {!isPasswordRevealed && <code>
-                            {" *****************"}
-                        </code>}
-                        <span className="btn btn-outline-secondary py-0 float-end" onClick={() => {
-                            return;
-                        }}>copy</span>
-                        {!isPasswordRevealed &&
+                        </code></Card>}
+                        {!isPasswordRevealed && <Card className="ms-2 px-1 d-inline"><code>
+                            {"*****************"}
+                        </code></Card>}
+                        <span className="btn btn-outline-secondary py-0 float-end" onClick={copyPasswordToClipBoard}>
+                            {!isPasswordCopied && <FontAwesomeIcon icon={faClipboard}/>}
+                            {isPasswordCopied && <FontAwesomeIcon icon={faClipboardCheck}/>}
+                        </span>
                         <span className="btn btn-outline-secondary py-0 float-end mx-1"
-                              onClick={() => setIsPasswordRevealed(true)}>
-                            reveal
-                        </span>}
+                              onClick={() => setIsPasswordRevealed(!isPasswordRevealed)}>
+                            {!isPasswordRevealed && <FontAwesomeIcon icon={faEye}/>}
+                            {isPasswordRevealed && <FontAwesomeIcon icon={faEyeSlash}/>}
+                        </span>
                     </div>
                 </ModalBody>
             </Modal>

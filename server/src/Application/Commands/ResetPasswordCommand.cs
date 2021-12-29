@@ -63,7 +63,7 @@ namespace Application.Commands
 
             var newPasswordHash =
                 BCrypt.Net.BCrypt.HashPassword(command.NewPassword + _settings.PasswordHashPepper, 14);
-            user.AddAccountActivity(ActivityType.SuccessfulPasswordReset, command.IpAddress, osName, browserName);
+            user.AddAccountActivity(ActivityType.PasswordReset, command.IpAddress, osName, browserName);
             user.ChangePassword(newPasswordHash);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);

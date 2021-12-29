@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
-import {Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
+import {FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 import {useSelector} from "react-redux";
 import {AuthState} from "../../redux/authenticationReducer";
 import {hashDerivationKey} from "../../security/KeyDerivation";
 import {encryptPassword} from "../../security/Encryption";
 import * as api from "../../api/apiCalls";
+import ButtonWithSpinner from "../../components/ButtonWithSpinner/ButtonWithSpinner";
 
 
 interface AddItemModalProps {
@@ -18,7 +19,9 @@ const AddItemModal = (props: AddItemModalProps) => {
     const [password, setPassword] = useState<string>('');
     const [identifier, setIdentifier] = useState<string>('');
     const [fieldErrors, setFieldErrors] = useState<any>([]);
-    const reduxState = useSelector((state: AuthState) => state)
+    const [ongoingApiCall, setOngoingApiCall] = useState<boolean>(false);
+    const reduxState = useSelector((state: AuthState) => state);
+
 
     const onChangeIdentifier = (ev: React.ChangeEvent<HTMLInputElement>) => {
         if (identifier !== ev.target.value.trim()) {
@@ -54,6 +57,7 @@ const AddItemModal = (props: AddItemModalProps) => {
     }
 
     const onClickAddButton = () => {
+        setOngoingApiCall(true);
         const encryptionKeyHash = hashDerivationKey(reduxState.encryptionKey, reduxState.email);
         const encryptedPassword = encryptPassword(password, reduxState.encryptionKey);
 
@@ -61,6 +65,7 @@ const AddItemModal = (props: AddItemModalProps) => {
             .then(response => {
                 props.toggle();
                 props.afterAdd();
+                setOngoingApiCall(false);
             });
     }
 
@@ -105,7 +110,8 @@ const AddItemModal = (props: AddItemModalProps) => {
                 </FormGroup>
             </ModalBody>
             <ModalFooter>
-                <Button onClick={onClickAddButton}>Add</Button>
+                <ButtonWithSpinner onClick={onClickAddButton} disabled={!websiteUrl || !password || !identifier}
+                                   content={"Add"} ongoingApiCall={ongoingApiCall} />
             </ModalFooter>
         </Modal>
     );

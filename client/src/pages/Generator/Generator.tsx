@@ -12,7 +12,6 @@ const Generator = () => {
     const [generatedPassword, setGeneratedPassword] = useState<string>('');
     const [copied, setCopied] = useState<boolean>(false);
 
-
     const generatePassword = (ev: React.FormEvent<HTMLButtonElement>) => {
         ev.preventDefault();
         setCopied(false);

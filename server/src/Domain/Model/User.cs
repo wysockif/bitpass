@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Authentication;
+using Domain.Exceptions;
 
 #pragma warning disable 8618
 
@@ -117,8 +118,9 @@ namespace Domain.Model
             var session = Sessions.FirstOrDefault(s => s.RefreshTokenGuid == refreshTokenGuid);
             if (session == default)
             {
-                return;
+                throw new DomainException("Session not found");
             }
+
             Sessions.Remove(session);
         }
     }

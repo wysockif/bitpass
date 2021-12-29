@@ -42,7 +42,7 @@ namespace Application.Utils.Security
             var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             // TODO: change
             // var expiresAt = DateTime.Now.AddMinutes(_applicationSettings.AccessTokenSettings.ExpiryTimeInMinutes);
-            var expiresAt = DateTime.Now.AddSeconds(30);
+            var expiresAt = DateTime.Now.AddSeconds(10);
 
             var tokenDescriptor = new SecurityTokenDescriptor
                 { Subject = claims, Expires = expiresAt, SigningCredentials = signingCredentials };

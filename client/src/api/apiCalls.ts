@@ -9,9 +9,11 @@ axios.interceptors.response.use(
         return res;
     },
     async (err) => {
-        if (!err.config.url.includes("login") && !err.config.url.includes("refresh-access-token")
-            && !err.config.url.includes("register") && !err.config.url.includes("logout")
-            && !err.config.url.includes("verify-email-address") && err.response) {
+        if (!err.config.url.includes("login")
+            && !err.config.url.includes("refresh-access-token")
+            && !err.config.url.includes("register")
+            && !err.config.url.includes("verify-email-address")
+            && err.response) {
             if (err.response.status === 401 && !err.config._retry) {
                 err.config._retry = true;
 
@@ -27,10 +29,16 @@ axios.interceptors.response.use(
                     const newAccessToken = response.data.accessToken;
                     const newRefreshToken = response.data.refreshToken;
                     updateAccessAndRefreshTokensInLocalStorage(newAccessToken, newRefreshToken);
+                    if (err.config.url.includes("logout")) {
+                        err.config.body = {refreshToken: newRefreshToken}
+                        err.config.data = {refreshToken: newRefreshToken}
+                        console.log("old " + oldRefreshToken)
+                        console.log("new " + newRefreshToken)
+                    }
+
                     axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
                     err.config.headers['Authorization'] = `Bearer ${newAccessToken}`;
                 } catch (e) {
-                    console.log(e)
                     localStorage.removeItem('bitpass-user');
                     store.dispatch({type: "logout"});
                     return Promise.reject(err);
@@ -48,7 +56,6 @@ axios.interceptors.response.use(
 export const setAuthHeader = (req: { isLoggedIn: boolean, accessToken: string }) => {
     if (req.accessToken) {
         axios.defaults.headers.common['Authorization'] = `Bearer ${req.accessToken}`;
-        console.log(axios.defaults.headers.common['Authorization'])
     }
 }
 
@@ -64,8 +71,9 @@ export const login = (loginUserRequest: { password: string; identifier: string }
     return axios.post(apiUrl + '/api/accounts/login', loginUserRequest);
 };
 
-export const logout = (logoutRequest: { refreshToken: string }) => {
-    return axios.post(apiUrl + '/api/accounts/logout', logoutRequest)
+export const logout = () => {
+    const refreshToken = getRefreshTokenFromLocalStorage();
+    return axios.post(apiUrl + '/api/accounts/logout', {refreshToken})
 }
 
 export const verifyEmailAddress = (verifyEmailAddressRequest: { username: string; token: string }) => {

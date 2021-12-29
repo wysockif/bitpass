@@ -14,17 +14,16 @@ import classNames from "classnames";
 import {Link} from "react-router-dom";
 import * as api from "../../api/apiCalls";
 import SubMenu from "./SubMenu";
-import {useDispatch, useSelector} from "react-redux";
-import {Action, AuthState} from "../../redux/authenticationReducer";
+import {useDispatch} from "react-redux";
+import {Action} from "../../redux/authenticationReducer";
 
 const SideBar = (props: any) => {
-    const refreshToken = useSelector((state: AuthState) => state.refreshToken);
     const dispatch: Dispatch<Action> = useDispatch();
 
     const onClickLogoutButton = () => {
-        dispatch({type: "logout"});
-        api.logout({refreshToken})
+        api.logout()
             .finally(() => {
+                dispatch({type: "logout"});
                 api.deleteAuthHeader();
             });
     }

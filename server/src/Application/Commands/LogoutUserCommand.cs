@@ -1,9 +1,12 @@
+using System;
 using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Exceptions;
 using Application.InfrastructureInterfaces;
 using Application.Utils.Security;
 using Application.ViewModels;
+using Domain.Exceptions;
 using Domain.Model;
 using FluentValidation;
 using MediatR;
@@ -20,12 +23,12 @@ namespace Application.Commands
 
     public class LogoutUserCommand : IRequest<SuccessViewModel>
     {
-        public string RefreshToken { get; set; }
-
         public LogoutUserCommand(string refreshToken)
         {
             RefreshToken = refreshToken;
         }
+
+        public string RefreshToken { get; set; }
     }
 
     public class LogoutUserCommandHandler : IRequestHandler<LogoutUserCommand, SuccessViewModel>
@@ -43,9 +46,21 @@ namespace Application.Commands
         {
             var user = await GetUserFromRefreshToken(command, cancellationToken);
             var refreshTokenGuid = _securityTokenService.GetTokenGuidFromRefreshToken(command.RefreshToken);
-            user.DeleteSession(refreshTokenGuid!.Value);
+            DeleteSessionIfExists(user, refreshTokenGuid);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
             return new SuccessViewModel();
+        }
+
+        private static void DeleteSessionIfExists(User user, Guid? refreshTokenGuid)
+        {
+            try
+            {
+                user.DeleteSession(refreshTokenGuid!.Value);
+            }
+            catch (DomainException exception)
+            {
+                throw new NotFoundException(exception.Message);
+            }
         }
 
         private async Task<User> GetUserFromRefreshToken(LogoutUserCommand command,

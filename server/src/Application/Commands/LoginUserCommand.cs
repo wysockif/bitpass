@@ -61,7 +61,7 @@ namespace Application.Commands
             var (osName, browserName) = UserAgentParser.GetDeviceInfo(command.UserAgent);
             await VerifyPassword(command.Password, command.IpAddress, user, osName, browserName);
             await CheckIfUserVerifiedEmailAddressAsync(user);
-            user.AddAccountActivity(ActivityType.SuccessfulLogin, command.IpAddress, osName, browserName);
+            user.AddAccountActivity(ActivityType.Login, command.IpAddress, osName, browserName);
 
             var accessToken = _securityTokenService.GenerateAccessTokenForUser(user.Id, user.Username);
             var refreshToken = _securityTokenService.GenerateRefreshTokenForUser(user.Id, user.Username);

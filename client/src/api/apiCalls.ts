@@ -4,6 +4,7 @@ import {store} from "../index";
 
 const apiUrl = 'http://localhost:5000';
 
+
 axios.interceptors.response.use(
     (res) => {
         return res;
@@ -82,6 +83,10 @@ export const verifyEmailAddress = (verifyEmailAddressRequest: { username: string
 
 export const requestResetPassword = (requestResetPasswordRequest: { identifier: string }) => {
     return axios.post(apiUrl + '/api/accounts/request-password-reset', requestResetPasswordRequest);
+}
+
+export const resetPassword = (resetPasswordRequest: { username: string, resetPasswordToken: string, newPassword: string }) => {
+    return axios.post(apiUrl + '/api/accounts/reset-password', resetPasswordRequest);
 }
 
 export const verifyEncryptionKey = (verifyEncryptionKeyRequest: { encryptionKeyHash: string }) => {

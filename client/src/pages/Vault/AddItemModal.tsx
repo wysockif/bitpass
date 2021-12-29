@@ -40,6 +40,7 @@ const AddItemModal = (props: AddItemModalProps) => {
             setPassword(ev.target.value.trim());
         }
     }
+
     const onChangeWebsiteUrl = (ev: React.ChangeEvent<HTMLInputElement>) => {
         if (websiteUrl !== ev.target.value.trim()) {
             const err = {...fieldErrors};

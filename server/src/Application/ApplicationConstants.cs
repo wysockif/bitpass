@@ -11,7 +11,9 @@ namespace Application
         public const int InvalidAuthOperationExtraDelayInMilliseconds = 2000;
         public const int UniversalTokenLength = 64;
         public const int PasswordResetTokenLength = 32;
+        public const int EmailVerificationTokenLength = 32;
         public const int PasswordResetTokenDurationInMinutes = 15;
+        public const int EmailVerificationTokenDurationInMinutes = 15;
         public const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     }
 }

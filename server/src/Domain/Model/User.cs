@@ -123,5 +123,11 @@ namespace Domain.Model
 
             Sessions.Remove(session);
         }
+
+        public void UpdateEmailVerificationToken(string verificationTokenHash, DateTime verificationTokenValidTo)
+        {
+            EmailVerificationTokenHash = verificationTokenHash;
+            EmailVerificationTokenValidTo = verificationTokenValidTo;
+        }
     }
 }

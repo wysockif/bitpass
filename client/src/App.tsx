@@ -16,6 +16,7 @@ import ResetPassword from "./pages/ResetPassword/ResetPassword";
 import VerifyEmailAddress from "./pages/VerifyEmail/VerifyEmailAddress";
 import {useSelector} from "react-redux";
 import {AuthState} from "./redux/authenticationReducer";
+import RequestEmailVerification from "./pages/RequestEmailVerification/RequestEmailVerification";
 
 function App() {
     const [sidebarIsOpen, setSidebarOpen] = useState(true);
@@ -30,6 +31,7 @@ function App() {
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/register" element={<Register/>}/>
                     <Route path="/request-reset-password" element={<RequestResetPassword/>}/>
+                    <Route path="/request-email-verification" element={<RequestEmailVerification/>}/>
                     <Route path="/reset-password/:username/:token" element={<ResetPassword/>}/>
                     <Route path="/verify-email-address/:username/:token" element={<VerifyEmailAddress/>}/>
                     <Route path="/*" element={<Navigate to="/login"/>}/>

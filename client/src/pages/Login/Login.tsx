@@ -99,6 +99,10 @@ const Login = () => {
                                 {fieldErrors.Password && <div className="text-danger mt-1">{fieldErrors.Password}</div>}
                             </FormGroup>
                             {error && <div className="text-danger text-center mt-1 mb-3">{error}</div>}
+                            {error && error === "Email not verified" && <div className="text-center mt-1 mb-3">
+                                <small className="text-center mt-2">Do you want to request new email verification link? <Link className="fw-bold" to={'/request-email-verification'}>Request email verification</Link></small>
+
+                            </div>}
 
                             <div className="text-center">
                                 <ButtonWithSpinner onClick={() => onClickLogin()} disabled={false}

@@ -119,5 +119,13 @@ namespace Api.Controllers
             });
             return Ok(activities);
         }
+        
+        [HttpPost("request-email-verification")]
+        [AllowAnonymous]
+        public async Task<ActionResult> RequestEmailVerification([FromBody] RequestEmailVerificationCommand command)
+        {
+            await Mediator.Send(command);
+            return NoContent();
+        }
     }
 }

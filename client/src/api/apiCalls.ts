@@ -85,6 +85,10 @@ export const requestResetPassword = (requestResetPasswordRequest: { identifier: 
     return axios.post(apiUrl + '/api/accounts/request-password-reset', requestResetPasswordRequest);
 }
 
+export const requestEmailVerification = (requestEmailVerificationRequest: { identifier: string }) => {
+    return axios.post(apiUrl + '/api/accounts/request-email-verification', requestEmailVerificationRequest);
+}
+
 export const resetPassword = (resetPasswordRequest: { username: string, resetPasswordToken: string, newPassword: string }) => {
     return axios.post(apiUrl + '/api/accounts/reset-password', resetPasswordRequest);
 }

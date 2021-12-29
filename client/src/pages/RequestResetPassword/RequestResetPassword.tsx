@@ -15,6 +15,9 @@ const RequestResetPassword = () => {
         setIdentifier('');
         setOngoingApiCall(true);
         setError('');
+        setFieldErrors('');
+        setMessage('')
+
         api.requestResetPassword({identifier})
             .then(response => {
                 setMessage('Check your email inbox and reset your password')
@@ -33,6 +36,7 @@ const RequestResetPassword = () => {
                 }
             })
     }
+
     const onChangeIdentifier = (ev: React.ChangeEvent<HTMLInputElement>) => {
         if (identifier !== ev.target.value.trim()) {
             const err = {...fieldErrors};
@@ -71,7 +75,7 @@ const RequestResetPassword = () => {
                                 <div className="text-success">{message}</div>
                                 <div style={{fontSize: "12px"}} className="text-muted mt-2">
                                     If you do not see the email in a few minutes, check your spam folder.<br/>
-                                    The number of requests is limited per hour. <br/>
+                                    The number of requests per hour is limited. <br/>
                                     Only the last sent link is valid (for 15 minutes).
                                 </div>
                             </div>}

@@ -58,7 +58,7 @@ namespace Application.Commands
                 user.AddAccountActivity(ActivityType.FailedPasswordReset, command.IpAddress, osName, browserName);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
                 await Task.Delay(ApplicationConstants.InvalidAuthOperationExtraDelayInMilliseconds, cancellationToken);
-                throw new BadRequestException("Invalid credentials");
+                throw new BadRequestException("The link is not valid, expired or you have generated new one");
             }
 
             var newPasswordHash =

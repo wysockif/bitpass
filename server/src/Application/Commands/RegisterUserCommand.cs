@@ -109,7 +109,7 @@ namespace Application.Commands
         {
             var emailVerificationToken = Guid.NewGuid().ToString();
             var emailVerificationTokenHash = BCrypt.Net.BCrypt.HashPassword(emailVerificationToken);
-            var emailVerificationTokenValidTo = DateTime.Now.AddHours(1);
+            var emailVerificationTokenValidTo = DateTime.Now.AddMinutes(ApplicationConstants.EmailVerificationTokenDurationInMinutes);
             var universalToken =
                 RandomStringGenerator.GeneratePasswordResetToken(ApplicationConstants.UniversalTokenLength);
             return (emailVerificationToken, emailVerificationTokenHash, emailVerificationTokenValidTo, universalToken);

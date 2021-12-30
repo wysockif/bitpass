@@ -84,9 +84,13 @@ namespace Domain.Model
         public void UpdateSession(Guid oldRefreshTokenGuid, Guid newRefreshTokenTokenGuid,
             long newRefreshTokenExpirationTimestamp)
         {
+            Console.WriteLine("Stary: "+ oldRefreshTokenGuid );
+            Console.WriteLine("Nowy: "+ newRefreshTokenTokenGuid );
+            
             var session = Sessions.FirstOrDefault(s => s.RefreshTokenGuid == oldRefreshTokenGuid);
             if (session == default || session.ExpirationUnixTimestamp < DateTimeOffset.Now.ToUnixTimeSeconds())
             {
+                Console.WriteLine("stary nie istnieje");
                 throw new AuthenticationException("Session for this refresh token does not exist or is not active");
             }
 
@@ -122,6 +126,17 @@ namespace Domain.Model
             }
 
             Sessions.Remove(session);
+        }
+
+        public void UpdateEmailVerificationToken(string verificationTokenHash, DateTime verificationTokenValidTo)
+        {
+            EmailVerificationTokenHash = verificationTokenHash;
+            EmailVerificationTokenValidTo = verificationTokenValidTo;
+        }
+
+        public void DeleteAllSessions()
+        {
+            Sessions.Clear();
         }
     }
 }

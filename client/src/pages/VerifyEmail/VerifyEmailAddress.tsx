@@ -43,7 +43,7 @@ const VerifyEmailAddress = () => {
             <div className="text-center mt-3">
                 {error && <div>
                     <div className="text-danger">{error}</div>
-                    <small className="mt-2 text-muted"><Link to="verify-email-request">Click here to send email
+                    <small className="mt-2 text-muted"><Link to="/request-email-verification">Click here to send email
                         verification link again</Link></small>
                 </div>}
                 {ongoingApiCall && !error && <Spinner animation="border" size="sm" role="status" className="ms-1">

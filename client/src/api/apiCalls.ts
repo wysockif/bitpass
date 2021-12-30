@@ -4,7 +4,6 @@ import {store} from "../index";
 
 const apiUrl = 'http://localhost:5000';
 
-
 axios.interceptors.response.use(
     (res) => {
         return res;
@@ -19,6 +18,7 @@ axios.interceptors.response.use(
                 err.config._retry = true;
 
                 const oldRefreshToken = getRefreshTokenFromLocalStorage();
+
                 if (!oldRefreshToken) {
                     localStorage.removeItem('bitpass-user');
                     store.dispatch({type: "logout"});
@@ -26,19 +26,18 @@ axios.interceptors.response.use(
                 }
 
                 try {
+                    // console.log("old " + oldRefreshToken)
                     const response = await axios.post(apiUrl + "/api/accounts/refresh-access-token", {refreshToken: oldRefreshToken});
                     const newAccessToken = response.data.accessToken;
                     const newRefreshToken = response.data.refreshToken;
+                    // console.log("new " + newRefreshToken)
                     updateAccessAndRefreshTokensInLocalStorage(newAccessToken, newRefreshToken);
-                    if (err.config.url.includes("logout")) {
-                        err.config.body = {refreshToken: newRefreshToken}
-                        err.config.data = {refreshToken: newRefreshToken}
-                        console.log("old " + oldRefreshToken)
-                        console.log("new " + newRefreshToken)
-                    }
-
                     axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
                     err.config.headers['Authorization'] = `Bearer ${newAccessToken}`;
+                    if (err.config.url.includes("logout")) {
+                        err.config.body = JSON.stringify({refreshToken: newRefreshToken})
+                        err.config.data = JSON.stringify({refreshToken: newRefreshToken})
+                    }
                 } catch (e) {
                     localStorage.removeItem('bitpass-user');
                     store.dispatch({type: "logout"});
@@ -85,6 +84,10 @@ export const requestResetPassword = (requestResetPasswordRequest: { identifier: 
     return axios.post(apiUrl + '/api/accounts/request-password-reset', requestResetPasswordRequest);
 }
 
+export const requestEmailVerification = (requestEmailVerificationRequest: { identifier: string }) => {
+    return axios.post(apiUrl + '/api/accounts/request-email-verification', requestEmailVerificationRequest);
+}
+
 export const resetPassword = (resetPasswordRequest: { username: string, resetPasswordToken: string, newPassword: string }) => {
     return axios.post(apiUrl + '/api/accounts/reset-password', resetPasswordRequest);
 }
@@ -109,4 +112,8 @@ export const getAccountActivities = () => {
 
 export const getActiveSessions = () => {
     return axios.get(apiUrl + '/api/accounts/active-sessions');
+}
+
+export const logoutAllSessions = () => {
+    return axios.post(apiUrl + '/api/accounts/logout-all-sessions');
 }

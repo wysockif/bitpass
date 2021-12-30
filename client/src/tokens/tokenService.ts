@@ -19,8 +19,10 @@ export const updateAccessAndRefreshTokensInLocalStorage = (newAccessToken: strin
             const loaded: AuthState = JSON.parse(loadedUserFromLocalStorage);
             loaded.accessToken = newAccessToken;
             loaded.refreshToken = newRefreshToken;
+            // console.log("Saved")
             localStorage.setItem('bitpass-user', JSON.stringify(loaded));
         } catch {
+            console.log("error while saving")
             return null;
         }
     }

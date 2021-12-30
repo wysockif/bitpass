@@ -38,7 +38,19 @@ namespace Api.Controllers
             await Mediator.Send(command);
             return NoContent();
         }
+        
+        [HttpPost("logout-all-sessions")]
+        [Authorize]
+        public async Task<ActionResult<AuthViewModel>> Logout()
+        {
+            var command = new LogoutAllSessionsCommand
+            {
+                UserId = AuthorizationService.RequireUserId(HttpContext.User)
+            };
 
+            await Mediator.Send(command);
+            return NoContent();
+        }
 
         [HttpPost("refresh-access-token")]
         [AllowAnonymous]

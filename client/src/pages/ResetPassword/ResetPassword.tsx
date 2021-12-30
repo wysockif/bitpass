@@ -1,8 +1,6 @@
 import React, {useState} from 'react';
 import {Link, useParams} from "react-router-dom";
-import {Col, FormGroup, Input, Label, Row, Spinner} from "reactstrap";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faSignOutAlt} from "@fortawesome/free-solid-svg-icons";
+import {Col, FormGroup, Input, Label, Row} from "reactstrap";
 import * as api from "../../api/apiCalls";
 import ButtonWithSpinner from "../../components/ButtonWithSpinner/ButtonWithSpinner";
 
@@ -26,7 +24,7 @@ const ResetPassword = () => {
         }
 
         api.resetPassword({username, newPassword, resetPasswordToken: token})
-            .then(response => {
+            .then(() => {
                 setMessage('Success')
                 setNewPassword('');
                 setOngoingApiCall(false);

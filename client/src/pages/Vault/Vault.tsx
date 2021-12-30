@@ -21,7 +21,6 @@ const Vault = () => {
     const [error, setError] = useState<string>('');
     const [ongoingApiCall, setOngoingApiCall] = useState<boolean>(true);
 
-
     useEffect(() => {
         if (!componentDidMount) {
             setError('');

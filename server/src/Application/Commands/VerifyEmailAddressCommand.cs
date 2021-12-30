@@ -79,7 +79,7 @@ namespace Application.Commands
                     browserName);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
                 await Task.Delay(ApplicationConstants.InvalidAuthOperationExtraDelayInMilliseconds, cancellationToken);
-                throw new AuthenticationException($"Invalid token for user {command.Username}");
+                throw new AuthenticationException("The link is not valid, expired or you have generated new one");
             }
         }
 
@@ -90,7 +90,7 @@ namespace Application.Commands
             if (user == default)
             {
                 await Task.Delay(ApplicationConstants.InvalidAuthOperationExtraDelayInMilliseconds, cancellationToken);
-                throw new AuthenticationException($"Invalid token for user {command.Username}");
+                throw new AuthenticationException("The link is not valid, expired or you have generated new one");
             }
 
             return user;

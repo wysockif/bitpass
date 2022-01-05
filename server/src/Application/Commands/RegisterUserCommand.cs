@@ -19,7 +19,6 @@ namespace Application.Commands
     {
         public RegisterUserCommandValidator()
         {
-            // todo: Move to validators
             RuleFor(command => command.Email)
                 .EmailAddress()
                 .WithMessage(" Not valid email address.")
@@ -39,7 +38,13 @@ namespace Application.Commands
             RuleFor(command => command.Password)
                 .NotNull()
                 .NotEmpty()
-                .WithMessage("Must not be empty");
+                .WithMessage("Must not be empty")
+                .MinimumLength(ApplicationConstants.MinPasswordLength)
+                .MaximumLength(ApplicationConstants.MaxPasswordLength)
+                .Matches(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W])[\S].{0,}$")
+                .WithMessage(
+                    "Password must contain at least one uppercase character, one lowercase character, " +
+                    "one number, one special character and must not contain any white character.");
             RuleFor(command => command.EncryptionKeyHash).NotNull().NotEmpty().WithMessage("Must not be empty");
         }
     }
@@ -109,7 +114,8 @@ namespace Application.Commands
         {
             var emailVerificationToken = Guid.NewGuid().ToString();
             var emailVerificationTokenHash = BCrypt.Net.BCrypt.HashPassword(emailVerificationToken);
-            var emailVerificationTokenValidTo = DateTime.Now.AddMinutes(ApplicationConstants.EmailVerificationTokenDurationInMinutes);
+            var emailVerificationTokenValidTo =
+                DateTime.Now.AddMinutes(ApplicationConstants.EmailVerificationTokenDurationInMinutes);
             var universalToken =
                 RandomStringGenerator.GeneratePasswordResetToken(ApplicationConstants.UniversalTokenLength);
             return (emailVerificationToken, emailVerificationTokenHash, emailVerificationTokenValidTo, universalToken);

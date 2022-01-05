@@ -17,6 +17,7 @@ import ButtonWithSpinner from "../../components/ButtonWithSpinner/ButtonWithSpin
 import {Link} from "react-router-dom";
 import * as api from "../../api/apiCalls";
 import {derivativeKey, hashDerivationKey} from "../../security/KeyDerivation";
+import PasswordInput from "../../components/PasswordInput/PasswordInput";
 
 const Register = () => {
     const [ongoingApiCall, setOngoingApiCall] = useState<boolean>(false);
@@ -34,7 +35,7 @@ const Register = () => {
         setOngoingApiCall(true);
         const encryptionKeyHash = hashDerivationKey(derivativeKey(masterPassword, email), email);
         api.register({email, username, password, encryptionKeyHash})
-            .then(response => {
+            .then(() => {
                 setUsername('');
                 setEmail('');
                 setPassword('');
@@ -129,25 +130,23 @@ const Register = () => {
                                 <Label for="password" className="mt-3">
                                     Password:
                                 </Label>
-                                <Input
+                                <PasswordInput
                                     id="password"
                                     name="Password"
                                     placeholder="Enter your password"
-                                    type="password"
-                                    value={password}
-                                    onChange={onChangePassword}
+                                    password={password}
+                                    onChangePassword={onChangePassword}
                                 />
                                 {fieldErrors.Password && <div className="text-danger mt-1">{fieldErrors.Password}</div>}
                                 <Label for="masterPassword" className="mt-3">
                                     Master password:
                                 </Label>
-                                <Input
+                                <PasswordInput
                                     id="masterPassword"
                                     name="Master password"
                                     placeholder="Enter your master password"
-                                    type="password"
-                                    value={masterPassword}
-                                    onChange={onChangeMasterPassword}
+                                    password={masterPassword}
+                                    onChangePassword={onChangeMasterPassword}
                                 />
                                 {fieldErrors.EncryptionKeyHash &&
                                 <div className="text-danger mt-1">{fieldErrors.EncryptionKeyHash}</div>}

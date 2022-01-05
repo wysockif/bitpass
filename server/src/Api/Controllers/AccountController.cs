@@ -38,7 +38,7 @@ namespace Api.Controllers
             await Mediator.Send(command);
             return NoContent();
         }
-        
+
         [HttpPost("logout-all-sessions")]
         [Authorize]
         public async Task<ActionResult<AuthViewModel>> Logout()
@@ -93,6 +93,7 @@ namespace Api.Controllers
         [Authorize]
         public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordCommand command)
         {
+            command.UserId = AuthorizationService.RequireUserId(HttpContext.User);
             command.UserAgent = Request.Headers["User-Agent"];
             command.IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
             await Mediator.Send(command);
@@ -120,7 +121,7 @@ namespace Api.Controllers
             });
             return Ok(activities);
         }
-        
+
         [HttpGet("active-sessions")]
         [Authorize]
         public async Task<ActionResult> GetActiveSessions()
@@ -131,7 +132,7 @@ namespace Api.Controllers
             });
             return Ok(activities);
         }
-        
+
         [HttpPost("request-email-verification")]
         [AllowAnonymous]
         public async Task<ActionResult> RequestEmailVerification([FromBody] RequestEmailVerificationCommand command)

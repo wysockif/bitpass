@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
 import {Link, useParams} from "react-router-dom";
-import {Col, FormGroup, Input, Label, Row} from "reactstrap";
+import {Col, FormGroup, Label, Row} from "reactstrap";
 import * as api from "../../api/apiCalls";
 import ButtonWithSpinner from "../../components/ButtonWithSpinner/ButtonWithSpinner";
+import PasswordInput from "../../components/PasswordInput/PasswordInput";
 
 const ResetPassword = () => {
     const [ongoingApiCall, setOngoingApiCall] = useState<boolean>(false);
@@ -65,13 +66,12 @@ const ResetPassword = () => {
                             <Label for="identifier" className="mt-3">
                                 New password:
                             </Label>
-                            <Input
+                            <PasswordInput
                                 id="password"
                                 name="password"
                                 placeholder="Enter your new password"
-                                type="password"
-                                value={newPassword}
-                                onChange={onChangeNewPassword}
+                                password={newPassword}
+                                onChangePassword={onChangeNewPassword}
                             />
                         </FormGroup>
                     </Col>

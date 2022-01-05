@@ -26,11 +26,11 @@ axios.interceptors.response.use(
                 }
 
                 try {
-                    // console.log("old " + oldRefreshToken)
+                    console.log("old " + oldRefreshToken)
                     const response = await axios.post(apiUrl + "/api/accounts/refresh-access-token", {refreshToken: oldRefreshToken});
                     const newAccessToken = response.data.accessToken;
                     const newRefreshToken = response.data.refreshToken;
-                    // console.log("new " + newRefreshToken)
+                    console.log("new " + newRefreshToken)
                     updateAccessAndRefreshTokensInLocalStorage(newAccessToken, newRefreshToken);
                     axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
                     err.config.headers['Authorization'] = `Bearer ${newAccessToken}`;
@@ -116,4 +116,8 @@ export const getActiveSessions = () => {
 
 export const logoutAllSessions = () => {
     return axios.post(apiUrl + '/api/accounts/logout-all-sessions');
+}
+
+export const changePassword = (changePasswordRequest: { newPassword: string, oldPassword: string }) => {
+    return axios.post(apiUrl + '/api/accounts/change-password', changePasswordRequest);
 }

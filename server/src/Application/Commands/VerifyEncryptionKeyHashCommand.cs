@@ -13,33 +13,31 @@ namespace Application.Commands
     {
         public VerifyEncryptionKeyHashCommandValidator()
         {
-            RuleFor(command => command.EncryptionKeyHash).NotNull();
+            RuleFor(command => command.EncryptionKeyHash).NotNull().NotEmpty();
+            RuleFor(command => command.UserId).GreaterThan(0);
         }
     }
 
     public class VerifyEncryptionKeyHashCommand : IRequest<SuccessViewModel>
     {
-        public string EncryptionKeyHash { get; set; }
-        public long UserId { get; set; }
-        public string? IpAddress { get; set; }
-        public string? UserAgent { get; set; }
-
-        public VerifyEncryptionKeyHashCommand(string encryptionKeyHash, long userId, string? ipAddress,
-            string? userAgent)
+        public VerifyEncryptionKeyHashCommand(string encryptionKeyHash, long userId)
         {
             EncryptionKeyHash = encryptionKeyHash;
             UserId = userId;
-            IpAddress = ipAddress;
-            UserAgent = userAgent;
         }
+
+        public string EncryptionKeyHash { get; }
+        public long UserId { get; set; }
     }
 
-    public class VerifyEncryptionKeyHashCommandHandler : IRequestHandler<VerifyEncryptionKeyHashCommand, SuccessViewModel>
+    public class
+        VerifyEncryptionKeyHashCommandHandler : IRequestHandler<VerifyEncryptionKeyHashCommand, SuccessViewModel>
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly ApplicationSettings _settings;
-        
-        public VerifyEncryptionKeyHashCommandHandler(IUnitOfWork unitOfWork, ISecurityTokenService securityTokenService, ApplicationSettings settings)
+        private readonly IUnitOfWork _unitOfWork;
+
+        public VerifyEncryptionKeyHashCommandHandler(IUnitOfWork unitOfWork, ISecurityTokenService securityTokenService,
+            ApplicationSettings settings)
         {
             _unitOfWork = unitOfWork;
             _settings = settings;
@@ -53,14 +51,16 @@ namespace Application.Commands
             {
                 throw new NotFoundException("User not found");
             }
-            
-            var isPasswordVerified = BCrypt.Net.BCrypt.Verify(command.EncryptionKeyHash + _settings.EncryptionKeyHashPepper, user.EncryptionKeyHash);
+
+            var isPasswordVerified =
+                BCrypt.Net.BCrypt.Verify(command.EncryptionKeyHash + _settings.EncryptionKeyHashPepper,
+                    user.EncryptionKeyHash);
 
             if (!isPasswordVerified)
             {
                 throw new BadRequestException("Incorrect master password");
             }
-            
+
             return new SuccessViewModel();
         }
     }

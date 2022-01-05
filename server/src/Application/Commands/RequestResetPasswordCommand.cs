@@ -9,10 +9,19 @@ using Application.Utils.RandomStringGenerator;
 using Application.Utils.UserAgentParser;
 using Application.ViewModels;
 using Domain.Model;
+using FluentValidation;
 using MediatR;
 
 namespace Application.Commands
 {
+    public class RequestResetPasswordCommandValidator : AbstractValidator<RequestResetPasswordCommand>
+    {
+        public RequestResetPasswordCommandValidator()
+        {
+            RuleFor(command => command.Identifier).NotNull().NotEmpty();
+        }
+    }
+
     public class RequestResetPasswordCommand : IRequest<SuccessViewModel>
     {
         public RequestResetPasswordCommand(string identifier, string? ipAddress, string? userAgent)
@@ -70,7 +79,8 @@ namespace Application.Commands
 
         private async Task CheckPasswordResetRequestsNumberInLastHourAsync(long userId)
         {
-            if (await _unitOfWork.UserRepository.GetPasswordResetRequestedActivitiesCountInLastHourByUserIdAsync(userId) > 4)
+            if (await _unitOfWork.UserRepository
+                .GetPasswordResetRequestedActivitiesCountInLastHourByUserIdAsync(userId) > 4)
             {
                 await Task.Delay(ApplicationConstants.InvalidAuthOperationExtraDelayInMilliseconds);
                 throw new BadRequestException("Too many password reset requests per hour. Try again later.");

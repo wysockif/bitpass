@@ -3,13 +3,27 @@ using System.Threading.Tasks;
 using Application.Exceptions;
 using Application.InfrastructureInterfaces;
 using Application.ViewModels;
+using FluentValidation;
 using MediatR;
 
 namespace Application.Commands
 {
+    public class LogoutAllSessionsCommandValidator : AbstractValidator<LogoutAllSessionsCommand>
+    {
+        public LogoutAllSessionsCommandValidator()
+        {
+            RuleFor(command => command.UserId).GreaterThan(0);
+        }
+    }
+
     public class LogoutAllSessionsCommand : IRequest<SuccessViewModel>
     {
-        public long UserId { get; set; }
+        public LogoutAllSessionsCommand(long userId)
+        {
+            UserId = userId;
+        }
+
+        public long UserId { get; }
     }
 
     public class LogoutAllSessionsCommandHandler : IRequestHandler<LogoutAllSessionsCommand, SuccessViewModel>
@@ -21,9 +35,11 @@ namespace Application.Commands
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<SuccessViewModel> Handle(LogoutAllSessionsCommand command, CancellationToken cancellationToken)
+        public async Task<SuccessViewModel> Handle(LogoutAllSessionsCommand command,
+            CancellationToken cancellationToken)
         {
-            var user = await _unitOfWork.UserRepository.GetByIdIncludingSessionsAsync(command.UserId, cancellationToken);
+            var user = await _unitOfWork.UserRepository.GetByIdIncludingSessionsAsync(command.UserId,
+                cancellationToken);
             if (user == default)
             {
                 throw new NotFoundException("User not found");

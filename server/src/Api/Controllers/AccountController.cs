@@ -44,9 +44,9 @@ namespace Api.Controllers
         public async Task<ActionResult<AuthViewModel>> Logout()
         {
             var command = new LogoutAllSessionsCommand
-            {
-                UserId = AuthorizationService.RequireUserId(HttpContext.User)
-            };
+            (
+                AuthorizationService.RequireUserId(HttpContext.User)
+            );
 
             await Mediator.Send(command);
             return NoContent();
@@ -105,8 +105,6 @@ namespace Api.Controllers
         public async Task<ActionResult> VerifyEncryptionKeyHash([FromBody] VerifyEncryptionKeyHashCommand command)
         {
             command.UserId = AuthorizationService.RequireUserId(HttpContext.User);
-            command.UserAgent = Request.Headers["User-Agent"];
-            command.IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
             await Mediator.Send(command);
             return NoContent();
         }
@@ -116,9 +114,7 @@ namespace Api.Controllers
         public async Task<ActionResult> GetAccountActivities()
         {
             var activities = await Mediator.Send(new GetAccountActivitiesQuery
-            {
-                UserId = AuthorizationService.RequireUserId(HttpContext.User)
-            });
+                (AuthorizationService.RequireUserId(HttpContext.User)));
             return Ok(activities);
         }
 
@@ -127,9 +123,7 @@ namespace Api.Controllers
         public async Task<ActionResult> GetActiveSessions()
         {
             var activities = await Mediator.Send(new GetActiveSessionsQuery
-            {
-                UserId = AuthorizationService.RequireUserId(HttpContext.User)
-            });
+                (AuthorizationService.RequireUserId(HttpContext.User)));
             return Ok(activities);
         }
 

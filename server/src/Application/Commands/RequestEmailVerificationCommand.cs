@@ -5,15 +5,21 @@ using Application.Exceptions;
 using Application.InfrastructureInterfaces;
 using Application.Utils.Email;
 using Application.Utils.Email.Templates;
-using Application.Utils.RandomStringGenerator;
-using Application.Utils.UserAgentParser;
 using Application.ViewModels;
-using Domain.Model;
+using FluentValidation;
 using MediatR;
 using Serilog;
 
 namespace Application.Commands
 {
+    public class RequestEmailVerificationCommandValidator : AbstractValidator<RequestEmailVerificationCommand>
+    {
+        public RequestEmailVerificationCommandValidator()
+        {
+            RuleFor(command => command.Identifier).NotNull().NotEmpty();
+        }
+    }
+
     public class RequestEmailVerificationCommand : IRequest<SuccessViewModel>
     {
         public RequestEmailVerificationCommand(string identifier)
@@ -21,10 +27,11 @@ namespace Application.Commands
             Identifier = identifier;
         }
 
-        public string Identifier { get; set; }
+        public string Identifier { get; }
     }
 
-    public class RequestEmailVerificationCommandHandler : IRequestHandler<RequestEmailVerificationCommand, SuccessViewModel>
+    public class
+        RequestEmailVerificationCommandHandler : IRequestHandler<RequestEmailVerificationCommand, SuccessViewModel>
     {
         private readonly IEmailService _emailService;
         private readonly ApplicationSettings _settings;
@@ -38,7 +45,8 @@ namespace Application.Commands
             _settings = settings;
         }
 
-        public async Task<SuccessViewModel> Handle(RequestEmailVerificationCommand command, CancellationToken cancellationToken)
+        public async Task<SuccessViewModel> Handle(RequestEmailVerificationCommand command,
+            CancellationToken cancellationToken)
         {
             var user = await _unitOfWork.UserRepository.GetByEmailOrUsernameAsync(command.Identifier,
                 command.Identifier, cancellationToken);
@@ -46,6 +54,7 @@ namespace Application.Commands
             {
                 throw new NotFoundException("User not found");
             }
+
             if (user.IdEmailConfirmed)
             {
                 throw new BadRequestException("Email already confirmed");
@@ -60,15 +69,16 @@ namespace Application.Commands
 
             return new SuccessViewModel();
         }
-        
+
         private static (string, string, DateTime) GenerateEmailVerificationToken()
         {
             var emailVerificationToken = Guid.NewGuid().ToString();
             var emailVerificationTokenHash = BCrypt.Net.BCrypt.HashPassword(emailVerificationToken);
-            var emailVerificationTokenValidTo = DateTime.Now.AddMinutes(ApplicationConstants.EmailVerificationTokenDurationInMinutes);
+            var emailVerificationTokenValidTo =
+                DateTime.Now.AddMinutes(ApplicationConstants.EmailVerificationTokenDurationInMinutes);
             return (emailVerificationToken, emailVerificationTokenHash, emailVerificationTokenValidTo);
         }
-        
+
         private async Task TryToSendEmailAsync(string email, string username, string verificationToken)
         {
             try

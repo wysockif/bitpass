@@ -5,12 +5,24 @@ using Application.InfrastructureInterfaces;
 using Application.Utils.Email;
 using Application.Utils.Email.Templates;
 using Application.Utils.UserAgentParser;
+using Application.Validators;
 using Application.ViewModels;
 using Domain.Model;
+using FluentValidation;
 using MediatR;
 
 namespace Application.Commands
 {
+    public class ChangePasswordCommandValidator : AbstractValidator<ChangePasswordCommand>
+    {
+        public ChangePasswordCommandValidator()
+        {
+            RuleFor(command => command.UserId).GreaterThan(0);
+            RuleFor(command => command.NewPassword).SetValidator(new PasswordValidator());
+            RuleFor(command => command.OldPassword).NotNull().NotEmpty();
+        }
+    }
+
     public class ChangePasswordCommand : IRequest<SuccessViewModel>
     {
         public ChangePasswordCommand(long userId, string oldPassword, string newPassword, string? ipAddress,

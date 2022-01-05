@@ -4,12 +4,24 @@ using System.Threading.Tasks;
 using Application.Exceptions;
 using Application.InfrastructureInterfaces;
 using Application.Utils.UserAgentParser;
+using Application.Validators;
 using Application.ViewModels;
 using Domain.Model;
+using FluentValidation;
 using MediatR;
 
 namespace Application.Commands
 {
+    public class ResetPasswordCommandValidator : AbstractValidator<ResetPasswordCommand>
+    {
+        public ResetPasswordCommandValidator()
+        {
+            RuleFor(command => command.Username).NotNull().NotEmpty();
+            RuleFor(command => command.ResetPasswordToken).NotNull().NotEmpty();
+            RuleFor(command => command.NewPassword).SetValidator(new PasswordValidator());
+        }
+    }
+
     public class ResetPasswordCommand : IRequest<SuccessViewModel>
     {
         public ResetPasswordCommand(string username, string resetPasswordToken, string newPassword, string? ipAddress,
@@ -22,24 +34,23 @@ namespace Application.Commands
             UserAgent = userAgent;
         }
 
-        public string Username { get; set; }
-        public string ResetPasswordToken { get; set; }
-        public string NewPassword { get; set; }
+        public string Username { get; }
+        public string ResetPasswordToken { get; }
+        public string NewPassword { get; }
         public string? IpAddress { get; set; }
         public string? UserAgent { get; set; }
     }
 
-    public class ResetPasswordCommandValidator : IRequestHandler<ResetPasswordCommand, SuccessViewModel>
+    public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand, SuccessViewModel>
     {
         private readonly ApplicationSettings _settings;
         private readonly IUnitOfWork _unitOfWork;
 
-        public ResetPasswordCommandValidator(IUnitOfWork unitOfWork, ApplicationSettings settings)
+        public ResetPasswordCommandHandler(IUnitOfWork unitOfWork, ApplicationSettings settings)
         {
             _unitOfWork = unitOfWork;
             _settings = settings;
         }
-
 
         public async Task<SuccessViewModel> Handle(ResetPasswordCommand command, CancellationToken cancellationToken)
         {

@@ -5,19 +5,33 @@ using Application.Exceptions;
 using Application.InfrastructureInterfaces;
 using Application.ViewModels;
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 
 namespace Application.Queries
 {
+    public class GetActiveSessionsQueryValidator : AbstractValidator<GetActiveSessionsQuery>
+    {
+        public GetActiveSessionsQueryValidator()
+        {
+            RuleFor(query => query.UserId).GreaterThan(0);
+        }
+    }
+
     public class GetActiveSessionsQuery : IRequest<SessionListViewModel>
     {
-        public long UserId { get; set; }
+        public GetActiveSessionsQuery(long userId)
+        {
+            UserId = userId;
+        }
+
+        public long UserId { get; }
     }
 
     public class GetActiveSessionsQueryHandler : IRequestHandler<GetActiveSessionsQuery, SessionListViewModel>
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
 
         public GetActiveSessionsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {

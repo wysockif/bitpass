@@ -5,19 +5,34 @@ using Application.Exceptions;
 using Application.InfrastructureInterfaces;
 using Application.ViewModels;
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 
 namespace Application.Queries
 {
-    public class GetAccountActivitiesQuery : IRequest<AccountActivityListViewModel>
+    public class GetAccountActivitiesQueryValidator : AbstractValidator<GetAccountActivitiesQuery>
     {
-        public long UserId { get; set; }
+        public GetAccountActivitiesQueryValidator()
+        {
+            RuleFor(query => query.UserId).GreaterThan(0);
+        }
     }
 
-    public class GetAccountActivitiesQueryHandler : IRequestHandler<GetAccountActivitiesQuery, AccountActivityListViewModel>
+    public class GetAccountActivitiesQuery : IRequest<AccountActivityListViewModel>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        public GetAccountActivitiesQuery(long userId)
+        {
+            UserId = userId;
+        }
+
+        public long UserId { get; }
+    }
+
+    public class
+        GetAccountActivitiesQueryHandler : IRequestHandler<GetAccountActivitiesQuery, AccountActivityListViewModel>
+    {
         private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
 
         public GetAccountActivitiesQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
@@ -36,7 +51,8 @@ namespace Application.Queries
 
             var activities = await _unitOfWork.UserRepository
                 .GetAccountActivitiesByOwnerId(user.Id, 14, cancellationToken);
-            return new AccountActivityListViewModel(activities.Select(activity => _mapper.Map<AccountActivityViewModel>(activity)));
+            return new AccountActivityListViewModel(activities.Select(activity =>
+                _mapper.Map<AccountActivityViewModel>(activity)));
         }
     }
 }

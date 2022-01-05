@@ -7,6 +7,7 @@ using Application.Utils.Email;
 using Application.Utils.Email.Templates;
 using Application.Utils.RandomStringGenerator;
 using Application.Utils.UserAgentParser;
+using Application.Validators;
 using Application.ViewModels;
 using Domain.Model;
 using FluentValidation;
@@ -19,32 +20,9 @@ namespace Application.Commands
     {
         public RegisterUserCommandValidator()
         {
-            RuleFor(command => command.Email)
-                .EmailAddress()
-                .WithMessage(" Not valid email address.")
-                .MinimumLength(ApplicationConstants.MinEmailLength)
-                .WithMessage($" Must contain at least {ApplicationConstants.MinEmailLength} characters.")
-                .MaximumLength(ApplicationConstants.MaxEmailLength)
-                .WithMessage($" Must contain max {ApplicationConstants.MaxEmailLength} characters.");
-            RuleFor(command => command.Username)
-                .NotNull()
-                .WithMessage("Must not be empty")
-                .MinimumLength(ApplicationConstants.MinUsernameLength)
-                .WithMessage($" Must contain at least {ApplicationConstants.MinUsernameLength} characters.")
-                .MaximumLength(ApplicationConstants.MaxUsernameLength)
-                .WithMessage($" Must contain max {ApplicationConstants.MaxUsernameLength} characters.")
-                .Matches(@"^[^\s\W]+$")
-                .WithMessage(" Must contain only alphanumeric characters or underscore.");
-            RuleFor(command => command.Password)
-                .NotNull()
-                .NotEmpty()
-                .WithMessage("Must not be empty")
-                .MinimumLength(ApplicationConstants.MinPasswordLength)
-                .MaximumLength(ApplicationConstants.MaxPasswordLength)
-                .Matches(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W])[\S].{0,}$")
-                .WithMessage(
-                    "Password must contain at least one uppercase character, one lowercase character, " +
-                    "one number, one special character and must not contain any white character.");
+            RuleFor(command => command.Email).SetValidator(new EmailValidator());
+            RuleFor(command => command.Username).SetValidator(new UsernameValidator());
+            RuleFor(command => command.Password).SetValidator(new PasswordValidator());
             RuleFor(command => command.EncryptionKeyHash).NotNull().NotEmpty().WithMessage("Must not be empty");
         }
     }

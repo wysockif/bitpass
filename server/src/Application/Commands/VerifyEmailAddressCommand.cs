@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.InfrastructureInterfaces;
 using Application.Utils.UserAgentParser;
+using Application.Validators;
 using Application.ViewModels;
 using Domain.Model;
 using FluentValidation;
@@ -15,15 +16,8 @@ namespace Application.Commands
     {
         public VerifyEmailAddressCommandValidator()
         {
-            RuleFor(command => command.Username)
-                .NotNull()
-                .MinimumLength(ApplicationConstants.MinUsernameLength)
-                .MaximumLength(ApplicationConstants.MaxUsernameLength);
-
-            RuleFor(command => command.Token)
-                .NotNull()
-                .Must(token => Guid.TryParse(token, out _))
-                .WithMessage("Not valid token");
+            RuleFor(command => command.Username).NotNull().NotEmpty();
+            RuleFor(command => command.Token).SetValidator(new EmailVerificationTokenValidator());
         }
     }
 

@@ -6,6 +6,7 @@ import {hashDerivationKey} from "../../security/KeyDerivation";
 import {encryptPassword} from "../../security/Encryption";
 import * as api from "../../api/apiCalls";
 import ButtonWithSpinner from "../../components/ButtonWithSpinner/ButtonWithSpinner";
+import PasswordInput from "../../components/PasswordInput/PasswordInput";
 
 
 interface AddItemModalProps {
@@ -100,13 +101,12 @@ const AddItemModal = (props: AddItemModalProps) => {
                     <Label for="password" className="mt-3">
                         Password:
                     </Label>
-                    <Input
+                    <PasswordInput
                         id="password"
                         name="Password"
                         placeholder="Enter password"
-                        type="password"
-                        value={password}
-                        onChange={onChangePassword}
+                        password={password}
+                        onChangePassword={onChangePassword}
                     />
                 </FormGroup>
             </ModalBody>

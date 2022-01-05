@@ -5,6 +5,7 @@ import {Link} from "react-router-dom";
 import * as api from "../../api/apiCalls";
 import {useDispatch} from "react-redux";
 import {Action} from "../../redux/authenticationReducer";
+import PasswordInput from "../../components/PasswordInput/PasswordInput";
 
 
 const Login = () => {
@@ -88,13 +89,12 @@ const Login = () => {
                                 <Label for="password" className="mt-3">
                                     Password:
                                 </Label>
-                                <Input
+                                <PasswordInput
                                     id="password"
                                     name="Password"
                                     placeholder="Enter your password"
-                                    type="password"
-                                    value={password}
-                                    onChange={onChangePassword}
+                                    password={password}
+                                    onChangePassword={onChangePassword}
                                 />
                                 {fieldErrors.Password && <div className="text-danger mt-1">{fieldErrors.Password}</div>}
                             </FormGroup>

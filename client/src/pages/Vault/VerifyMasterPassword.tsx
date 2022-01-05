@@ -1,5 +1,5 @@
 import React, {Dispatch, useState} from 'react';
-import {FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
+import {FormGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 import ButtonWithSpinner from "../../components/ButtonWithSpinner/ButtonWithSpinner";
 import {Link} from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -8,6 +8,7 @@ import * as api from "../../api/apiCalls";
 import {derivativeKey, hashDerivationKey} from "../../security/KeyDerivation";
 import {useDispatch, useSelector} from "react-redux";
 import {Action, AuthState} from "../../redux/authenticationReducer";
+import PasswordInput from "../../components/PasswordInput/PasswordInput";
 
 const VerifyMasterPassword = () => {
         const [masterPassword, setMasterPassword] = useState<string>('');
@@ -28,7 +29,7 @@ const VerifyMasterPassword = () => {
             const encryptionKey = derivativeKey(masterPassword, reduxState.email);
             const encryptionKeyHash = hashDerivationKey(encryptionKey, reduxState.email);
             api.verifyEncryptionKey({encryptionKeyHash})
-                .then(response => {
+                .then(() => {
                     setOngoingApiCall(false);
                     dispatch({
                         type: "verify-master-password",
@@ -60,13 +61,12 @@ const VerifyMasterPassword = () => {
                         <Label for="password" className="mt-3">
                             Master password:
                         </Label>
-                        <Input
+                        <PasswordInput
                             id="password"
-                            name="Password"
+                            name="Passw vord"
                             placeholder="Enter your master password"
-                            type="password"
-                            value={masterPassword}
-                            onChange={onChangeMasterPassword}
+                            password={masterPassword}
+                            onChangePassword={onChangeMasterPassword}
                         />
                     </FormGroup>
                     <div style={{fontSize: "10px"}} className="text-muted">Your master password is never sent to the server.

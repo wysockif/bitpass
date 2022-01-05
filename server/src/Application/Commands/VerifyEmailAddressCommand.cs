@@ -31,8 +31,8 @@ namespace Application.Commands
             UserAgent = userAgent;
         }
 
-        public string Username { get; set; }
-        public string Token { get; set; }
+        public string Username { get; }
+        public string Token { get; }
         public string? IpAddress { get; set; }
         public string? UserAgent { get; set; }
     }

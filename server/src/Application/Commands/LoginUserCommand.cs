@@ -32,8 +32,8 @@ namespace Application.Commands
             UserAgent = userAgent;
         }
 
-        public string Identifier { get; set; }
-        public string Password { get; set; }
+        public string Identifier { get; }
+        public string Password { get; }
         public string? IpAddress { get; set; }
         public string? UserAgent { get; set; }
     }

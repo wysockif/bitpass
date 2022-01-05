@@ -60,11 +60,6 @@ namespace Infrastructure.Persistence.Repositories
                     cancellationToken);
         }
 
-        // public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
-        // {
-        //     return await _storage.Users.FirstOrDefaultAsync(u => u.Email.Equals(email.ToLower()), cancellationToken);
-        // }
-        //
         public async Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default)
         {
             return await _storage.Users.FirstOrDefaultAsync(u => u.Username.Equals(username.ToLower()),
@@ -101,7 +96,8 @@ namespace Infrastructure.Persistence.Repositories
                 .CountAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<AccountActivity>> GetAccountActivitiesByOwnerId(long userId, int days, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<AccountActivity>> GetAccountActivitiesByOwnerId(long userId, int days,
+            CancellationToken cancellationToken = default)
         {
             return await _storage.AccountActivities
                 .Where(activity => activity.UserId == userId
@@ -110,7 +106,8 @@ namespace Infrastructure.Persistence.Repositories
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<Session>> GetActiveSessionsByOwnerId(long userId, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Session>> GetActiveSessionsByOwnerId(long userId,
+            CancellationToken cancellationToken)
         {
             var nowTimestamp = (DateTimeOffset.Now).ToUnixTimeSeconds();
             return await _storage.Sessions

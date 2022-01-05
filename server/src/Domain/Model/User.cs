@@ -1,10 +1,9 @@
+#pragma warning disable 8618
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Authentication;
 using Domain.Exceptions;
-
-#pragma warning disable 8618
 
 namespace Domain.Model
 {
@@ -84,9 +83,9 @@ namespace Domain.Model
         public void UpdateSession(Guid oldRefreshTokenGuid, Guid newRefreshTokenTokenGuid,
             long newRefreshTokenExpirationTimestamp)
         {
-            Console.WriteLine("Stary: "+ oldRefreshTokenGuid );
-            Console.WriteLine("Nowy: "+ newRefreshTokenTokenGuid );
-            
+            Console.WriteLine("Stary: " + oldRefreshTokenGuid);
+            Console.WriteLine("Nowy: " + newRefreshTokenTokenGuid);
+
             var session = Sessions.FirstOrDefault(s => s.RefreshTokenGuid == oldRefreshTokenGuid);
             if (session == default || session.ExpirationUnixTimestamp < DateTimeOffset.Now.ToUnixTimeSeconds())
             {

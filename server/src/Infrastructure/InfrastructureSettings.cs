@@ -1,3 +1,5 @@
+#pragma warning disable 8618
+
 using Infrastructure.Mailing;
 
 namespace Infrastructure
@@ -5,7 +7,6 @@ namespace Infrastructure
     public class InfrastructureSettings
     {
         public string DbConnectionString { get; set; }
-
         public SendGridSettings SendGridSettings { get; set; }
     }
 }

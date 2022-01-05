@@ -18,7 +18,6 @@ namespace Domain.Repositories
         Task<User?> GetByEmailOrUsernameIncludingSessionsAndActivitiesAsync(string email, string username,
             CancellationToken cancellationToken = default);
 
-        // Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
         Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default);
 
         Task<int> GetFailedLoginActivitiesCountInLastHourByUserIdAsync(long userId,
@@ -26,7 +25,10 @@ namespace Domain.Repositories
 
         Task<int> GetPasswordResetRequestedActivitiesCountInLastHourByUserIdAsync(long userId,
             CancellationToken cancellationToken = default);
-        Task<IEnumerable<AccountActivity>> GetAccountActivitiesByOwnerId(long userId, int days, CancellationToken cancellationToken = default);
+
+        Task<IEnumerable<AccountActivity>> GetAccountActivitiesByOwnerId(long userId, int days,
+            CancellationToken cancellationToken = default);
+
         Task<IEnumerable<Session>> GetActiveSessionsByOwnerId(long userId, CancellationToken cancellationToken);
     }
 }

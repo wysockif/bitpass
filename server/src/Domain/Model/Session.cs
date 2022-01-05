@@ -1,17 +1,11 @@
+// ReSharper disable MemberCanBePrivate.Global
+
 using System;
 
 namespace Domain.Model
 {
     public class Session
     {
-        public long Id { get; set; }
-        public long UserId { get; set; }
-        public Guid RefreshTokenGuid { get; set; }
-        public long ExpirationUnixTimestamp { get; set; }
-        public string? OsName { get; private init; }
-        public string? BrowserName { get; private init; }
-        public string? IpAddress { get; private init; }
-
         private Session(long userId, Guid refreshTokenGuid, long expirationUnixTimestamp, string? osName,
             string? browserName, string? ipAddress)
         {
@@ -22,6 +16,14 @@ namespace Domain.Model
             BrowserName = browserName;
             IpAddress = ipAddress;
         }
+
+        public long Id { get; set; }
+        public long UserId { get; set; }
+        public Guid RefreshTokenGuid { get; set; }
+        public long ExpirationUnixTimestamp { get; set; }
+        public string? OsName { get; private init; }
+        public string? BrowserName { get; private init; }
+        public string? IpAddress { get; private init; }
 
         public static Session Create(long userId, Guid refreshTokenGuid, long expirationUnixTimestamp,
             string? ipAddress, string? osName, string? browserName)

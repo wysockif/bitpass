@@ -1,3 +1,7 @@
+// ReSharper disable ClassNeverInstantiated.Global
+
+#pragma warning disable 8618
+
 namespace Application.Utils.Security
 {
     public class RefreshTokenSettings

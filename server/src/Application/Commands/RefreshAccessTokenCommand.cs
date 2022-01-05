@@ -25,7 +25,7 @@ namespace Application.Commands
             RefreshToken = refreshToken;
         }
 
-        public string RefreshToken { get; set; }
+        public string RefreshToken { get; }
     }
 
     public class RefreshAccessTokenCommandHandler : IRequestHandler<RefreshAccessTokenCommand, AuthViewModel>

@@ -1,4 +1,4 @@
-namespace Domain
+namespace Domain.Model
 {
     public interface IAggregateRoot
     {

@@ -1,3 +1,4 @@
+using System;
 using System.Security.Authentication;
 using System.Threading.Tasks;
 using Application.Exceptions;
@@ -28,11 +29,11 @@ namespace Api.Middlewares
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 await context.Response.WriteAsync(authenticationException.Message);
             }
-            // catch (Exception e)
-            // {
-            //     context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-            //     await context.Response.WriteAsync("Something went wrong");
-            // }
+            catch (Exception e)
+            {
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                await context.Response.WriteAsync("Something went wrong");
+            }
         }
     }
 }

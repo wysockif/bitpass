@@ -36,8 +36,8 @@ namespace Application.Commands
         }
 
         public long UserId { get; set; }
-        public string OldPassword { get; set; }
-        public string NewPassword { get; set; }
+        public string OldPassword { get; }
+        public string NewPassword { get; }
         public string? IpAddress { get; set; }
         public string? UserAgent { get; set; }
     }

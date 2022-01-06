@@ -87,7 +87,8 @@ const Register = () => {
                 setPasswordError('');
                 console.log('here')
             } else {
-                setPasswordError('Password is too weak.');
+                setPasswordError("Password must contain at least 8 characters: at least one uppercase character, one lowercase character, " +
+                                        "one number, one special character and must not contain any white character.");
             }
         }
     }
@@ -101,7 +102,8 @@ const Register = () => {
             if (validatePassword(ev.target.value.trim()) || ev.target.value.trim() === '') {
                 setMasterPasswordError('');
             } else {
-                setMasterPasswordError('Master password is too weak.');
+                setMasterPasswordError("Master password must contain at least 8 characters: at least one uppercase character, one lowercase character, " +
+                    "one number, one special character and must not contain any white character.");
             }
         }
     }

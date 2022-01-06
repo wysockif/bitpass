@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Application.Commands;
 using Application.Queries;
@@ -18,7 +17,7 @@ namespace Api.Controllers
         public async Task<ActionResult> Register([FromBody] RegisterUserCommand command)
         {
             command.UserAgent = Request.Headers["User-Agent"];
-            command.IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+            command.IpAddress = GetIpAddress(HttpContext);
             await Mediator.Send(command);
             return NoContent();
         }
@@ -65,7 +64,7 @@ namespace Api.Controllers
         public async Task<ActionResult> VerifyEmailAddress([FromBody] VerifyEmailAddressCommand command)
         {
             command.UserAgent = Request.Headers["User-Agent"];
-            command.IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+            command.IpAddress = GetIpAddress(HttpContext);
             await Mediator.Send(command);
             return NoContent();
         }
@@ -75,7 +74,7 @@ namespace Api.Controllers
         public async Task<ActionResult> RequestPasswordReset([FromBody] RequestResetPasswordCommand command)
         {
             command.UserAgent = Request.Headers["User-Agent"];
-            command.IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+            command.IpAddress = GetIpAddress(HttpContext);
             await Mediator.Send(command);
             return NoContent();
         }
@@ -85,7 +84,7 @@ namespace Api.Controllers
         public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordCommand command)
         {
             command.UserAgent = Request.Headers["User-Agent"];
-            command.IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+            command.IpAddress = GetIpAddress(HttpContext);
             await Mediator.Send(command);
             return NoContent();
         }
@@ -96,7 +95,7 @@ namespace Api.Controllers
         {
             command.UserId = AuthorizationService.RequireUserId(HttpContext.User);
             command.UserAgent = Request.Headers["User-Agent"];
-            command.IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+            command.IpAddress = GetIpAddress(HttpContext);
             await Mediator.Send(command);
             return NoContent();
         }

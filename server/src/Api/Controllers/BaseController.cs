@@ -1,4 +1,3 @@
-using System;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +14,7 @@ namespace Api.Controllers
         {
             var ip = httpContext.Request.Headers["x-forwarded-for"].Count != default
                 ? httpContext.Request.Headers["x-forwarded-for"].ToString().Split(',')[
-                    httpContext.Request.Headers["x-forwarded-for"].ToString().Split(',').Length - 1]
+                    httpContext.Request.Headers["x-forwarded-for"].ToString().Split(',').Length - 1].Trim()
                 : httpContext.Connection.RemoteIpAddress?.ToString();
             return ip;
         }

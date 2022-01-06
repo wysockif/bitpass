@@ -17,7 +17,6 @@ namespace Application.Commands
     {
         public ChangePasswordCommandValidator()
         {
-            RuleFor(command => command.UserId).GreaterThan(0);
             RuleFor(command => command.NewPassword).SetValidator(new PasswordValidator());
             RuleFor(command => command.OldPassword).NotNull().NotEmpty();
         }

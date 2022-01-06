@@ -21,7 +21,6 @@ namespace Api
         {
             var infrastructureSettings = new InfrastructureSettings();
             Configuration.Bind(nameof(InfrastructureSettings), infrastructureSettings);
-            // infrastructureSettings.Validate();
             services.AddInfrastructure(infrastructureSettings);
 
             var applicationSettings = new ApplicationSettings();
@@ -29,6 +28,7 @@ namespace Api
             services.AddApplication(applicationSettings);
 
             services.AddScoped<ErrorHandlingMiddleware>();
+            services.AddScoped<ResponseHeaderModifyingMiddleware>();
 
             services.AddControllers();
             services.AddCors(options =>
@@ -38,6 +38,7 @@ namespace Api
                     builder.AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowAnyOrigin();
+                    // .WithOrigins(applicationSettings.FrontendUrl);
                 });
             });
         }
@@ -47,6 +48,7 @@ namespace Api
             app.UseCors("FrontEndClient");
             app.UseRouting();
             app.UseMiddleware<ErrorHandlingMiddleware>();
+            app.UseMiddleware<ResponseHeaderModifyingMiddleware>();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });

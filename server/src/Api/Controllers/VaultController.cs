@@ -19,7 +19,7 @@ namespace Api.Controllers
             {
                 UserId = AuthorizationService.RequireUserId(HttpContext.User),
                 UserAgent = Request.Headers["User-Agent"],
-                IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString()
+                IpAddress = GetIpAddress(HttpContext)
             };
             return Ok(await Mediator.Send(query));
         }
@@ -29,7 +29,7 @@ namespace Api.Controllers
         {
             command.UserId = AuthorizationService.RequireUserId(HttpContext.User);
             command.UserAgent = Request.Headers["User-Agent"];
-            command.IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+            command.IpAddress = GetIpAddress(HttpContext);
             await Mediator.Send(command);
             return NoContent();
         }

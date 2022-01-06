@@ -4,6 +4,7 @@ import {Col, FormGroup, Label, Row} from "reactstrap";
 import * as api from "../../api/apiCalls";
 import ButtonWithSpinner from "../../components/ButtonWithSpinner/ButtonWithSpinner";
 import PasswordInput from "../../components/PasswordInput/PasswordInput";
+import {validatePassword} from "../../utils/validatePassword";
 
 const ResetPassword = () => {
     const [ongoingApiCall, setOngoingApiCall] = useState<boolean>(false);
@@ -12,6 +13,8 @@ const ResetPassword = () => {
     const [fieldErrors, setFieldErrors] = useState<any>([]);
     const [newPassword, setNewPassword] = useState<string>('');
     const {token, username} = useParams();
+    const [newPasswordError, setNewPasswordError] = useState<string>('');
+
 
     const onClickResetPassword = () => {
         setOngoingApiCall(true);
@@ -51,6 +54,11 @@ const ResetPassword = () => {
             delete err.Password;
             setFieldErrors(err);
             setNewPassword(ev.target.value.trim());
+            if (validatePassword(ev.target.value.trim()) || ev.target.value.trim() === '') {
+                setNewPasswordError('');
+            } else {
+                setNewPasswordError('Password is too weak.');
+            }
         }
     }
 
@@ -80,11 +88,14 @@ const ResetPassword = () => {
                     <div className="text-success mb-3">{message}</div>
                 </div>}
                 {error && <div className="text-danger text-center mt-1 mb-3">{error}</div>}
-                <div className="text-center">
-                    <ButtonWithSpinner onClick={onClickResetPassword} disabled={!newPassword}
+                {newPasswordError &&
+                <div className="text-danger">{newPasswordError}</div>}
+                <div className="text-center mt-2">
+                    <ButtonWithSpinner onClick={onClickResetPassword} disabled={!newPassword || newPasswordError !== ''}
                                        className="" content="Reset" ongoingApiCall={ongoingApiCall}/>
                 </div>
-                <div className="mt-2"><small className="text-center"><Link className="fw-bold" to={'/login'}>Return to login</Link></small></div>
+                <div className="mt-2"><small className="text-center"><Link className="fw-bold" to={'/login'}>Return to
+                    login</Link></small></div>
             </div>
         </div>
     );

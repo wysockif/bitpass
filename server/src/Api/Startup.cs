@@ -29,7 +29,6 @@ namespace Api
             services.AddApplication(applicationSettings);
 
             services.AddScoped<ErrorHandlingMiddleware>();
-            services.AddScoped<DeviceInfoCollectingMiddleware>();
 
             services.AddControllers();
             services.AddCors(options =>
@@ -48,7 +47,6 @@ namespace Api
             app.UseCors("FrontEndClient");
             app.UseRouting();
             app.UseMiddleware<ErrorHandlingMiddleware>();
-            app.UseMiddleware<DeviceInfoCollectingMiddleware>();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });

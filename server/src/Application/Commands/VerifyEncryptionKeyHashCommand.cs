@@ -14,7 +14,6 @@ namespace Application.Commands
         public VerifyEncryptionKeyHashCommandValidator()
         {
             RuleFor(command => command.EncryptionKeyHash).NotNull().NotEmpty();
-            RuleFor(command => command.UserId).GreaterThan(0);
         }
     }
 

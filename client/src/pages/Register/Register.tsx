@@ -18,6 +18,7 @@ import {Link} from "react-router-dom";
 import * as api from "../../api/apiCalls";
 import {derivativeKey, hashDerivationKey} from "../../security/KeyDerivation";
 import PasswordInput from "../../components/PasswordInput/PasswordInput";
+import {validatePassword} from "../../utils/validatePassword";
 
 const Register = () => {
     const [ongoingApiCall, setOngoingApiCall] = useState<boolean>(false);
@@ -27,6 +28,8 @@ const Register = () => {
     const [masterPassword, setMasterPassword] = useState<string>('');
     const [fieldErrors, setFieldErrors] = useState<any>([]);
     const [error, setError] = useState<string>('');
+    const [masterPasswordError, setMasterPasswordError] = useState<string>('');
+    const [passwordError, setPasswordError] = useState<string>('');
     const [isMessageDisplayed, setIsMessageDisplayed] = useState<boolean>(false);
 
     const onClickRegisterButton = () => {
@@ -48,7 +51,7 @@ const Register = () => {
                 if (error?.response?.data?.errors) {
                     setFieldErrors(error.response.data.errors);
                     return;
-                } else if (error.response?.data){
+                } else if (error.response?.data) {
                     setError(error.response.data);
                 } else {
                     setError("An error occurred, please try again later")
@@ -80,6 +83,12 @@ const Register = () => {
             delete err.Password;
             setFieldErrors(err);
             setPassword(ev.target.value.trim());
+            if (validatePassword(ev.target.value.trim()) || ev.target.value.trim() === '') {
+                setPasswordError('');
+                console.log('here')
+            } else {
+                setPasswordError('Password is too weak.');
+            }
         }
     }
 
@@ -89,6 +98,11 @@ const Register = () => {
             delete err.MasterPassword;
             setFieldErrors(err);
             setMasterPassword(ev.target.value.trim());
+            if (validatePassword(ev.target.value.trim()) || ev.target.value.trim() === '') {
+                setMasterPasswordError('');
+            } else {
+                setMasterPasswordError('Master password is too weak.');
+            }
         }
     }
 
@@ -138,6 +152,8 @@ const Register = () => {
                                     onChangePassword={onChangePassword}
                                 />
                                 {fieldErrors.Password && <div className="text-danger mt-1">{fieldErrors.Password}</div>}
+                                {passwordError &&
+                                <div className="text-danger mt-1">{passwordError}</div>}
                                 <Label for="masterPassword" className="mt-3">
                                     Master password:
                                 </Label>
@@ -150,12 +166,14 @@ const Register = () => {
                                 />
                                 {fieldErrors.EncryptionKeyHash &&
                                 <div className="text-danger mt-1">{fieldErrors.EncryptionKeyHash}</div>}
+                                {masterPasswordError &&
+                                <div className="text-danger mt-1">{masterPasswordError}</div>}
                             </FormGroup>
                             {error && <div className="text-danger text-center mt-1 mb-3">{error}</div>}
 
                             <div className="text-center">
                                 <ButtonWithSpinner onClick={() => onClickRegisterButton()}
-                                                   disabled={!username || !email || !password || !masterPassword}
+                                                   disabled={!username || !email || !password || !masterPassword || masterPasswordError !== '' || passwordError !== ''}
                                                    content="Sign up" ongoingApiCall={ongoingApiCall}/>
                             </div>
                         </CardBody>

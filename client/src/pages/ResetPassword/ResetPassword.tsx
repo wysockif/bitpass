@@ -57,7 +57,8 @@ const ResetPassword = () => {
             if (validatePassword(ev.target.value.trim()) || ev.target.value.trim() === '') {
                 setNewPasswordError('');
             } else {
-                setNewPasswordError('Password is too weak.');
+                setNewPasswordError("New password must contain at least 8 characters: at least one uppercase character, one lowercase character, " +
+                    "one number, one special character and must not contain any white character.");
             }
         }
     }

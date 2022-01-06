@@ -11,7 +11,6 @@ const Contact = () => {
         navigator.clipboard.writeText(email).then();
     }
 
-
     return (
         <div>
             <PageTitle title="Contact"/>
@@ -21,7 +20,7 @@ const Contact = () => {
                         <CardTitle tag="h5" className="ms-3">
                             Email address
                         </CardTitle>
-                        <CardText>
+                        <CardText tag="div">
                                 <div className="ms-1 p-2 d-inline-flex" onClick={() => copyToClipBoard()}
                                      style={{cursor: "pointer"}}>
                                     <ListGroupItem action className="rounded">
@@ -31,14 +30,14 @@ const Contact = () => {
                                         <span style={{fontSize: "10px"}}
                                               className="text-muted">Copied to clipboard!</span>}
                                         <div>
-                                            <h5><code className="text-danger">{email}</code></h5>
+                                            <code className="text-danger">{email}</code>
                                         </div>
                                     </ListGroupItem>
                                 </div>
-                                <div className="ms-3">
-                                    <small className="text-muted">Franciszek Wysocki</small>
-                                </div>
                         </CardText>
+                        <div className="ms-3">
+                            <small className="text-muted">Franciszek Wysocki</small>
+                        </div>
                     </CardBody>
                 </Card>
             </div>

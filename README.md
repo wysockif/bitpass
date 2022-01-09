@@ -1,5 +1,5 @@
 # BitPass
-[![Website shields.io](https://img.shields.io/website-up-down-green-red/http/shields.io.svg)](https://bitpass-app.herokuapp.pl)
+[![Website shields.io](https://img.shields.io/website-up-down-green-red/http/shields.io.svg)](https://bitpass-app.herokuapp.com)
 
 ### General Information
 
@@ -81,6 +81,14 @@ Bitpass is an open source password manager.
 * Password generator
 
 ![Vault](screenshots/PasswordGenerator.png)
+
+* Active sessions
+
+![Vault](screenshots/ActiveSessions.png)
+
+* Account activities
+
+![Vault](screenshots/AccountActivities.png)
 
 * Settings
 

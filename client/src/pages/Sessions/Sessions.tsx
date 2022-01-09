@@ -39,7 +39,7 @@ const Sessions = () => {
     return (
         <div>
             <PageTitle title="Your active sessions"/>
-            <div className="m-2">
+            <div className="m-2 page-content table-responsive">
                 {ongoingApiCall && !error &&
                 <div className="text-center mt-3"><Spinner animation="border" size="sm" role="status">
                     Loading...

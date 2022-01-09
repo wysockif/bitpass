@@ -40,7 +40,7 @@ const AccountActivity = () => {
         <div>
             <PageTitle title="Your account activity from the last 14 days"/>
 
-            <div className="m-2">
+            <div className="m-2 page-content table-responsive">
                 {ongoingApiCall && !error && <div className="text-center mt-3"><Spinner animation="border" size="sm" role="status">
                     Loading...
                 </Spinner></div>}

@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
-    [Route("api/vault")]
+    [Route("api")]
     [Authorize]
     [ApiController]
     public class VaultController : BaseController
     {
-        [HttpGet]
+        [HttpGet("vault")]
         public async Task<ActionResult> GetVault()
         {
             var query = new GetVaultQuery
@@ -24,7 +24,7 @@ namespace Api.Controllers
             return Ok(await Mediator.Send(query));
         }
 
-        [HttpPost]
+        [HttpPost("vault")]
         public async Task<ActionResult> AddCipherLogin([FromBody] AddCipherLoginCommand command)
         {
             command.UserId = AuthorizationService.RequireUserId(HttpContext.User);

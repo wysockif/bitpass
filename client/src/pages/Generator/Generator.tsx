@@ -90,15 +90,14 @@ const Generator = () => {
                         onClick={(ev) => generatePassword(ev)}>Generate</Button>
 
                 {generatedPassword && <div>
-                    <div className="mt-3 p-2 d-inline-flex" onClick={() => copyToClipBoard()}
-                         style={{cursor: "pointer"}}>
+                    <div className="mt-3 p-2 d-inline-flex generator-output" onClick={() => copyToClipBoard()}>
                         <ListGroupItem action className="rounded">
                             {!copied &&
                             <span style={{fontSize: "10px"}} className="text-muted">Click to copy to clipboard</span>}
                             {copied &&
                             <span style={{fontSize: "10px"}} className="text-muted">Copied to clipboard!</span>}
                             <div>
-                                <h5><code className="text-danger">{generatedPassword}</code></h5>
+                                <h5><code className="text-danger text-wrap">{generatedPassword}</code></h5>
                             </div>
                         </ListGroupItem>
                     </div>

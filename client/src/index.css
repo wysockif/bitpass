@@ -82,6 +82,22 @@ li a.dropdown-toggle::after {
     max-width: 100vw !important;
 }
 
+.generator-output {
+    cursor: pointer;
+}
+
+@media (min-width: 576px) {
+    .generator-output {
+        max-width: calc(100vw - 300px);
+    }
+}
+
+@media (max-width: 575px) {
+    .generator-output {
+        max-width: calc(100vw - 50px);
+    }
+}
+
 .logout-button {
     cursor: pointer;
     color: #5886d1;

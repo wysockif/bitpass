@@ -36,7 +36,7 @@ The project consists of a RESTful web service with Spring Boot & (responsive) si
 ---
 
 ### Security
--![Diagram](img/Diagram.svg)
+-![Diagram](img/diagram.svg)
 
 
 ---
@@ -47,16 +47,18 @@ To run the application locally you need:
 * `Docker 19.03.13`;
 * `Docker-compose  1.25.0`;
 
+Supported browsers:
+<p float="left">
+    <img src="https://imgur.com/3C4iKO0.png" width="32" height="32">
+    <img src="https://imgur.com/ihXsdDO.png" width="32" height="32">
+    <img src="https://imgur.com/vMcaXaw.png" width="32" height="32">
+    <img src="https://imgur.com/nSJ9htU.png" width="32" height="32">
+    <img src="https://imgur.com/ENbaWUu.png" width="32" height="32">
+    <img src="https://imgur.com/z8yjLZ2.png" width="32" height="32">
+</p>
 
-<img src="https://imgur.com/3C4iKO0.png" width="32" height="32">
-<img src="https://imgur.com/ihXsdDO.png" width="32" height="32">
-<img src="https://imgur.com/vMcaXaw.png" width="32" height="32">
-<img src="https://imgur.com/nSJ9htU.png" width="32" height="32">
-<img src="https://imgur.com/ENbaWUu.png" width="32" height="32">
-<img src="https://imgur.com/z8yjLZ2.png" width="32" height="32">
 
-
-The project uses the latest version  of React. You can refer to the  <a href="https://reactjs.org/docs/react-dom.html#browser-support" target="_blank">React documentation</a> for more information about supported browsers.
+The project uses the latest version (17.0.2) of React. You can refer to the  <a href="https://reactjs.org/docs/react-dom.html#browser-support" target="_blank">React documentation</a> for more information about supported browsers.
 
 ---
 ### Setup & usage
@@ -65,6 +67,29 @@ To use the deployed app <a href="https://bitpass-app.herokuapp.com" target="_bla
 
 To run it locally follow the instructions:
 
+0. Clone this repo to your desktop:
+
+    ```sh
+    git clone git@github.com:wysockif/noticeboard.git
+    ```
+1. Database:
+
+    Change your directory to `bitpass/database` and enter:
+
+    ```sh
+    docker-compose up database
+    ```
+
+    to set up a database (PostgreSQL) server on port 5432.
+
+2. Back-end:
+
+    Create `appsettings.Development.json` file as in <a href="https://github.com/wysockif/bitpass/blob/main/server/src/Api/appsettings.Example.json" target="_blank">appsettings.Example.json</a>.
+
+    Change your directory to `bitpass/server` and enter:
+
+
+3. Front-end: 
 
 ---
 ### Deployment

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Controllers
 {
     [Route("")]
-    public class DefaultController : Controller
+    public class RootController : Controller
     {
         [HttpGet]
         public ContentResult GetFrontendUrl([FromServices] ApplicationSettings settings)

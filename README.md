@@ -1,11 +1,15 @@
 # BitPass
 [![Website shields.io](https://img.shields.io/website-up-down-green-red/http/shields.io.svg)](https://bitpass-app.herokuapp.com)
 
+<a href="https://bitpass-app.herokuapp.com" target="_blank">https://bitpass-app.herokuapp.com</a>
+
 ### General Information
 
-Bitpass is an open source password manager.
+Bitpass is an open source password manager opereting on a zero-knowledge securitymodel. 
 
-![Vault](screenshots/Vault.png)
+The project consists of a RESTful web service with Spring Boot & (responsive) single page application with React.
+
+![Vault](img/Vault.png)
 
 
 
@@ -31,78 +35,97 @@ Bitpass is an open source password manager.
 
 ---
 
+### Security
+-![Diagram](img/Diagram.svg)
+
+
+---
 ### Requirements
 
-...
----
+To run the application locally you need:
 
+* `Docker 19.03.13`;
+* `Docker-compose  1.25.0`;
+
+
+<img src="https://imgur.com/3C4iKO0.png" width="32" height="32">
+<img src="https://imgur.com/ihXsdDO.png" width="32" height="32">
+<img src="https://imgur.com/vMcaXaw.png" width="32" height="32">
+<img src="https://imgur.com/nSJ9htU.png" width="32" height="32">
+<img src="https://imgur.com/ENbaWUu.png" width="32" height="32">
+<img src="https://imgur.com/z8yjLZ2.png" width="32" height="32">
+
+
+The project uses the latest version  of React. You can refer to the  <a href="https://reactjs.org/docs/react-dom.html#browser-support" target="_blank">React documentation</a> for more information about supported browsers.
+
+---
 ### Setup & usage
 
-...
+To use the deployed app <a href="https://bitpass-app.herokuapp.com" target="_blank">click here</a>.
+
+To run it locally follow the instructions:
+
 
 ---
 ### Deployment
 
-...
+
 
 ---
 ### Screenshots
 
 * Sign up
 
-![Vault](screenshots/SignUp.png)
+![Vault](img/SignUp.png)
 
 * Sign in
 
-![Vault](screenshots/SignIn.png)
-
+![Vault](img/SignIn.png)
 
 * Request reset your password
 
-![Vault](screenshots/RequestResetPassword.png)
+![Vault](img/RequestResetPassword.png)
 
 * Verify your master password
 
-![Vault](screenshots/VerifyMasterPassword.png)
-
+![Vault](img/VerifyMasterPassword.png)
 
 * Add a new item
 
-![Vault](screenshots/AddNewItem.png)
+![Vault](img/AddNewItem.png)
 
 * Vault
 
-![Vault](screenshots/Vault.png)
+![Vault](img/Vault.png)
 
 * Reveal the password
 
-![Vault](screenshots/RevealingPassword.png)
+![Vault](img/RevealingPassword.png)
 
 * Password generator
 
-![Vault](screenshots/PasswordGenerator.png)
+![Vault](img/PasswordGenerator.png)
 
 * Active sessions
 
-![Vault](screenshots/ActiveSessions.png)
+![Vault](img/ActiveSessions.png)
 
 * Account activities
 
-![Vault](screenshots/AccountActivities.png)
+![Vault](img/AccountActivities.png)
 
 * Settings
 
-![Vault](screenshots/Settings.png)
+![Vault](img/Settings.png)
 
 ---
-
 ### Motivation & Project Status
 
 Bitpass was created as my student project during the third year of studying Computer Science. It was my individual project for Data Protection in IT Systems subject.
 
 The project was completed successfully.
 
-Duration time: 01.12.2021 - 10-01-2022
+Duration time: 23.11.2021 - 18-01-2022
 
 ---
 ### License

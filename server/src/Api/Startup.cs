@@ -37,8 +37,7 @@ namespace Api
                 {
                     builder.AllowAnyMethod()
                         .AllowAnyHeader()
-                        .AllowAnyOrigin();
-                    // .WithOrigins(applicationSettings.FrontendUrl);
+                        .WithOrigins(applicationSettings.FrontendUrl);
                 });
             });
         }

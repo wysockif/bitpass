@@ -29,7 +29,7 @@ namespace Api.Middlewares
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 await context.Response.WriteAsync(authenticationException.Message);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 await context.Response.WriteAsync("Something went wrong");

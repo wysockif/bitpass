@@ -4,6 +4,8 @@ using System;
 using Infrastructure.Mailing;
 using Npgsql;
 
+#pragma warning disable 8603
+
 namespace Infrastructure
 {
     public class InfrastructureSettings
@@ -17,12 +19,10 @@ namespace Infrastructure
             get
             {
                 var databaseUrl = Environment.GetEnvironmentVariable(_dbConnectionString ?? "");
-
                 return databaseUrl != null ? ParseDatabaseUrl(databaseUrl) : _dbConnectionString;
             }
 
             set => _dbConnectionString = value;
-            // set => _dbConnectionString = ParseDatabaseUrl(value);
         }
 
         private string ParseDatabaseUrl(string databaseUrl)

@@ -1,5 +1,6 @@
 using System;
-using Domain.Model;
+
+#pragma warning disable 8618
 
 namespace Application.ViewModels
 {

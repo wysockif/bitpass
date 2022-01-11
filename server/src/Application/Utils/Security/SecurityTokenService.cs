@@ -5,6 +5,8 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
+#pragma warning disable 8601
+
 namespace Application.Utils.Security
 {
     public interface ISecurityTokenService
@@ -157,7 +159,7 @@ namespace Application.Utils.Security
                     ClockSkew = TimeSpan.Zero
                 }, out _);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }

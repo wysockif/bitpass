@@ -1,5 +1,7 @@
 using Application.Utils.Security;
 
+#pragma warning disable 8618
+
 namespace Application
 {
     public class ApplicationSettings

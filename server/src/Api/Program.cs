@@ -27,7 +27,11 @@ namespace Api
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseUrls($"http://0.0.0.0:{Environment.GetEnvironmentVariable("PORT") ?? "5000"}");
+                    if (Environment.GetEnvironmentVariable("PORT") != default)
+                    {
+                        webBuilder.UseUrls($"http://0.0.0.0:{Environment.GetEnvironmentVariable("PORT")}");
+                    }
+
                     webBuilder.UseKestrel(opt => opt.AddServerHeader = false);
                     webBuilder.UseStartup<Startup>();
                 });

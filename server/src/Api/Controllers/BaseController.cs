@@ -1,5 +1,8 @@
-using System.Threading.Tasks;
-using Application;
+// ReSharper disable ConstantNullCoalescingCondition
+
+#pragma warning disable 8618
+#pragma warning disable 8601
+#pragma warning disable 8603
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

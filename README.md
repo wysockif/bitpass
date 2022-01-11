@@ -3,14 +3,15 @@
 
 <a href="https://bitpass-app.herokuapp.com" target="_blank">https://bitpass-app.herokuapp.com</a>
 
+<a href="https://bitpass-server.herokuapp.com" target="_blank">https://bitpass-server.herokuapp.com</a>
+
 ### General Information
 
-Bitpass is an open source password manager opereting on a zero-knowledge securitymodel. 
+Bitpass is an open source password manager opereting on a zero-knowledge security model. 
 
 The project consists of a RESTful web service with Spring Boot & (responsive) single page application with React.
 
 ![Vault](img/Vault.png)
-
 
 
 ---
@@ -28,7 +29,7 @@ The project consists of a RESTful web service with Spring Boot & (responsive) si
 - `Typescript 4.1.2`
 - `React.js 17.0.2`
 
-4. DevOps:
+4. DevOps and deploymend:
 - `Heroku`
 - `Docker 20.10.11`
 - `Docker Compose 2.2.1`
@@ -36,8 +37,7 @@ The project consists of a RESTful web service with Spring Boot & (responsive) si
 ---
 
 ### Security
--![Diagram](img/diagram.svg)
-
+![Diagram](img/diagram.svg)
 
 ---
 ### Requirements
@@ -80,21 +80,38 @@ To run it locally follow the instructions:
     docker-compose up database
     ```
 
-    to set up a database (PostgreSQL) server on port 5432.
+    It will set up a database (PostgreSQL) server on port 5432.
 
 2. Back-end:
 
     Create `appsettings.Development.json` file as in <a href="https://github.com/wysockif/bitpass/blob/main/server/src/Api/appsettings.Example.json" target="_blank">appsettings.Example.json</a>.
 
-    Change your directory to `bitpass/server` and enter:
+    Change your directory to `bitpass\server\src\Api` and enter:
 
+    ```bash
+    dotnet dev-certs https --trust
+     ```
+    
+    then:
+
+    ```bash
+    dotnet run
+     ```
+
+     It will run the back-end app on port 5001 via https. Trust the certificate in your browser.
 
 3. Front-end: 
+    Change your directory to `bitpass\client` and enter:
+    ```bash
+    yarn install
+    ```
+    then: 
 
----
-### Deployment
+    ```bash
+    yarn start
+    ```
 
-
+    It will run the front-end app on port 3000 via https. Trust the certificate in your browser.
 
 ---
 ### Screenshots
@@ -146,7 +163,7 @@ To run it locally follow the instructions:
 ---
 ### Motivation & Project Status
 
-Bitpass was created as my student project during the third year of studying Computer Science. It was my individual project for Data Protection in IT Systems subject.
+Bitpass was created as my student project during the third year of studying Computer Science. It was my individual project for Data Protection in IT Systems subject. The idea of "zero knowledge" policy was inspired by Bitwarden and Lastpass.
 
 The project was completed successfully.
 

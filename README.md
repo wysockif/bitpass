@@ -1,4 +1,6 @@
 # BitPass
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/wysockif/bitpass)
+
 [![Website shields.io](https://img.shields.io/website-up-down-green-red/http/shields.io.svg)](https://bitpass-app.herokuapp.com)
 
 <a href="https://bitpass-app.herokuapp.com" target="_blank">https://bitpass-app.herokuapp.com</a>
@@ -9,9 +11,19 @@
 
 Bitpass is an open source password manager opereting on a zero-knowledge security model. 
 
-The project consists of a RESTful web service with Spring Boot & (responsive) single page application with React.
+The project consists of a RESTful web service with .NET and (responsive) single page application with React.
+
 
 ![Vault](img/Vault.png)
+
+The app allows users to:
+* register (with account activation via e-mail) and login,
+* save the encrypted passwords,
+* show/copy the decrypted passwords,
+* see the account activities,
+* see the active sessions and logout of all sessions,
+* change/reset the password,
+* generate a new password.
 
 
 ---
@@ -29,7 +41,7 @@ The project consists of a RESTful web service with Spring Boot & (responsive) si
 - `Typescript 4.1.2`
 - `React.js 17.0.2`
 
-4. DevOps and deploymend:
+4. DevOps and deployment:
 - `Heroku`
 - `Docker 20.10.11`
 - `Docker Compose 2.2.1`
@@ -37,15 +49,31 @@ The project consists of a RESTful web service with Spring Boot & (responsive) si
 ---
 
 ### Security
+
+Bitpass employs a "zero-knowledge" policy. The passwords, master password and encryption key are never received in plain text on the server - it is possible by encrypting the vault passwords and hashing the encryption key before ever leaving the browser. Having the encrypted passwords without the encryption key prevents the decryption on the server. The encryption key is derived from the master password using Password-Based Key Derivation Function 2 (PBKDF2) - it makes it harder for someone to guess the encryption key through a brute-force attack.
+
+
 ![Diagram](img/diagram.svg)
+
+Used algorithms:
+
+* <a href="https://github.com/brix/crypto-js/blob/develop/src/aes.js" target="_blank">AES 256-bit</a> - encryption
+* <a href="https://github.com/crypto-browserify/pbkdf2" target="_blank">PBKDF2</a> (with salt) - encryption key derivation
+* <a href="https://github.com/BcryptNet/bcrypt.net" target="_blank">BCrypt</a> (with salt and pepper) - hashing
+
+
+The app uses JSON Web Tokens for Authentication. Access tokens are valid for 1 minute. Refresh tokens are valid for 3 hours. The app implements also login delays and limits of invalid login attempts.
+
 
 ---
 ### Requirements
 
 To run the application locally you need:
 
-* `Docker 19.03.13`;
-* `Docker-compose  1.25.0`;
+* `Docker 19.03.13`
+* `Docker-compose  1.25.0`
+* `.NET 5`
+* `NodeJS`
 
 Supported browsers:
 <p float="left">
@@ -167,7 +195,7 @@ Bitpass was created as my student project during the third year of studying Comp
 
 The project was completed successfully.
 
-Duration time: 23.11.2021 - 18-01-2022
+Duration time: 23.11.2021 - 16.01.2022
 
 ---
 ### License

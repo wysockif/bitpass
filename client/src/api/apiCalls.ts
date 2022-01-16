@@ -2,7 +2,7 @@ import axios from 'axios';
 import {getRefreshTokenFromLocalStorage, updateAccessAndRefreshTokensInLocalStorage} from "../tokens/tokenService";
 import {store} from "../index";
 
-const apiUrl = 'http://localhost:5000';
+const apiUrl = 'https://localhost:5001';
 
 axios.interceptors.response.use(
     (res) => {

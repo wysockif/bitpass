@@ -98,7 +98,7 @@ To run it locally follow the instructions:
 0. Clone this repo to your desktop:
 
     ```sh
-    git clone git@github.com:wysockif/noticeboard.git
+    git clone git@github.com:wysockif/bitpass.git
     ```
 1. Database:
 

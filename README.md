@@ -189,14 +189,5 @@ To run it locally follow the instructions:
 ![Vault](img/Settings.png)
 
 ---
-### Motivation & Project Status
-
-Bitpass was created as my student project during the third year of studying Computer Science. It was my individual project for Data Protection in IT Systems subject. The idea of "zero knowledge" policy was inspired by Bitwarden and Lastpass.
-
-The project was completed successfully.
-
-Duration time: 23.11.2021 - 16.01.2022
-
----
 ### License
 Usage is provided under the [MIT License](http://opensource.org/licenses/mit-license.php). See LICENSE for the full details.

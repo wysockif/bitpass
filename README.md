@@ -3,9 +3,8 @@
 
 [![Website shields.io](https://img.shields.io/website-up-down-green-red/http/shields.io.svg)](https://bitpass-app.herokuapp.com)
 
-<a href="https://bitpass-app.herokuapp.com" target="_blank">https://bitpass-app.herokuapp.com</a>
-
-<a href="https://bitpass-server.herokuapp.com" target="_blank">https://bitpass-server.herokuapp.com</a>
+Frontend URL: <a href="https://bitpass-app.herokuapp.com" target="_blank">https://bitpass-app.herokuapp.com</a>
+Backend URL: <a href="https://bitpass-server.herokuapp.com" target="_blank">https://bitpass-server.herokuapp.com</a>
 
 ### General Information
 
@@ -57,9 +56,9 @@ Bitpass employs a "zero-knowledge" policy. The passwords, master password and en
 
 Used algorithms:
 
-* <a href="https://github.com/brix/crypto-js/blob/develop/src/aes.js" target="_blank">AES 256-bit</a> - encryption
-* <a href="https://github.com/crypto-browserify/pbkdf2" target="_blank">PBKDF2</a> (with salt) - encryption key derivation
-* <a href="https://github.com/BcryptNet/bcrypt.net" target="_blank">BCrypt</a> (with salt and pepper) - hashing
+* <a href="https://github.com/brix/crypto-js/blob/develop/src/aes.js" target="_blank">AES 256-bit</a> - encryption,
+* <a href="https://github.com/crypto-browserify/pbkdf2" target="_blank">PBKDF2</a> (with salt) - encryption key derivation,
+* <a href="https://github.com/BcryptNet/bcrypt.net" target="_blank">BCrypt</a> (with salt and pepper) - hashing.
 
 
 The app uses JSON Web Tokens for Authentication. Access tokens are valid for 1 minute. Refresh tokens are valid for 3 hours. The app implements also login delays and limits of invalid login attempts.

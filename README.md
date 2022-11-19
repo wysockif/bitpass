@@ -4,6 +4,7 @@
 [![Website shields.io](https://img.shields.io/website-up-down-green-red/http/shields.io.svg)](https://bitpass-app.herokuapp.com)
 
 Frontend URL: <a href="https://bitpass-app.herokuapp.com" target="_blank">https://bitpass-app.herokuapp.com</a>
+
 Backend URL: <a href="https://bitpass-server.herokuapp.com" target="_blank">https://bitpass-server.herokuapp.com</a>
 
 ### General Information
